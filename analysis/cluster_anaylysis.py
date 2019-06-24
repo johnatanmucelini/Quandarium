@@ -45,16 +45,6 @@ remove_ps = args.remove_ps
 degree = args.degree
 count = args.count
 
-## Surface atoms indentifier algorithms
-algorithms = np.array( np.array(algorithms , dtype=int) , dtype=bool)
-nearest_0A = algorithms[0] #False#True # nearest from sampling distance (0A direction)
-nearest_0r = algorithms[1] #True#False#True # nearest from sampling distance (random direction)
-balistic_B_0A = algorithms[2] # balistic in direction atom_b from sampling distance (from 0 to atom_a)
-balistic_B_0AplusC = algorithms[3] # balistic in direction atom_b from sampling distance (from 0 to atom_a + atom_c)' )
-balistic_B_0rand = algorithms[4] #True # balistic in direction atom_b from sampling distance (random direction)
-balistic_B_0reg = algorithms[5] # '6) balistic in direction atom_b from sampling distance (regular sampling)'
-surface_contructuin = algorithms[6] # construction based in accept or reject points over the atoms..
-
 np.random.seed(1234)
 
 def compute_bounds_dimp ( positions , chemical_symbols , criteria, print_convergence = True ):
@@ -115,42 +105,35 @@ def compute_bounds ( positions , chemical_symbols , criteria, print_convergence 
     if print_convergence : print( '    Bound analysis finished...' )
     return ecn , dav , np.array(Pij ,dtype=int)
 
+def compute_ecn_dav_ropt(positions, chemical_symbols, pij_to_int=True) :
+    """Return the effective coordination number (ecn) and the atomic radius ri
+    and the conective index matrix Pijself.
+    positions: np.array of (n,3) shape with atoms positions.
+    chemical_symbols: np.array with the atoms symbols strings.
+    pij_to_int: around the conective index matrix to intiger."""
 
-def compute_ecn_dav_ropt ( positions , chemical_symbols , pij_to_int = True , print_convergence = True):
-    if print_convergence : print("\n\nECN-Ropt analysis:")
+    logging.debug("Initializing ECN-Ropt analysis!")
+
+    if (type(positions) != np.ndarray)
+      or (np.shape(positions)[1] != 3)
+      or (type(positions[0][0]) != bool) :
+        logging.error("positions must be a (n,3) shaped numpy.ndarray!"
+                      + " Aborting...")
+        sys.exit(1)
+
+    if (type(chemical_symbols) != np.ndarray)
+      or (type(chemical_symbols[0][0]) != str) :
+        logging.error("chemical_symbols must be a numpy.ndarray of strings.")
+        sys.exit(1)
+
     dij = cdist(positions,positions) + 100*np.eye(len(positions))
     dav = np.max( cdist(positions,positions) , axis=0)
     ri = dav / 2.
     ri_pre = np.zeros_like(ri)
     ecn_pre = np.zeros_like(dij)
-    def compute_pij( dij, ri , Pij_max ):
+    def compute_pij_max_dumbed( dij, ri , Pij_max ):
         return np.exp(1-(dij / ( ri.reshape(-1,1) + ri.reshape(1,-1)   ))**6 -(dij/3.5)**4)*Pij_max
-    def cost_l2( ri , dij , Pij ):
-        ri_sum_rj = ri.reshape([1,-1]) + ri.reshape([-1,1])
-        return np.sum(((dij - ri_sum_rj)*Pij)**2)
-    def bonds_distance( a1 , a2 ):
-        if ((a1 == 'H')  and (a2 == 'H'))  or ((a2 == 'H')  and (a1 == 'H'))  : return [ 0.70 , 1.19 ]
-        if ((a1 == 'C')  and (a2 == 'H'))  or ((a2 == 'C')  and (a1 == 'H'))  : return [ 0.90 , 1.35 ]
-        if ((a1 == 'C')  and (a2 == 'C'))  or ((a2 == 'C')  and (a1 == 'C'))  : return [ 1.17 , 1.51 ]
-        if ((a1 == 'Fe') and (a2 == 'H'))  or ((a2 == 'Fe') and (a1 == 'H'))  : return [ 1.2  , 1.99 ]
-        if ((a1 == 'Fe') and (a2 == 'C'))  or ((a2 == 'Fe') and (a1 == 'C'))  : return [ 1.2  , 2.15 ]
-        if ((a1 == 'Fe') and (a2 == 'Fe')) or ((a2 == 'Fe') and (a1 == 'Fe')) : return [ 2.17 , 2.8  ]
-        if ((a1 == 'Ni') and (a2 == 'H'))  or ((a2 == 'Ni') and (a1 == 'H'))  : return [ 1.2  , 1.98 ]
-        if ((a1 == 'Ni') and (a2 == 'C'))  or ((a2 == 'Ni') and (a1 == 'C'))  : return [ 1.2  , 2.08 ]
-        if ((a1 == 'Ni') and (a2 == 'Ni')) or ((a2 == 'Ni') and (a1 == 'Ni')) : return [ 2.07 , 2.66 ]
-        if ((a1 == 'Co') and (a2 == 'H'))  or ((a2 == 'Co') and (a1 == 'H'))  : return [ 1.2  , 1.91 ]
-        if ((a1 == 'Co') and (a2 == 'C'))  or ((a2 == 'Co') and (a1 == 'C'))  : return [ 1.2  , 2.20 ]
-        if ((a1 == 'Co') and (a2 == 'Co')) or ((a2 == 'Co') and (a1 == 'Co')) : return [ 2.05 , 2.63 ]
-        if ((a1 == 'Cu') and (a2 == 'H'))  or ((a2 == 'Cu') and (a1 == 'H'))  : return [ 1.2  , 1.98 ]
-        if ((a1 == 'Cu') and (a2 == 'C'))  or ((a2 == 'Cu') and (a1 == 'C'))  : return [ 1.2  , 2.14 ]
-        if ((a1 == 'Cu') and (a2 == 'Cu')) or ((a2 == 'Cu') and (a1 == 'Cu')) : return [ 2.15 , 2.76 ]
 
-        if ((a1 == 'Ce') and (a2 == 'O' )) or ((a2 == 'Ce') and (a1 == 'O' )) : return [ 1.1  , 2.7  ]
-        if ((a1 == 'Zr') and (a2 == 'O' )) or ((a2 == 'Zr') and (a1 == 'O' )) : return [ 1.1  , 2.7  ]
-        if ((a1 == 'O' ) and (a2 == 'O' )) or ((a2 == 'O' ) and (a1 == 'O' )) : return [ 1.1  , 2.7  ]
-        if ((a1 == 'Ce') and (a2 == 'Ce')) or ((a2 == 'Ce') and (a1 == 'Ce')) : return [ 1.1  , 2.7  ]
-        if ((a1 == 'Zr') and (a2 == 'Zr')) or ((a2 == 'Zr') and (a1 == 'Zr')) : return [ 1.1  , 2.7  ]
-        if ((a1 == 'Zr') and (a2 == 'Ce')) or ((a2 == 'Zr') and (a1 == 'Ce')) : return [ 1.1  , 2.7  ]
     dij_max = np.array([[ bonds_distance( a1 , a2 )[1] for a1 in chemical_symbols] for a2 in chemical_symbols ])
     Pij_max = dij < dij_max
     v=0
@@ -159,7 +142,7 @@ def compute_ecn_dav_ropt ( positions , chemical_symbols , pij_to_int = True , pr
         if v > 0 :
             ri_pre = ri * 1.
             ecn_pre = ecn * 1.
-        Pij = compute_pij( dij, ri , Pij_max )
+        Pij = compute_pij_max_dumbed( dij, ri , Pij_max )
         def cost_l2 ( ri , dij , Pij ):
             ri_sum_rj = ri.reshape([1,-1]) + ri.reshape([-1,1])
             return np.sum(((dij - ri_sum_rj)*Pij)**2)
@@ -188,9 +171,7 @@ def compute_ecn_dav_ropt ( positions , chemical_symbols , pij_to_int = True , pr
         return 1./(np.sqrt(2.*np.pi)*sig)*np.exp(-np.power((x - mu)/sig, 2.)/2)
     for i, atomi in enumerate(chemical_symbols):
         for j, atomj in enumerate(chemical_symbols):
-#            if Pij[i,j] > 0.5 :
                 rd_per_atom[i] += gaussian(x,dij[i,j]/(ri[i] + ri[j]),sig)
-        #plt.plot(x,(rd_per_atom[i]+1)**-1)
         peaks, _ = find_peaks( (rd_per_atom[i]+1)**-1, height=0)
         plt.plot(rd_per_atom[i])
         plt.plot(peaks, rd_per_atom[i][peaks], "x")
@@ -200,9 +181,6 @@ def compute_ecn_dav_ropt ( positions , chemical_symbols , pij_to_int = True , pr
     print(ecn_integrated)
     print(ecn)
     return ecn , ri, Pij
-
-
-
 
 def compute_ecn_dav ( positions , print_convergence=True ):
     if print_convergence : print("\n\nECN analysis:")
@@ -502,7 +480,7 @@ def surf_path_random_atom(positions, sampling_distance, write_shell_points=True)
         print( remove_ps )
         dots_for_find_eps = RegRDS_set(max(atoms_path_dot_touch_distance), max_cicle)
         eps = 2.1 * np.max( np.min(cdist( dots_for_find_eps, dots_for_find_eps) + np.eye(len(dots_for_find_eps))*10 , axis=0)  )
-        bigger_pseudo_surface_dots = remove_pseudo_surfaces(dots_surface, eps)
+        bigger_pseudo_surface_dots = large_surfaces_index(dots_surface, eps)
         dots_surface = dots_surface[ bigger_pseudo_surface_dots ]
         surface_dot_origin = dot_origin[surface_dots][bigger_pseudo_surface_dots]
     else :
