@@ -1,20 +1,35 @@
 """Several tools to deal with QC calculations."""
 
-import os.path.isfile
+# from os.path import isfile
 
-def find(code_or_file, path_to_start_the_search='.', recursivity=True ):
+
+def find(code_or_file, path_to_start_the_search='.', recursivity=True):
     """This function find the path of all folders with calculations.
     In fact, if code_or_file is a code it select folder with the code output
-    file, if code_or_file is not a code (so it is a filename), it select folders
-    with a file named equal to code_or_file.
+    file, if code_or_file is not a code (so it is a filename), it select
+    folders with a file named equal to code_or_file.
 
-    code_or_file: str with the code name (VASP of fhi) or a file name.
-    path_to_start_the_search: str with the path to the folder to start the seach
-                              for folders with calculations.
-    recursivity: if True the search is completely recursive, if False, the seach
-                 run over the forder within the folder path_to_start_the_search.
+    Parameters
+    ----------
+    code_or_file, path_to_start_the_search : str, path_to_start_the_search is
+                                            optional
+        code_or_file is the code name (VASP of fhi) or a file name to search to
+        consider that the folder with the filename is a calculation folder.
+        path_to_start_the_search is the path to start the seaching for folders
+        with calculations.
+    recursivity : boolean
+        If True, the search is completely recursive. If False, the seach run
+        over the forder within the folder in the variable
+        path_to_start_the_search.
 
-    Example:
+    Returns
+    -------
+    list_with_all_calculations_folder : list
+        A list with the calculations found in the search.
+
+    Examples
+    --------
+    >>> from quandarium.calculations import find
     >>> list_with_calculations_path = find('VASP', '.')
     """
 
@@ -38,8 +53,8 @@ def find(code_or_file, path_to_start_the_search='.', recursivity=True ):
 
     # Other verification tests
     if os.path.isdir(path_to_start_the_search) == False :
-        logging.error("The path_to_start_the_search is not a directory!
-                       Aborting...")
+        logging.error("The path_to_start_the_search is not a directory! " \
+                       "Aborting...")
         sys.exit(1)
     else:
         logging.debug('path_to_start_the_search is a directory!')
