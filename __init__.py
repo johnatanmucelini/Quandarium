@@ -15,8 +15,13 @@ enginering, DM processes, and data plot."""
 import pkgutil
 import logging
 
-logging.basicConfig(filename='quadarium_module.log', level=logging.DEBUG)
-logging.info('The logging level is debug')
+logging.basicConfig(filename='/home/johnatan/quandarium_module.log',
+                    level=logging.INFO,
+                    format='%(asctime)s - %(name)s - %(module)s - %(funcName)s - %(levelname)s - %(message)s',
+                    datefmt='%d-%b-%y %H:%M:%S')
+logging.info('The logging level is info')
+logging.info(f'{"#"*20} QUANDARIUM WERE INITILIZED {"#"*20}')
+
 
 # Importing all the submodules py files
 __path__ = pkgutil.extend_path(__path__, __name__)

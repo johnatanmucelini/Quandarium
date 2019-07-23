@@ -3,64 +3,35 @@
 import sys
 import itertools
 import time
-import auxiliar_analysis as auxa
-import numpy as np
-import matplotlib.pyplot as plt
+import logging
 import ase.io
+import numpy as np
 import networkx as nx
+import matplotlib.pyplot as plt
 from scipy import optimize
 from scipy.stats import describe
 from scipy.special import legendre
 from scipy.spatial.distance import cdist
 from scipy.signal import find_peaks
 from sklearn.cluster import DBSCAN
-import logging
+from quandarium.analy.aux import RegRDS_set
+from quandarium.analy.aux import large_surfaces_index
+from quandarium.analy.aux import write_points_xyz
+from quandarium.analy.aux import comp_aveabs
+from quandarium.analy.aux import comp_roptl2
+from quandarium.analy.aux import comp_gaussian
+from quandarium.analy.aux import comp_pij_maxdamped
+from quandarium.analy.aux import comp_pij_classed
+from quandarium.analy.aux import comp_minmaxbond
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(filename='/home/johnatan/quandarium_module.log',
+                    level=logging.INFO)
+logging.info('The logging level is INFO')
 np.random.seed(1234)
+    
 
-
-def minmax_bonds(atom1, atom2):
-    """For the atoms 1 and 2, it return the max and min bond distances.
-    Parameters
-    ----------
-    atom1, atom2: string.
-                  A string with the atoms chemical elements symbol.
-    Return
-    ------
-    minmax: list with two values.
-            A list with the minimun and maximun distance bewteen two atoms to
-            to consider they bounded.
-    """
-
-    conections = np.array([['H', 'H', 0.70, 1.19],
-                           ['C', 'H', 0.90, 1.35],
-                           ['C', 'C', 1.17, 1.51],
-                           ['Fe', 'H', 1.2, 1.99],
-                           ['Fe', 'C', 1.2, 2.15],
-                           ['Fe', 'Fe', 2.17, 2.8],
-                           ['Ni', 'H', 1.2, 1.98],
-                           ['Ni', 'C', 1.2, 2.08],
-                           ['Co', 'H', 1.2, 1.91],
-                           ['Ni', 'Ni', 2.07, 2.66],
-                           ['Co', 'C', 1.2, 2.20],
-                           ['Co', 'Co', 2.05, 2.63],
-                           ['Cu', 'Cu', 2.15, 2.76],
-                           ['Cu', 'C', 1.2, 2.14],
-                           ['Zr', 'O', 1.1, 2.7],
-                           ['Cu', 'H', 1.2, 1.98],
-                           ['Ce', 'O', 1.1, 2.7],
-                           ['O', 'O', 1.1, 2.7],
-                           ['Ce', 'Ce', 1.1, 2.7],
-                           ['Zr', 'Zr', 1.1, 2.7],
-                           ['Zr', 'Ce', 1.1, 2.7]])
-    for info in conections:
-        if (atom1 in info[0:2]) and (atom2 in info[0:2]):
-            return info[2:]
-
-
-def ecn_dav_ropt(positions, chemical_symbols, plot_name='',
-                 print_convergence=True):
+def ecndav_ropt(positions, chemical_symbols, plot_name='',
+                print_convergence=True):
     """Return the effective coordination number (ecn), the optimized atomic
     radius (ori), the bond distance average (dav), and the conective index
     matrix pij. The radius are optimized...
@@ -89,47 +60,8 @@ def ecn_dav_ropt(positions, chemical_symbols, plot_name='',
          The index of connectivity between pairs of atoms.
     """
 
-    def gaussian(x, mu, sig):
-        """Returns the valeues of a normalized gaussian (sig=sigma, mean=mu)
-        over the values of x.
-        Parameters
-        ----------
-        mu, sig: floats.
-                 Parameters of the gaussian function.
-        x: numpy array (n,) shaped.
-           Values to evaluate the normalized gaussian function.
-
-        Retunr
-        ------
-        gaussian_of_x: np.array of lengh = len(x).
-                       Values of the gaussian for the values in x.
-        """
-        return 1./(np.sqrt(2.*np.pi)*sig)*np.exp(-np.power((x - mu)/sig, 2.)/2)
-
-    def compute_pij_max_damped(dij, ori, pij_max):
-        """Compute all the conective index pij with a dumping"""
-        exp_arg = (1 - (dij/(ori.reshape(-1, 1) + ori.reshape(1, -1)))**6
-                   - (dij/3.5)**4)
-        return np.exp(exp_arg)*pij_max
-
-    def ave_abs(values):
-        """It meansure the average of the absolute values
-        Example
-        -------
-        >>> old = [1.21, 1.32, 1.23]
-        >>> new = [1.20, 1.33, 1.24]
-        >>> ave_abs(old-new)
-        0.01
-        """
-        return np.average(np.abs(values))
-
-    def cost_l2(ori, dij, pij):
-        """Compute the difference between ori + orj and the dij of the bonded
-        atoms (pij) with a l2 norm."""
-        ori_sum_orj = ori.reshape([1, -1]) + ori.reshape([-1, 1])
-        return np.sum(((dij - ori_sum_orj)*pij)**2)
-
-    print("Initializing ECN-Ropt analysis!")
+    if print_convergence:
+        print("Initializing ECN-Ropt analysis!")
 
     if not isinstance(positions, np.ndarray) or (np.shape(positions)[1] != 3):
         print("positions must be a (n,3) shaped numpy.ndarray! Aborting...")
@@ -145,27 +77,33 @@ def ecn_dav_ropt(positions, chemical_symbols, plot_name='',
     ori = dav / 2.
     ori_pre = np.zeros_like(ori)
     ecn_pre = np.zeros_like(dij)
+    ecn = np.zeros_like(dij)
 
-    dij_max = np.array([[minmax_bonds(a1, a2)[1] for a1 in chemical_symbols]
-                        for a2 in chemical_symbols])
+    dij_max = np.array([[comp_minmaxbond(a1, a2)[1] for a1 in chemical_symbols]
+                        for a2 in chemical_symbols], dtype=float)
     pij_max = dij < dij_max
     step = 0
     if print_convergence:
         print("     Delta sum_i(abs(r_i))/N     Delta sum_i(abs(ECN_i))/N")
-    while (np.sum(np.abs(ori_pre - ori)) / len(ori) > 10E-8) or (v < 2):
+    while (np.sum(np.abs(ori_pre - ori)) / len(ori) > 10E-8) or (step < 2):
         if step > 0:
             ori_pre = ori * 1.
             ecn_pre = ecn * 1.
-        pij = compute_pij_max_damped(dij, ori, pij_max)
-        results = optimize.minimize(cost_l2, ori, args=(dij, pij),
+        pij = comp_pij_maxdamped(dij, ori, pij_max)
+        results = optimize.minimize(comp_roptl2, ori, args=(dij, pij),
                                     bounds=((0.5, 1.7),)*len(chemical_symbols),
                                     method="L-BFGS-B", tol=1.E-7,
                                     options={"maxiter": 50, "disp": False})
         ori = results.x
         ecn = np.sum(pij, axis=1)
         if print_convergence:
-            print('   ', ave_abs(ori_pre - ori), ave_abs(ecn - ecn_pre))
+            print('   ', comp_aveabs(ori_pre - ori),
+                  comp_aveabs(ecn - ecn_pre))
         step += 1
+
+    # dav
+    ori_sum_orj = ori.reshape([1, -1]) + ori.reshape([-1, 1])
+    dav = np.sum((ori_sum_orj)*pij, axis=1) / np.sum(pij, axis=1)
 
     if plot_name:
         bins = 400
@@ -176,9 +114,9 @@ def ecn_dav_ropt(positions, chemical_symbols, plot_name='',
         for i in range(qtna):
             plt.close("all")
             for j in range(qtna):
-                rd_per_atom[i] += gaussian(xvalues,
-                                           dij[i, j]/(ori[i] + ori[j]),
-                                           sig)
+                rd_per_atom[i] += comp_gaussian(xvalues,
+                                                dij[i, j]/(ori[i] + ori[j]),
+                                                sig)
             peaks, _ = find_peaks((rd_per_atom[i]+1)**-1, height=0)
             plt.plot(rd_per_atom[i])
             plt.plot(peaks, rd_per_atom[i][peaks], "x")
@@ -190,7 +128,7 @@ def ecn_dav_ropt(positions, chemical_symbols, plot_name='',
     return ecn, dav, ori, pij
 
 
-def compute_ecn_dav(positions, print_convergence=True):
+def ecndav(positions, print_convergence=True):
     """Return the effective coordination number (ecn) and the average bound
     distance and the conective index matrix Pij.
 
@@ -204,7 +142,7 @@ def compute_ecn_dav(positions, print_convergence=True):
     -------
     ecn, dav: numpy.array, (n,) shaped.
               They contain the calculated ecn and dav for each atom.
-    Pij: numpy.array, (n,n) shaped.
+    pij: numpy.array, (n,n) shaped.
          The index of connectivity between pairs of atoms.
     """
 
@@ -219,6 +157,8 @@ def compute_ecn_dav(positions, print_convergence=True):
     dav = np.max(cdist(positions, positions), axis=0)
     dav_pre = np.zeros_like(dav)
     ecn_pre = np.zeros_like(dij)
+    ecn = np.zeros_like(dij)
+
     step = 0
     if print_convergence:
         print("     Delta sum_i(abs(dav_i))/N     Delta sum_i(abs(ECN_i))/N")
@@ -240,36 +180,9 @@ def compute_ecn_dav(positions, print_convergence=True):
     return ecn, dav, pij
 
 
-def surface_bounded_pij(pij, is_surface, cutoff):
-    """It return the conectivity matrix considering only bounds between surface
-    atoms.
-    Parameters
-    ----------
-    pij: numpy array of floats, (n,n) shaped.
-         Matrix of conectivity between atoms.
-    is_surface: numpy array of boolean of len n.
-                Array with boolean indicating if the i-th atom is belongs to
-                the surface.
-    cutoff: float > 0.
-            Cutoff index to be considered as a bound.
-
-    Return
-    ------
-    matrix_surface_bond: numpy array of boolean, (n,n) shaped.
-                         Matrix indicating the surface atoms conecetivity.
-    """
-    ecn_bounded_ones = np.array(pij >= cutoff, dtype=int)
-    is_surface_ones = np.array(is_surface, dtype=int)
-    matrix_surface_bond = np.array((ecn_bounded_ones * is_surface_ones).T
-                                   * is_surface_ones, dtype=bool)
-    return matrix_surface_bond
-
-
-def surfcore_classyfier_adatom(positions, atomic_radii, adatom_radius,
-                               remove_is=True, ssamples=1000, writw_sp=True,
-                               return_expositions=True,
-                               print_surf_properties=False,
-                               sp_file="surface_points.xyz"):
+def findsc(positions, atomic_radii, adatom_radius, remove_is=True,
+           ssamples=1000, writw_sp=True, return_expositions=True,
+           print_surf_properties=False, sp_file="surface_points.xyz"):
     """This algorithm classify atoms in surface and core atoms employing the
     concept of atoms as ridge spheres. Then the surface atoms are the ones that
     could be touched by an fictitious adatom that approach the cluster, while
@@ -312,16 +225,17 @@ def surfcore_classyfier_adatom(positions, atomic_radii, adatom_radius,
     touch_radii = atomic_radii + adatom_radius
     qtna = len(positions)
 
-    dots_try = auxa.RegRDS_set(adatom_radius, ssamples)
+    dots_try = RegRDS_set(adatom_radius, ssamples)
     rssamples = len(dots_try)
     max_dots = rssamples * qtna
-    print('Quantity of dots per atom: ' + str(len(dots_try)))
-    print('Quantity of investigated dots: ' + str(max_dots))
+    if print_surf_properties:
+        print('Quantity of dots per atom: ' + str(len(dots_try)))
+        print('Quantity of investigated dots: ' + str(max_dots))
 
-    dots = positions[0] + auxa.RegRDS_set(touch_radii[0] + 0.001, ssamples)
+    dots = positions[0] + RegRDS_set(touch_radii[0] + 0.001, ssamples)
     dot_origin = [[0] * len(dots_try)]
     for atom_id in range(1, qtna):
-        dots = np.append(dots, positions[atom_id] + auxa.RegRDS_set(
+        dots = np.append(dots, positions[atom_id] + RegRDS_set(
             touch_radii[atom_id] + 0.001, ssamples), axis=0)
         dot_origin.append([atom_id] * len(dots_try))
     dot_origin = np.array(dot_origin).flatten()
@@ -339,13 +253,14 @@ def surfcore_classyfier_adatom(positions, atomic_radii, adatom_radius,
 
     # removing internal surfaces
     if remove_is:
-        print("removing_internal_surface")
-        dots_for_find_eps = auxa.RegRDS_set(max(touch_radii), ssamples)
+        if print_surf_properties:
+            print("removing_internal_surface")
+        dots_for_find_eps = RegRDS_set(max(touch_radii), ssamples)
         dotdot_distances = cdist(dots_for_find_eps, dots_for_find_eps)
         min_dotdot_dist = np.min(dotdot_distances + np.eye(rssamples) * 10,
                                  axis=0)
         eps = 2.1 * np.max(min_dotdot_dist)
-        external_surface_dots = auxa.large_surfaces_index(dots_surface, eps)
+        external_surface_dots = large_surfaces_index(dots_surface, eps)
         dots_surface = dots_surface[external_surface_dots]
         surface_dot_origin = dot_origin[surface_dots][external_surface_dots]
     else:
@@ -358,16 +273,16 @@ def surfcore_classyfier_adatom(positions, atomic_radii, adatom_radius,
     exposition = np.zeros(qtna)
     is_surface = np.zeros(qtna, dtype=bool)
     incidence = np.zeros(qtna)
-    dots_per_atom = np.zeros(qtna)
+    # dots_per_atom = np.zeros(qtna)
     for atom_id, atom_incidence in zip(surface_atoms, dots_per_atom):
-        print(' found surface atom: ' + str(atom_id))
+        if print_surf_properties:
+            print(' found surface atom: ' + str(atom_id))
         is_surface[atom_id] = True
-        dots_per_atom[atom_id] = atom_incidence
         incidence[atom_id] = atom_incidence
         exposition[atom_id] = atom_incidence * atoms_area_per_dot[atom_id]
 
     if writw_sp:
-        auxa.write_points_xyz(sp_file, dots_surface)
+        write_points_xyz(sp_file, dots_surface)
 
     if print_surf_properties:
         centered_dots_surface = dots_surface - np.average(dots_surface, axis=0)
@@ -568,7 +483,7 @@ def planes_of_atoms():
 
     # finding surface_bounded_axis
     print( 'Bounded criteria: ECN_{ij} < 1.')
-    surface_bounded = surface_bounded_pij( pij , is_surface , 1. ) # important parameter
+    surface_bounded = comp_pij_classed( pij , is_surface , 1. ) # important parameter
     printt( pl , 1 , "    reg_bound_in_surface: " + str(np.sum(surface_bounded)/2.))
 
     # finding initial planes

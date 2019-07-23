@@ -1,22 +1,122 @@
-import time
-ti_header = time.time()
-import sys
-import argparse
-import itertools
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy import optimize
-from scipy.stats import describe
-from scipy.special import legendre
-from scipy.spatial.distance import cdist
-from sklearn.cluster import DBSCAN
-from scipy.signal import find_peaks
-import ase.io
-import networkx as nx
+"""This module present auxiliar function for cluster_analysis file"""
+
 import logging
+import sys
+import ase.io
+import numpy as np
+from sklearn.cluster import DBSCAN
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(filename='/home/johnatan/quandarium_module.log',
+                    level=logging.INFO)
+logging.info('The logging level is INFO')
 
+
+def comp_minmaxbond(atom1, atom2):
+    """For the atoms 1 and 2, it return the max and min bond distances.
+    Parameters
+    ----------
+    atom1, atom2: string.
+                  A string with the atoms chemical elements symbol.
+    Return
+    ------
+    minmax: list with two values.
+            A list with the minimun and maximun distance bewteen two atoms to
+            to consider they bounded.
+    """
+
+    conections = np.array([['H', 'H', 0.70, 1.19],
+                           ['C', 'H', 0.90, 1.35],
+                           ['C', 'C', 1.17, 1.51],
+                           ['Fe', 'H', 1.2, 1.99],
+                           ['Fe', 'C', 1.2, 2.15],
+                           ['Fe', 'Fe', 2.17, 2.8],
+                           ['Ni', 'H', 1.2, 1.98],
+                           ['Ni', 'C', 1.2, 2.08],
+                           ['Co', 'H', 1.2, 1.91],
+                           ['Ni', 'Ni', 2.07, 2.66],
+                           ['Co', 'C', 1.2, 2.20],
+                           ['Co', 'Co', 2.05, 2.63],
+                           ['Cu', 'Cu', 2.15, 2.76],
+                           ['Cu', 'C', 1.2, 2.14],
+                           ['Zr', 'O', 1.1, 2.7],
+                           ['Cu', 'H', 1.2, 1.98],
+                           ['Ce', 'O', 1.1, 2.7],
+                           ['O', 'O', 1.1, 2.7],
+                           ['Ce', 'Ce', 1.1, 2.7],
+                           ['Zr', 'Zr', 1.1, 2.7],
+                           ['Zr', 'Ce', 1.1, 2.7]])
+    for info in conections:
+        if (atom1 in info[0:2]) and (atom2 in info[0:2]):
+            result = info[2:]
+    return result
+
+
+def comp_gaussian(x, mu, sig):
+    """Returns the valeues of a normalized gaussian (sig=sigma, mean=mu)
+    over the values of x.
+    Parameters
+    ----------
+    mu, sig: floats.
+             Parameters of the gaussian function.
+    x: numpy array (n,) shaped.
+       Values to evaluate the normalized gaussian function.
+
+    Retunr
+    ------
+    gaussian_of_x: np.array of lengh = len(x).
+                   Values of the gaussian for the values in x.
+    """
+    return 1./(np.sqrt(2.*np.pi)*sig)*np.exp(-np.power((x - mu)/sig, 2.)/2)
+
+
+def comp_pij_classed(pij, is_surface, cutoff):
+    """It return the conectivity matrix considering only bounds between surface
+    atoms.
+    Parameters
+    ----------
+    pij: numpy array of floats, (n,n) shaped.
+         Matrix of conectivity between atoms.
+    is_surface: numpy array of boolean of len n.
+                Array with boolean indicating if the i-th atom is belongs to
+                the surface.
+    cutoff: float > 0.
+            Cutoff index to be considered as a bound.
+
+    Return
+    ------
+    matrix_surface_bond: numpy array of boolean, (n,n) shaped.
+                         Matrix indicating the surface atoms conecetivity.
+    """
+    ecn_bounded_ones = np.array(pij >= cutoff, dtype=int)
+    is_surface_ones = np.array(is_surface, dtype=int)
+    matrix_surface_bond = np.array((ecn_bounded_ones * is_surface_ones).T
+                                   * is_surface_ones, dtype=bool)
+    return matrix_surface_bond
+
+
+def comp_pij_maxdamped(dij, ori, pij_max):
+    """Compute all the conective index pij with a dumping"""
+    exp_arg = (1 - (dij/(ori.reshape(-1, 1) + ori.reshape(1, -1)))**6
+               - (dij/3.5)**4)
+    return np.exp(exp_arg)*pij_max
+
+
+def comp_aveabs(values):
+    """It meansure the average of the absolute values
+    Example
+    -------
+    >>> old = [1.21, 1.32, 1.23]
+    >>> new = [1.20, 1.33, 1.24]
+    >>> ave_abs(old-new)
+    0.01
+    """
+    return np.average(np.abs(values))
+
+def comp_roptl2(ori, dij, pij):
+    """Compute the difference between ori + orj and the dij of the bonded
+    atoms (pij) with a l2 norm."""
+    ori_sum_orj = ori.reshape([1, -1]) + ori.reshape([-1, 1])
+    return np.sum(((dij - ori_sum_orj)*pij)**2)
 
 def cost_l2(ori, dij, pij):
     """L2 cost function for the difference between sum of two atoms radii and
@@ -50,20 +150,53 @@ def cost_l2(ori, dij, pij):
     return l2cost
 
 
-def bag2string(bag):
-    """It print the data from bags.
+def arr2bag(nparray):
+    """It convert a numpy array to a bag.
     Parameters
     ----------
-    bag: np.array of lengh n.
-         It contains the values which will be converted in the string format.
+    nparray: np.array or a list.
+             It contains the values which will be converted in the string
+             format.
 
     Return
     ------
-    bagstring: string
-               The values of bag as in the correct string format.
+    bagstring: str.
+               The string with the nparray info in the bagformat.
     """
 
-    return '[' + ','.join(np.array(bag, dtype=str)) + ']'
+    if isinstance(nparray, np.ndarray):
+        bagstring = '[' + ','.join(str(row) for row in
+                                   nparray.tolist()).replace(' ', '') + ']'
+    if isinstance(nparray, list):
+        bagstring = '[' + ','.join(str(row) for row in nparray
+                                   ).replace(' ', '') + ']'
+
+    return bagstring
+
+
+def bag2arr(bagstring, dtype=''):
+    """It convert a bagstring to numpy array.
+    Parameters
+    ----------
+    bagstring: str.
+               The string with the nparray info in the bagformat.
+    dtype: a type (optional, default='' is the numpy interpretation).
+           The type of information in numpy array.
+
+    Return
+    ------
+    nparray: np.array or a list.
+             It contains the values which will be converted in the string
+             format.
+    """
+
+    if dtype:
+        nparray = eval('np.array(' + bagstring + ', dtype=dtype)')
+    else:
+        nparray = eval('np.array(' + bagstring + ')')
+
+    return nparray
+
 
 
 def changesymb(chemical_symbols, changes, condition=None):
@@ -124,18 +257,18 @@ def RegRDS_set(sampling_distance, N):
     N: intiger grater than zero."""
 
     logging.debug("Initializing RegRDS_set function!")
-    logging.debug("sampling_distance: " + str(sampling_distance))
-    logging.debug("N: " + str(N))
+    logging.debug("sampling_distance: {}".format(str(sampling_distance)))
+    logging.debug("N: {}".format(str(N)))
 
     if not sampling_distance > 0:
         logging.error("sampling_distance must be higher than zero! Aborting...")
         sys.exit(1)
 
-    if (type(N) != int) or (N <= 0):
+    if (not isinstance(N,int)) or (N <= 0):
         logging.error("N must be an intiger grater than zero! Aborting...")
         sys.exit(1)
 
-    cart_coordinates=[]
+    cart_coordinates = []
     r = 1
     Ncount = 0
     a = 4. * np.pi * r**2 / N
@@ -156,14 +289,14 @@ def RegRDS_set(sampling_distance, N):
             z = sampling_distance * np.cos(theta)
             cart_coordinates.append([x,y,z])
     cart_coordinates = np.array(cart_coordinates)
-    logging.info("Final quanity of points in the radial grid: "
+    logging.debug("Final quanity of points in the radial grid: "
                  + str(len(cart_coordinates)))
 
     logging.debug("RegRDS_set function finished sucsessfuly!")
     return cart_coordinates
 
 
-def writing_points_xyz(file_name, positions):
+def write_points_xyz(file_name, positions):
     """Write positions, a list or array of R3 points, in a xyz file file_named.
     Several softwares open xyz files, such as Avogadro and VESTA
     In the xyz file all the atoms are H.
@@ -288,7 +421,7 @@ def large_surfaces_index(surface_dots_positions, eps):
 
     logging.debug("Initializing remove_pseudo_surfaces function!")
 
-    if (isinstance(surface_dots_positions, np.ndarray)
+    if (not isinstance(surface_dots_positions, np.ndarray)
             or (np.shape(surface_dots_positions)[1] != 3)
             or isinstance(surface_dots_positions[0][0], bool)):
         logging.error("surface_dots_positions must be a (n,3) shaped np.array.\
