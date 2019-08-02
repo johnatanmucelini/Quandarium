@@ -111,7 +111,9 @@ def find(code_or_file, path_to_start_the_search='.', recursivity=True):
         for folder in list_with_all_calculations_folder:
             logging.debug('    ' + folder)
 
-    logging.debug('The function finished sucsessfuly!')
+    logging.info('Folders founded:')
+    for i in list_with_all_calculations_folder:
+        logging.info('    {}'.format(i))
 
     # It must be the full name of the path, without abbreviations!
     return list_with_all_calculations_folder

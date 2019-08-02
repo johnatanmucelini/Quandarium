@@ -10,6 +10,38 @@ logging.basicConfig(filename='/home/johnatan/quandarium_module.log',
                     level=logging.INFO)
 logging.info('The logging level is INFO')
 
+class Log(object):
+    def write(self, msg):
+        logging.error("NUMPY floating-point error")
+Logging_function_np = Log()
+np.seterr(all='log')
+np.seterrcall(Logging_function_np)
+
+def checkmissingkeys(keys, dictlist, massange):
+    """It return the missing keys of a dictionary or list"""
+    missingkeyslist = []
+    for key in keys:
+        if key not in dictlist:
+            missingkeyslist.append(key)
+    if missingkeyslist:
+        print("Error: " + massange + ': {}'.format(str(missingkeyslist)))
+        logging.error("Error: " + massange + ': {}'.format(str(
+            missingkeyslist)))
+        sys.exit(1)
+    return
+
+def logcolumns(lvl, massange, pd_df):
+    lvldict = {'critical': logging.CRITICAL,
+               'error': logging.ERROR,
+               'warning': logging.WARNING,
+               'info': logging.INFO,
+               'debug': logging.DEBUG,
+               'notset': logging.NOTSET}
+
+    logging.log(lvldict[lvl], '{}'.format(massange))
+    for index, column in enumerate(pd_df.columns.to_list()):
+        logging.log(lvldict[lvl], '{:>4d} : {}'.format(index, column))
+
 
 def comp_minmaxbond(atom1, atom2):
     """For the atoms 1 and 2, it return the max and min bond distances.
@@ -36,17 +68,19 @@ def comp_minmaxbond(atom1, atom2):
                            ['Ni', 'Ni', 2.07, 2.66],
                            ['Co', 'C', 1.2, 2.20],
                            ['Co', 'Co', 2.05, 2.63],
-                           ['Cu', 'Cu', 2.15, 2.76],
+                           ['Cu', 'Cu', 1.5, 2.76],
                            ['Cu', 'C', 1.2, 2.14],
-                           ['Zr', 'O', 1.1, 2.7],
                            ['Cu', 'H', 1.2, 1.98],
+                           ['Zr', 'O', 1.1, 2.7],
                            ['Ce', 'O', 1.1, 2.7],
                            ['O', 'O', 1.1, 2.7],
                            ['Ce', 'Ce', 1.1, 2.7],
                            ['Zr', 'Zr', 1.1, 2.7],
                            ['Zr', 'Ce', 1.1, 2.7]])
     for info in conections:
-        if (atom1 in info[0:2]) and (atom2 in info[0:2]):
+        if ((atom1 in info[0]) and (atom2 in info[1])) or ((atom1 in info[1])
+                                                           and
+                                                           (atom2 in info[0])):
             result = info[2:]
     return result
 
@@ -112,11 +146,68 @@ def comp_aveabs(values):
     """
     return np.average(np.abs(values))
 
+
+def logistic(dij, ri, k):
+    rij = ri.reshape(1, -1) + ri.reshape(-1, 1)
+    return 1./(1. + np.exp(k*(dij - rij)))
+
+
+def comp_rs(rs, dij, k, R):
+    """Cost function optimized in ecn_rsopt function."""
+    rcut = rs[:int(len(rs)/2)]
+    ori = rs[int(len(rs)/2):]
+
+    ew = 0.005
+    ewe = 0.000
+    ewd = 1 - ewe
+
+    rw = 1 - ew
+    rwR = 0.57
+    rwd = 0.4
+    rwc = 1 - rwR - rwd
+
+    pij = logistic(dij, rcut, k)
+    pijsum = np.sum(pij)
+
+    # ecn costs
+    ecn = np.sum(pij, axis=1)
+    ecn_cost = ew * ewe * np.average(np.exp(-ecn))  # size invariant
+    ecndump_cost = ew * ewd * np.average(ecn**(-1))  # size invariant
+
+    # r costs
+    ori_sum_orj = ori.reshape([1, -1]) + ori.reshape([-1, 1])
+    rdij_cost = rw * rwd * np.sum(((dij - ori_sum_orj)**2)*pij)/pijsum
+
+    # ori_minus_orj = ori.reshape([1, -1]) - ori.reshape([-1, 1])
+    # Ri_minus_Rj = R.reshape([1, -1]) - R.reshape([-1, 1])
+    # rR_cost = rw * rwR * np.sum(10**(-(ori_minus_orj
+    #                                    - Ri_minus_Rj)**2)*pij)/pijsum
+
+    rR_cost = rw * rwR * np.average((ori - R)**2)
+
+    rrcut_cost = rw * rwc * np.sum(10**(-(ori + rcut)))
+
+    total = ecn_cost + ecndump_cost + rdij_cost + rR_cost + rrcut_cost
+
+    # print('{:2.2f}    {:2.2f}:      {:2.2f}        {:2.2f}      {:2.2f}    '
+    #       '   {:2.2f}       {:2.2f}'.format(np.average(ecn), total,
+    #                                         100*rdij_cost/total,
+    #                                         100*rR_cost/total,
+    #                                         100*rrcut_cost/total,
+    #                                         100*ecn_cost/total,
+    #                                         100*ecndump_cost/total))
+    # print('av_ecn,  total,   rdij_cost ,  rR_cost,  rrcut_cost,  ecn_cost, '
+    #       '  ecndump_cost    rcutori_cost')
+
+    return total
+
+
 def comp_roptl2(ori, dij, pij):
     """Compute the difference between ori + orj and the dij of the bonded
     atoms (pij) with a l2 norm."""
     ori_sum_orj = ori.reshape([1, -1]) + ori.reshape([-1, 1])
-    return np.sum(((dij - ori_sum_orj)*pij)**2)
+    #return np.sum(((dij - ori_sum_orj)*pij)**2)
+    return np.sum(((dij - ori_sum_orj)**2)*pij)
 
 def cost_l2(ori, dij, pij):
     """L2 cost function for the difference between sum of two atoms radii and
@@ -167,9 +258,12 @@ def arr2bag(nparray):
     if isinstance(nparray, np.ndarray):
         bagstring = '[' + ','.join(str(row) for row in
                                    nparray.tolist()).replace(' ', '') + ']'
-    if isinstance(nparray, list):
+    elif isinstance(nparray, list):
         bagstring = '[' + ','.join(str(row) for row in nparray
                                    ).replace(' ', '') + ']'
+    else:
+        print("ERRO: the argument should be a array or list."
+              "A {} was given.".format(type(nparray)))
 
     return bagstring
 
@@ -189,6 +283,13 @@ def bag2arr(bagstring, dtype=''):
              It contains the values which will be converted in the string
              format.
     """
+    #C='C'
+    #H='H'
+    #Cu='Cu'
+    #Fe='Fe'
+    #Co='Co'
+    #Ni='Ni'
+    nan = np.nan
 
     if dtype:
         nparray = eval('np.array(' + bagstring + ', dtype=dtype)')
@@ -261,11 +362,11 @@ def RegRDS_set(sampling_distance, N):
     logging.debug("N: {}".format(str(N)))
 
     if not sampling_distance > 0:
-        logging.error("sampling_distance must be higher than zero! Aborting...")
+        logging.error("ERROR: sampling_distance must be higher than zero!")
         sys.exit(1)
 
-    if (not isinstance(N,int)) or (N <= 0):
-        logging.error("N must be an intiger grater than zero! Aborting...")
+    if (not isinstance(N, int)) or (N <= 0):
+        logging.error("ERROR: N must be an intiger grater than zero!")
         sys.exit(1)
 
     cart_coordinates = []
@@ -276,21 +377,21 @@ def RegRDS_set(sampling_distance, N):
     Mtheta = int(round(np.pi/d))
     dtheta = np.pi / Mtheta
     dphi = a / dtheta
-    logging.debug("Mtheta: " + str(Mtheta))
-    for m in range(0, Mtheta ) :
-        theta = np.pi *( m + 0.5 ) / Mtheta
-        Mphi = int(round(2 *np.pi * np.sin(theta) / dphi ))
-        logging.debug("Mtheta: " + str(Mphi))
-        for n in range( 0 , Mphi ) :
-            phi = 2* np.pi * n / Mphi
+    logging.debug("Mtheta: {}".format(str(Mtheta)))
+    for m in range(0, Mtheta):
+        theta = np.pi * (m + 0.5) / Mtheta
+        Mphi = int(round(2*np.pi*np.sin(theta)/dphi))
+        logging.debug("Mphi: {}".format(str(Mphi)))
+        for n in range(0, Mphi) :
+            phi = 2 * np.pi * n / Mphi
             Ncount += 1
             y = sampling_distance * np.sin(theta) * np.cos(phi)
             x = sampling_distance * np.sin(theta) * np.sin(phi)
             z = sampling_distance * np.cos(theta)
-            cart_coordinates.append([x,y,z])
+            cart_coordinates.append([x, y, z])
     cart_coordinates = np.array(cart_coordinates)
-    logging.debug("Final quanity of points in the radial grid: "
-                 + str(len(cart_coordinates)))
+    logging.debug("Final quanity of points in the radial grid: {}".format(
+        str(len(cart_coordinates))))
 
     logging.debug("RegRDS_set function finished sucsessfuly!")
     return cart_coordinates
@@ -305,21 +406,23 @@ def write_points_xyz(file_name, positions):
     positions: a list or numpy array with the atoms positions."""
 
     logging.debug("Initializing writing_points_xyz function!")
-    logging.debug("file_name: " + str(file_name))
-    logging.debug("positions: " + str(positions))
+    logging.debug("file_name: {}".format(str(file_name)))
+    logging.debug("positions: {}".format(str(positions)))
 
-    if type(file_name) != str :
+    if not isinstance(file_name, str):
         logging.error("file_name must be a string")
         sys.exit(1)
 
     for index, element in enumerate(positions):
         if len(element) != 3:
-            logging.error("Element " + str(index) + " of positions does not" \
-                          "present three elements.")
-    if type(positions) != list : positions = np.array(positions)
+            logging.error("Element {} of positions does not present three "
+                          "elements.".format(str(index)))
+    if not isinstance(positions, list):
+        positions = np.array(positions)
 
     logging.debug("Writing points in the xyz file...")
-    ase.io.write( file_name , ase.Atoms('H'+str(len(positions)) , list(map(tuple,positions)) ))
+    ase.io.write(file_name, ase.Atoms('H'+str(len(positions)),
+                                      list(map(tuple, positions))))
     logging.debug("Finished.")
 
     logging.debug("writing_points_xyz function finished!")

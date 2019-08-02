@@ -11,17 +11,102 @@ import numpy as np
 from scipy.optimize import linear_sum_assignment
 from quandarium.analy.aux import bag2arr
 from quandarium.analy.aux import arr2bag
+from quandarium.analy.aux import logcolumns
 from quandarium.analy.mols import ecndav
+from quandarium.analy.mols import ecndav_rsopt
 from quandarium.analy.mols import ecndav_ropt
 from quandarium.analy.mols import findsc
+
 
 logging.basicConfig(filename='/home/johnatan/quandarium_module.log',
                     level=logging.INFO)
 logging.info('The logging level is INFO')
 
 
+def rec_ecndav_rsopt(pd_df, kinfo, Rinfo, positionsfeature='bag_positions',
+                     chemefeature='bag_cheme', print_convergence=False,
+                     roundpijtoecn=False):
+    """Return the effective coordination number (ecn), the average bound
+    distance (dav), the optimized radius (ropt), and the conective index matrix
+    Pij for each structure in the input pandas dataframe. See function
+    quandarium.analy.mols.ecndav_rsopt.
+
+    Parameters
+    ----------
+    pd_df: pandas.DataFrame.
+           A pandas dataframe with all the positions needed to the analysis
+    kinfo: float, np.array, or dictionary.
+           Coordination activation factor, a float will give the same factor k
+           for each possible coordination. A np.array (n,n) shaped, where n is
+           the quantity of atoms, will be consider the each entry as the k for
+           each pair of possible coordination. A dictionary will construct
+           each k factor as dict[cheme[i]] plus dict[cheme[j]].
+    Rinfo: np.array or a dict.
+           The atomic tabeled radius. If a dict, each element radius will be
+           consider as dict[cheme[i]].
+    positionsfeature: str (optional, default='bag_positions')
+                      The name of the fuature (bag type) in pd_df with
+                      cartezian positions of the atoms.
+    print_convergence: boolean, (optional, default=False).
+                       It treu, the convergency will be printed.
+    Returns
+    -------
+    combined_df: pandas.DataFrame.
+                 The combination of the input dataframe plus a dataframe with
+                 more three features:
+                 bag_ecn, bag_dav: bag of floats, (n,) shaped.
+                                   They contain the calculated ecn and dav for
+                                   each atom.
+                 bag_of_bag_pij: bag of bag of floats, (n,n) shaped.
+                                 The index of connectivity between pairs of
+                                 atoms.
+    """
+
+    print("Initializing analysis: rec_ecndav_rsopt")
+    logging.info('Initializing analysis: rec_ecndav_rsopt')
+    logging.info('kinfo: {}'.format(kinfo))
+    logging.info('Rinfo: {}'.format(Rinfo))
+    logging.info('chemefeature: {}'.format(chemefeature))
+    logging.info('positionsfeature: {}'.format(positionsfeature))
+    logging.info('roundpijtoecn: {}'.format(roundpijtoecn))
+    # logging.info('print_convergence: {}'.format(print_convergence))
+    list_bag_ecn = []
+    list_bag_dav = []
+    list_bag_ori = []
+    list_bag_pij = []
+    for index in range(len(pd_df)):
+        logging.info('    Proceding analysis of structure index {:04d}'.format(
+            index))
+        cheme = bag2arr(pd_df[chemefeature][index])
+        positions = bag2arr(pd_df[positionsfeature][index])
+        ecn, dav, ori, pij = ecndav_rsopt(positions, cheme, kinfo, Rinfo,
+                                          roundpijtoecn=roundpijtoecn)
+        #                                 print_convergence=print_convergence,
+        list_bag_ecn.append(arr2bag(ecn))
+        list_bag_dav.append(arr2bag(dav))
+        list_bag_ori.append(arr2bag(ori))
+        list_bag_pij.append(arr2bag(pij))
+        if index % 50 == 0:
+            print("    concluded %3.1f%%" % (100*index/len(pd_df)))
+    print("    concluded %3.1f%%" % (100))
+    list_of_new_features_data = [list_bag_ecn, list_bag_dav, list_bag_ori,
+                                 list_bag_pij]
+    list_of_new_features_name = ['bag_ecn_rsopt', 'bag_dav_rsopt',
+                                 'bag_ori_rsopt', 'bag_pij_rsopt']
+
+    # Creating and combinating the pandas DataFrame
+    new_df = pd.DataFrame(np.array(list_of_new_features_data).T,
+                          columns=list_of_new_features_name)
+    combined_df = pd.concat([pd_df, new_df], axis=1, sort=False)
+
+    logcolumns('info', "New columns:", new_df)
+
+    return combined_df
+
+
 def rec_ecndav_ropt(pd_df, positionsfeature='bag_positions',
-                    chemefeature='bag_cheme', print_convergence=False):
+                    chemefeature='bag_cheme', print_convergence=False,
+                    roundpijtoecn=False):
     """Return the effective coordination number (ecn), the average bound
     distance (dav), the optimized radius (ropt), and the conective index matrix
     Pij for each structure in the input pandas dataframe. See function
@@ -50,15 +135,23 @@ def rec_ecndav_ropt(pd_df, positionsfeature='bag_positions',
     """
 
     print("Initializing analysis: rec_ecndav_ropt")
+    logging.info('Initializing analysis: rec_ecndav_ropt')
+    logging.info('chemefeature: {}'.format(chemefeature))
+    logging.info('positionsfeature: {}'.format(positionsfeature))
+    logging.info('roundpijtoecn: {}'.format(roundpijtoecn))
+    logging.info('print_convergence: {}'.format(print_convergence))
     list_bag_ecn = []
     list_bag_dav = []
     list_bag_ori = []
     list_bag_pij = []
     for index in range(len(pd_df)):
+        logging.info('    Proceding analysis of structure index {:04d}'.format(
+            index))
         cheme = bag2arr(pd_df[chemefeature][index])
         positions = bag2arr(pd_df[positionsfeature][index])
         ecn, dav, ori, pij = ecndav_ropt(positions, cheme, plot_name='',
-                                         print_convergence=False)
+                                         print_convergence=print_convergence,
+                                         roundpijtoecn=roundpijtoecn)
         list_bag_ecn.append(arr2bag(ecn))
         list_bag_dav.append(arr2bag(dav))
         list_bag_ori.append(arr2bag(ori))
@@ -76,11 +169,13 @@ def rec_ecndav_ropt(pd_df, positionsfeature='bag_positions',
                           columns=list_of_new_features_name)
     combined_df = pd.concat([pd_df, new_df], axis=1, sort=False)
 
+    logcolumns('info', "New columns:", new_df)
+
     return combined_df
 
 
 def rec_ecndav(pd_df, positionsfeature='bag_positions',
-                print_convergence=False):
+               print_convergence=False):
     """Return the effective coordination number (ecn) and the average bound
     distance and the conective index matrix Pij for each structure in the input
     pandas dataframe. See function quandarium.analy.mols.ecndav.
@@ -108,11 +203,17 @@ def rec_ecndav(pd_df, positionsfeature='bag_positions',
     """
 
     print("Initializing analysis: rec_ecndav")
+    logging.info('Initializing analysis: rec_ecndav')
+    logging.info('Atomic positions bag (positionsfeature): {}'.format(
+        positionsfeature))
+    logging.info('print_convergence: {}'.format(print_convergence))
+
     list_bag_ecn = []
     list_bag_dav = []
     list_bag_pij = []
     for index in range(len(pd_df)):
-
+        logging.info('    Proceding analysis of structure index {:04d}'.format(
+            index))
         positions = eval('np.array(' + pd_df[positionsfeature][index] + ')')
         ecn, dav, pij = ecndav(positions, print_convergence=print_convergence)
         list_bag_ecn.append(arr2bag(ecn))
@@ -215,28 +316,43 @@ def rec_findsc(pd_df, adatom_radius, positionsfeature='bag_positions',
     """
 
     print("Initializing analysis: rec_findsc")
+    logging.info('    Initializing analysis: rec_findsc')
+    logging.info('    Proceding analysis with {} as column {}'.format(
+        davradius, davraddiifeature))
+    logging.info('    Positions from column {}'.format(positionsfeature))
+    logging.info('    ssamples: {}'.format(ssamples))
+    logging.info('    return_expositions: {}'.format(return_expositions))
+    logging.info('    print_surf_properties: {}'.format(print_surf_properties))
+    logging.info('    remove_is: {}'.format(remove_is))
+
     list_is_surface = []
     list_exposition = []
-    list_bag_pij = []
     for index in range(len(pd_df)):
-        positions = eval('np.array(' + pd_df[positionsfeature][index] + ')')
+        logging.info('    Proceding analysis of structure index {:04d}'.format(
+            index))
+        positions = bag2arr(pd_df[positionsfeature][index])
         if davradius == 'dav':
-            atomic_radii = eval('np.array(' + pd_df[davraddiifeature][index]
-                                + ')')/2
+            atomic_radii = bag2arr(pd_df[davraddiifeature][index])/2
         if davradius == 'radii':
-            atomic_radii = eval('np.array(' + pd_df[davraddiifeature][index]
-                                + ')')
+            # print(pd_df[davraddiifeature][index])
+            # print(type(pd_df[davraddiifeature][index]))
+            # print(bag2arr(pd_df[davraddiifeature][index]))
+            # print(type(bag2arr(pd_df[davraddiifeature][index])))
+            atomic_radii = bag2arr(pd_df[davraddiifeature][index])
         is_surface, exposition = findsc(positions, atomic_radii,
                                         adatom_radius, remove_is=remove_is,
-                                        ssamples=ssamples, writw_sp=True,
+                                        ssamples=ssamples, writw_sp=False,
                                         return_expositions=return_expositions,
                                         print_surf_properties=print_surf_properties,
                                         sp_file="surface_points.xyz")
         list_is_surface.append(arr2bag(is_surface))
         list_exposition.append(arr2bag(exposition))
+        logging.info('    Proceding analysis of index {}'.format(index))
         if index % 50 == 0:
-            print("    concluded %3.1f%%" % (100*index/len(pd_df)))
-    print("    concluded %3.1f%%" % (100))
+            percentage = index*100./len(pd_df)
+            logging.info('    concluded {:>5.1f}%%'.format(percentage))
+            print("    concluded {:>5.1f}".format(percentage))
+    print("    concluded {:>5.1f}%%".format(100.))
     list_of_new_features_data = [list_is_surface, list_exposition]
     list_of_new_features_name = ['bag_issurf', 'bag_exposition']
 
@@ -245,12 +361,74 @@ def rec_findsc(pd_df, adatom_radius, positionsfeature='bag_positions',
                           columns=list_of_new_features_name)
     combined_df = pd.concat([pd_df, new_df], axis=1, sort=False)
 
+    logcolumns('info', "New columns: ", new_df)
+
     return combined_df
 
 
-def class_from_svalues(pd_df, bag, classesbasen='', classesvals='',
-                         classesvalsn='', add_ones=True):
-    """It take classes from specific values of a single feature bag:"""
+def class_from_svalues(pd_df, bags, bagsvals, new_class_name, operationsonbags='', addqtn=False):
+    """It take a class for atoms that present specific feature values in bags.
+    if addqtn is True: new_reg_name = new_class_name.replace('bag_','reg_qtn_')
+    """
+
+    print("Initializing class_from_svalues.")
+    logging.info("Initializing class_from_svalues.")
+    logging.info("bags: {}".format(str(bags)))
+    logging.info("bagsvals: {}".format(str(bagsvals)))
+    logging.info("new_class_name: {}".format(str(new_class_name)))
+    logging.info("operationsonbags: {}".format(str(operationsonbags)))
+    logging.info("addqtn: {}".format(str(addqtn)))
+
+    if operationsonbags == '':
+        operationsonbags = []
+        for bag in bags:
+            operationsonbags.append('')
+        logging.info("automaticaly generated operationsonbags: {}".format(
+            str(operationsonbags)))
+
+    # Verificando quais bags não estão cheias
+    bagssize = len(bag2arr(pd_df[bags[0]][0], dtype=str))
+    for bag in bags:
+        for sampleind in range(len(pd_df)):
+            data = bag2arr(pd_df[bag][sampleind], dtype=str)
+            if len(data) != bagssize:  # problem...
+                print(sampleind, bag, data)
+
+    list_of_new_classes_data = []
+    list_of_new_classes_name = []
+    new_class_data = []
+    for sampleind in range(len(pd_df)):
+        sampleclassdata = np.ones(bagssize, dtype=bool)
+        for bag, val, operation in zip(bags, bagsvals, operationsonbags):
+            bagdata = bag2arr(pd_df[bag][sampleind])
+            if operation == '':
+                sampleclassdataaux = bagdata == val
+            else:
+                sampleclassdataaux = operation(bagdata) == val
+            sampleclassdata = np.logical_and(sampleclassdata,
+                                             sampleclassdataaux)
+        new_class_data.append(arr2bag(sampleclassdata))
+    list_of_new_classes_data.append(new_class_data)
+    list_of_new_classes_name.append(new_class_name)
+
+    if addqtn:
+        new_reg_name = new_class_name.replace('bag_', 'reg_qtn_')
+        classqtndata = []
+        for ind in range(len(pd_df)):
+            classqtndata.append(sum(bag2arr(list_of_new_classes_data[0][ind],
+                                            dtype=int)))
+        list_of_new_classes_name.append(new_reg_name)
+        list_of_new_classes_data.append(classqtndata)
+
+    # criando um pd.DataFrame que tem todos os dados e nome dos mesmos
+    new_df = pd.DataFrame(np.array(list_of_new_classes_data).T,
+                          columns=list_of_new_classes_name)
+
+    combined_df = pd.concat([pd_df, new_df], axis=1, sort=False)
+
+    logcolumns('info', "New columns: ", new_df)
+
+    return combined_df
 
 
 def classes_from_dvalues(pd_df, bags, classesbasen='', classesvals='',
@@ -294,10 +472,20 @@ def classes_from_dvalues(pd_df, bags, classesbasen='', classesvals='',
                  the new classes.
     """
 
+    print("Initializing classes_from_dvalues.")
+    logging.info("Initializing classes_from_dvalues.")
+    logging.info("bags: " + str(bags))
+    logging.info("classesbasen: " + str(classesbasen))
+    logging.info("classesvals: " + str(classesvals))
+    logging.info("classesvalsn: " + str(classesvalsn))
+    logging.info("add_ones: " + str(add_ones))
+
     if classesbasen == '':
         classesbasen = []
         for bag in bags:
             classesbasen.append(bag.replace('bag_', ''))
+        logging.info("automaticaly generated classesbasen: "
+                     + str(classesbasen))
 
     if classesvals == '':
         classesvals = []
@@ -306,6 +494,7 @@ def classes_from_dvalues(pd_df, bags, classesbasen='', classesvals='',
             jointedbagaux = jointedbag.replace('[', '').replace(']', '')
             unique_vals = np.unique(jointedbagaux.split(',')).tolist()
             classesvals.append(unique_vals)
+        logging.info("automaticaly generated classesvals: " + str(classesvals))
 
     if classesvalsn == '':
         classesvalsn = []
@@ -314,18 +503,13 @@ def classes_from_dvalues(pd_df, bags, classesbasen='', classesvals='',
             for val in unique_vals:
                 valn = str(val).replace('.', '')
                 classesvalsn[-1].append(valn)
+        logging.info("automaticaly generated classesvalsn: "
+                     + str(classesvalsn))
 
     # ao longo da funcao serao adicionado os novos dados e nomes deles nessas
     # duas listas:
     list_of_new_classes_name = []
     list_of_new_classes_data = []
-
-    # Verificando quais bags não estão cheias
-    for sampleind in range(len(pd_df)):
-        for bag in bags:
-            data = bag2arr(pd_df[bag][sampleind], dtype=str)
-            if len(data) != 45:  # problem...
-                print(sampleind, bag, data)
 
     for bag, classbasen, vals, valsn in zip(bags, classesbasen, classesvals,
                                             classesvalsn):
@@ -356,6 +540,9 @@ def classes_from_dvalues(pd_df, bags, classesbasen='', classesvals='',
                           columns=list_of_new_classes_name)
 
     combined_df = pd.concat([pd_df, new_df], axis=1, sort=False)
+
+    logcolumns('info', "New columns: ", new_df)
+
     return combined_df
 
 
@@ -384,14 +571,25 @@ def classes_mixing(pd_df, classes1, classes2, classesn1='', classesn2=''):
                  the new classes.
     """
 
+    print('Initializing classes_mixing.')
+    logging.info('Initializing classes_mixing.')
+    logging.info('classes1: ' + str(classes1))
+    logging.info('classesn1: ' + str(classesn1))
+    logging.info('classes2: ' + str(classes2))
+    logging.info('classesn2: ' + str(classesn2))
+
+
     if classesn1 == '':
         classesn1 = []
         for class1 in classes1:
             classesn1.append(class1.replace('bag_', ''))
+        logging.info('automaticaly generated classesn1: ' + str(classesn1))
+
     if classesn2 == '':
         classesn2 = []
         for class2 in classes2:
             classesn2.append(class2.replace('bag_', ''))
+        logging.info('automaticaly generated classesn2: ' + str(classesn2))
 
     # ao longo da funcao serao adicionado os novos dados e nomes deles nessas
     # duas listas:
@@ -424,4 +622,7 @@ def classes_mixing(pd_df, classes1, classes2, classesn1='', classesn2=''):
                           columns=list_of_new_features_name)
 
     combined_df = pd.concat([pd_df, new_df], axis=1, sort=False)
+
+    logcolumns('info', "New columns: ", new_df)
+
     return combined_df

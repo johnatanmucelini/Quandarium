@@ -10,11 +10,12 @@ import re
 import pandas as pd
 import numpy as np
 from quandarium.analy.aux import arr2bag
-from quandarium.analy.aux import bag2arr
 
 logging.basicConfig(filename='/home/johnatan/quandarium_module.log',
                     level=logging.INFO)
 logging.info('The logging level is INFO')
+
+
 
 
 def extractor_fhi(outfile='aims.out'):
@@ -82,15 +83,26 @@ def extractor_fhi(outfile='aims.out'):
             break
 
     # xyz and chemical symbols
-    for index, line in enumerate(reversed(data)):
-        if re.findall('.*Final atomic structure:.*', line):
-            first_atom_line = -index+1
-            break
     for line in data:
         if re.findall('.*Number of atoms.*', line):
             number_of_atoms = int(re.search('.*Number of atoms.*',
                                             line).string.split()[5])
             break
+    xyzfound = False
+    for index, line in enumerate(reversed(data)):
+        if re.findall('.*Final atomic structure:.*', line):
+            first_atom_line = -index+1
+            xyzfound = True
+            break
+    if not xyzfound:
+        for index, line in enumerate(data):
+            if re.findall('Updated atomic structure:', line):
+                print('error')
+        for index, line in enumerate(data):
+            if re.findall('^\s+atom(\s+(|-)\d\.\d+){3}\s+\w+', line):
+                first_atom_line = index
+                break
+
     positions = []
     chemical_elements = []
     for line in data[first_atom_line:first_atom_line+number_of_atoms]:
@@ -137,7 +149,6 @@ def extractfhi_fromfolders(folders, output_file_name='aims.out', csv_name=''):
     list_of_new_features_data = []
     list_of_new_features_name = []
 
-
     # getting properties from  extractor_fhi
     gap_list = []
     homo_list = []
@@ -148,7 +159,9 @@ def extractfhi_fromfolders(folders, output_file_name='aims.out', csv_name=''):
     cheme_list = []
     chemf_list = []
     print("Initializing data extraction:")
+    logging.info("Initializing data extraction:")
     for index, folder in enumerate(folders):
+        logging.info("    {}".format(folder))
         gap, homo, lumo, mag, etot, positions, cheme, chemf = extractor_fhi(
             folder + '/aims.out')
         if index % 50 == 0:

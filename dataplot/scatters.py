@@ -2,11 +2,12 @@
 
 import logging
 import os
+import sys
 import seaborn as sns
 import numpy as np
 import pandas as pd
 from matplotlib import rc                         # For laxtex in ploting
-from matplotlib.ticker import FormatStrFormatter  # For precise def tick labels
+from matplotlib.ticker import FormatStrFormatter  # For tick labels
 import matplotlib
 import matplotlib.pylab as plt
 from matplotlib.legend import Legend
@@ -15,6 +16,7 @@ from scipy.stats import spearmanr
 from scipy import stats as scipystats
 from sklearn.utils import resample
 from npeet import entropy_estimators
+from quandarium.analy.aux import checkmissingkeys
 rc('text', usetex=True)
 rc('text.latex', preamble=r'\usepackage{mhchem} \usepackage{amsmath} \usepackage{amsfonts} \usepackage{mathtools} \usepackage[T1]{fontenc} ')
 
@@ -22,15 +24,26 @@ logging.basicConfig(filename='/home/johnatan/quandarium_module.log',
                     level=logging.WARNING)
 logging.info('The logging level is INFO')
 
+
 def data2rownp(data):
     """It convert a data (pd.series, np.array, and list) to a flat
-    np.array."""
+    np.array. It it is none of then, an error will occur"""
     if isinstance(data, pd.core.series.Series):
         rownp = data.values.flatten()
-    if isinstance(data, np.ndarray):
+    elif isinstance(data, np.ndarray):
         rownp = data.flatten()
-    if isinstance(data, list):
+    elif isinstance(data, list):
         rownp = np.array(data).flatten()
+    elif isinstance(data, pd.DataFrame):
+        print('WARNING: you can not transform a pandas.DataFrame in a '
+              'numpy row array. Tip: check if there are two columns with '
+              'the name {} in your pandas.DataFrame.)'.format(
+                 data.columns[0]))
+        logging.error('WARNING: you can not transform a pandas.DataFrame '
+                      'in a numpy row array. Tip: check if there are two '
+                      'columns with the name {} in your '
+                      'pandas.DataFrame.)'.format(data.columns[0]))
+        sys.exit(1)
     return rownp
 
 
@@ -285,6 +298,17 @@ def bstnullrs(data_x, data_y, alpha=0.05, nresamp=2000, hist=''):
     True
     """
 
+    data_x = data2rownp(data_x)
+    data_y = data2rownp(data_y)
+    nan_data = np.logical_or(np.isnan(data_y), np.isnan(data_x))
+    real_data = nan_data == False
+    data_x = data_x[real_data]
+    data_y = data_y[real_data]
+    if len(data_x) == 0:
+        return True, 1.0
+    if (np.all(data_y == data_y[0]) or np.all(data_x == data_x[0])):
+        return True, 1.0
+
     data_x = data2rownp(data_x)  # to guarantee that data is a 1D np.array
     data_y = data2rownp(data_y)
     rs = spearmanr(data_x, data_y)[0]  # original data correlation
@@ -348,16 +372,6 @@ def bstnullrs(data_x, data_y, alpha=0.05, nresamp=2000, hist=''):
 
     return reject_null, pvalue
 
-    # Changing magnetizations
-    # data_change_signal_mags = np.array(pd_df.reg_mag_moment_final > 0,
-    #                                    dtype=int )*2 -1
-    # for nome_da_coluna_para_alterar in [ nome_da_coluna for nome_da_coluna in
-    # pd_df.columns if ('mag' in nome_da_coluna) and ('bag'
-    # not in nome_da_coluna) ]:
-    #     exec( "pd_df." + nome_da_coluna_para_alterar + " = pd_df. " +
-    # nome_da_coluna_para_alterar + "* data_change_signal_mags" )
-
-
 def comp_spearman(data_u, data_v, print=False):
     data_u = data2rownp(data_u)
     data_v = data2rownp(data_v)
@@ -373,7 +387,7 @@ def comp_spearman(data_u, data_v, print=False):
         result = 0.
     elif (all(real_data_u == real_data_u[0]) or all(real_data_v == real_data_v[0])):
         result = 0.
-    else :
+    else:
         result = spearmanr(real_data_u, real_data_v)[0]
     return result
 
@@ -406,7 +420,9 @@ def scatter_colorbar(pd_df, mainprop, features, splitfeature, fdict='',
     """
 
     print("Initializing plot")
+    logging.info("Initializing plot")
 
+    # Columns:
     if cdict == '':
         if x_labels == '':
             x_labels = []
@@ -417,12 +433,17 @@ def scatter_colorbar(pd_df, mainprop, features, splitfeature, fdict='',
     else:
         unique_vals = np.unique(pd_df[splitfeature])
         x_labels = [cdict[val] for val in unique_vals]
+
+    # Features:
+    checkmissingkeys(features, pd_df.columns.to_list(), "the "
+        "pandas.DataFrame does not present the following features")
     if fdict == '':
         if y_labels == '':
             y_labels = []
             for feature in features:
                 y_labels.append(feature.replace('reg_', '').replace('_', '-'))
     else:
+        checkmissingkeys(features, fdict, "Missing labels in dict fdict")
         y_labels = [fdict[feature] for feature in features]
 
     grouped = pd_df.groupby(splitfeature)
@@ -451,10 +472,10 @@ def scatter_colorbar(pd_df, mainprop, features, splitfeature, fdict='',
                                        nresamp=nresamp, alpha=alpha)
                 null_test[findex, gindex] = test
                 null_test_pval[findex, gindex] = pval
-                alt_test[findex, gindex] = bstaltrs(group[feature],
-                                                    group[mainprop],
-                                                    nresamp=nresamp,
-                                                    alpha=alpha)
+                #alt_test[findex, gindex] = bstaltrs(group[feature],
+                #                                    group[mainprop],
+                #                                    nresamp=nresamp,
+                #                                    alpha=alpha)
             print("completed: ", findex + 1, ' of ', len(features))
 
     # Iniciando a plotagem!
@@ -497,22 +518,25 @@ def scatter_colorbar(pd_df, mainprop, features, splitfeature, fdict='',
 
             if ((not all(group[feature] == 0.0))
                     and (not all(np.isnan(group[feature])))):
-                # Linear Regresion
-                fit_fn = np.poly1d(johnatan_polyfit(group[mainprop],
-                                                    group[feature], 1))
-                # variavel auxiliar pra nao plotar o linha obtida na regressao
-                # alem dos dados do set (isso pode acontecer para as variaveis
-                # b2 onde nem todos os samples apresentam dados)
-                aux = np.array([list(group[mainprop]),
-                                fit_fn(group[mainprop])])
-                xfited_values = np.array([aux[:, aux[0].argmin()],
-                                          aux[:, aux[0].argmax()]]).T[0]
-                yfited_values = np.array([aux[:, aux[0].argmin()],
-                                          aux[:, aux[0].argmax()]]).T[1]
-                # plotando linha obtida com dados da regressao
-                axis[indf, indg].plot(xfited_values, yfited_values,
-                                      marker=None, linestyle='-',
-                                      color='k')
+                if np.sum(np.array(np.isnan(group[feature].values) == False,
+                                   dtype=bool)) > 1:
+                    # Linear Regresion
+                    fit_fn = np.poly1d(johnatan_polyfit(group[mainprop],
+                                                        group[feature], 1))
+                    # variavel auxiliar pra nao plotar o linha obtida na
+                    # regressao alem dos dados do set (isso pode acontecer para
+                    # as variaveisb2 onde nem todos os samples apresentam
+                    # dados)
+                    aux = np.array([list(group[mainprop]),
+                                    fit_fn(group[mainprop])])
+                    xfited_values = np.array([aux[:, aux[0].argmin()],
+                                              aux[:, aux[0].argmax()]]).T[0]
+                    yfited_values = np.array([aux[:, aux[0].argmin()],
+                                              aux[:, aux[0].argmax()]]).T[1]
+                    # plotando linha obtida com dados da regressao
+                    axis[indf, indg].plot(xfited_values, yfited_values,
+                                          marker=None, linestyle='-',
+                                          color='k')
                 # plotando dados da celula
                 axis[indf, indg].scatter(group[mainprop], group[feature],
                                          marker=marker[0], s=marker_size,
@@ -588,11 +612,16 @@ def scatter_colorbar(pd_df, mainprop, features, splitfeature, fdict='',
     for indf, feature in enumerate(features):
         for indg, (_, group) in enumerate(grouped):
             if not all(group[feature] == 0.0):
-               axis[indf, indg].text(0.06, 0.155,
-                                     str(round(info_plot[indf, indg], 2)),
-                                     fontsize=anotation_font_size,
-                                     transform=axis[indf, indg].transAxes,
-                                     bbox=dict(facecolor='yellow', alpha=0.1))
+                if null_test_pval[indf, indg] > 0.005:
+                    labelstr = str(round(null_test_pval[indf, indg], 2))
+                elif null_test_pval[indf, indg] > 0.:
+                    labelstr = str('{:.0E}'.format(null_test_pval[indf, indg]))
+                else:
+                    labelstr = str('<{:.0E}'.format(1./nresamp))
+                axis[indf, indg].text(0.06, 0.155, labelstr,
+                                      fontsize=anotation_font_size,
+                                      transform=axis[indf, indg].transAxes,
+                                      bbox=dict(facecolor='yellow', alpha=0.1))
 
     # Adicionando os principais captions da figura.
     fig.text(0.04, 0.524, ymatrixlabel, ha='center', rotation='vertical',
@@ -764,3 +793,16 @@ FEATURES_DICT = {
     'reg_qtn_Pt': '$N^{\\ce{Pt}}$',
     'reg_qtn_TM': '$N^{\\ce{TM}}$'
     }
+
+
+#
+#def cost(ri, dij, A, C, baserad):
+#   Rij = baserad.reshape([1, -1]) + baserad.reshape([-1, 1])
+#   rij = ri.reshape([1, -1]) + ri.reshape([-1, 1])
+#   size = len(x)
+#   act = (1-1/(1 + 2.7**(10*(dij - rij))))*(np.ones([size,size]) - np.eye(size))
+#   B=1-A
+#   partA= A*np.sum(((dij - rij)**2)*act)
+#   partB= B*np.sum(- act)
+#   return A*np.sum(((dij - rij)**2)*act) + B*np.sum(- act) + C*np.sum(((rij - Rij)**2)*act) #(1-1/(1 + 2.7**(10*(dij - x))))*(-3 + 100*(dij - x)**2)
+#optimize.minimize(cost, np.min(dij,axis=0), args=(dij,0.010,0.2,baserad), method="L-BFGS-B", bounds=((0.0, 1.7),)*len(positions), tol=1.E-7, options={"maxiter": 50, "disp": False})

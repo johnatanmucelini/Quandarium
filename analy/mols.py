@@ -23,15 +23,140 @@ from quandarium.analy.aux import comp_gaussian
 from quandarium.analy.aux import comp_pij_maxdamped
 from quandarium.analy.aux import comp_pij_classed
 from quandarium.analy.aux import comp_minmaxbond
+from quandarium.analy.aux import comp_rs
+from quandarium.analy.aux import logistic
 
 logging.basicConfig(filename='/home/johnatan/quandarium_module.log',
                     level=logging.INFO)
 logging.info('The logging level is INFO')
 np.random.seed(1234)
-    
+
+def avradius(positions, raddii, useradius=True):
+    """Return the average radius of some molecule.
+    Parameters
+    ----------
+    positions: numpy array of floats (n,3) shaped.
+               Cartezian positions of the atoms, in angstroms.
+    atomic_radii: numpy array of floats (n,) shaped.
+                  Radius of the atoms, in the same order which they appear in
+                  positions, in angstroms.
+
+    Returns
+    -------
+    average_radius: numpy float
+    """
+    if len(positions) > 1:
+        positions = positions - np.average(positions, axis=0)
+        dists = cdist(positions, positions)
+        distargmax = np.unravel_index(np.argmax(dists), dists.shape)
+        part1 = dists[distargmax[0], distargmax[1]]
+        if useradius:
+            part1 += raddii[distargmax[0]] + raddii[distargmax[1]]
+            distcenter = np.linalg.norm(positions, axis=0) + raddii
+            part2 = max(distcenter)
+        else:
+            distcenter = np.linalg.norm(positions, axis=0)
+            part2 = max(distcenter)
+        average_radius = part1/2. + part2/2.
+    else:
+        average_radius = np.nan
+    return average_radius
+
+
+def ecndav_rsopt(positions, cheme, kinfo, Rinfo, roundpijtoecn=False):
+    """Return an effective coordination number (ecn), the optimized atomic
+    radius (ori), the bond distance average (dav), and the conective index
+    matrix pij. The radius are optimized...
+
+    Parameters
+    ----------
+    positions: numpy.array, (3,n) shaped.
+               The cartezian positions of the atoms.
+    cheme : numpy.array, (n,) shaped.
+            the chemical symbols of each element.
+    kinfo : float, np.array, or dictionary.
+            Coordination activation factor, a float will give the same factor k
+            for each possible coordination. A np.array (n,n) shaped, where n is
+            the quantity of atoms, will be consider the each entry as the k for
+            each pair of possible coordination. A dictionary will construct
+            each k factor as dict[cheme[i]] plus dict[cheme[j]].
+    Rinfo : np.array or a dict.
+            The atomic tabeled radius. If a dict, each element radius will be
+            consider as dict[cheme[i]].
+    roundpijtoecn: If true the pij is rounded to calculate the ecn.
+
+    Returns
+    -------
+    ecn, dav, ori : numpy.array, (n,) shaped.
+                   They contain the calculated ecn, optimized radius, and dav
+                   for each atom.
+    pij: numpy.array, (n,n) shaped.
+         The index of connectivity between pairs of atoms.
+    """
+
+    qtna = len(positions)
+    positions = positions - np.average(positions, axis=0)
+    dij = cdist(positions, positions) + 100 * np.eye(qtna)
+
+    if isinstance(kinfo, float):
+        k = np.ones([qtna, qtna]) * kinfo
+    elif isinstance(kinfo, dict):
+        k = np.array([[kinfo[e1] + kinfo[e2] for e1 in cheme] for e2 in cheme])
+    else:
+        k = kinfo
+
+    if isinstance(Rinfo, dict):
+        R = np.array([kinfo[e1] for e1 in cheme])
+    else:
+        R = Rinfo
+
+    rs = np.zeros(qtna*2)
+    rcut_min = np.min(dij, axis=1) * 0.30
+    rcut_max = 3*rcut_min
+    bounds = []
+    # rcut
+    for ind, ce in enumerate(cheme):
+        rs[ind] = R[ind]
+        bounds.append((rcut_min[ind], rcut_max[ind]))
+    # ori
+    for ind, ce in enumerate(cheme):
+        rs[ind + len(positions)] = R[ind] * 1.9
+        bounds.append((rcut_min[ind], rcut_max[ind]))
+    bounds = tuple(map(tuple, bounds))
+    # print('{:<3}  {:^3}  {:^3}  {:^3}'.format('ce','r_min','r_max','rcut'))
+    # for ind in range(len(positions)):
+    #     print('{}   {}   {}   {}'.format(cheme[ind], bounds[ind][0],
+    #                                      bounds[ind][1], rs[ind]))
+    # print(bounds)
+
+    rs_opt = optimize.minimize(comp_rs, rs, args=(dij, k, R),
+                               bounds=bounds,
+                               method="L-BFGS-B", tol=1.E-6,
+                               options={"maxiter": 250, "disp": False})
+
+    # print('av_ecn,  total,     rdij,         rR,      rrcut,       ecn,     '
+    #       'ecndump')
+    # print('\n\n' + str(rs_opt.message) + '\n' + str(rs_opt.success) + '\n\n')
+    if not rs_opt.success:
+        logging.warning('Otimization do not converg.')
+
+    rcut = rs_opt.x[:qtna]
+    ori = rs_opt.x[qtna:]
+    pij = logistic(dij, rcut, k)
+    ecn = np.sum(pij, axis=1)
+    ecn_aux = ecn < 1.
+    print(ecn[ecn_aux == False], np.ones_like(ecn)[ecn_aux])
+    ecn_aux2 = ecn
+    ecn_aux2[ecn_aux] = 1. 
+    dav = np.sum(dij*pij, axis=1) / ecn_aux2
+    if roundpijtoecn:
+        ecn = np.sum(np.round(pij), axis=1)
+
+    return ecn, dav, ori, pij
+
 
 def ecndav_ropt(positions, chemical_symbols, plot_name='',
-                print_convergence=True):
+                print_convergence=True, roundpijtoecn=False):
     """Return the effective coordination number (ecn), the optimized atomic
     radius (ori), the bond distance average (dav), and the conective index
     matrix pij. The radius are optimized...
@@ -50,6 +175,7 @@ def ecndav_ropt(positions, chemical_symbols, plot_name='',
                It a string were provided, a plot of the dij as function of ori
                + orj will be saved in for each atom i, with name
                plot_name_i.png.
+    roundpijtoecn: If true the pij is rounded to calculate the ecn.
 
     Returns
     -------
@@ -60,8 +186,12 @@ def ecndav_ropt(positions, chemical_symbols, plot_name='',
          The index of connectivity between pairs of atoms.
     """
 
+
     if print_convergence:
+        logging.info('Initializing ECN-Ropt analysis!')
         print("Initializing ECN-Ropt analysis!")
+    else:
+        logging.debug('Initializing ECN-Ropt analysis!')
 
     if not isinstance(positions, np.ndarray) or (np.shape(positions)[1] != 3):
         print("positions must be a (n,3) shaped numpy.ndarray! Aborting...")
@@ -79,10 +209,16 @@ def ecndav_ropt(positions, chemical_symbols, plot_name='',
     ecn_pre = np.zeros_like(dij)
     ecn = np.zeros_like(dij)
 
+    # dij_max = np.zeros([qtna,qtna])
+    # for ia1, a1 in enumerate(chemical_symbols):
+    #     for ia2, a2 in enumerate(chemical_symbols):
+    #         dij_max[ia1,ia2] = comp_minmaxbond(a1, a2)[1]
+    #         print(a1, a2, dij_max[ia1,ia2], dij[ia1,ia2])
     dij_max = np.array([[comp_minmaxbond(a1, a2)[1] for a1 in chemical_symbols]
                         for a2 in chemical_symbols], dtype=float)
     pij_max = dij < dij_max
     step = 0
+    logging.debug('     Delta sum_i(abs(r_i))/N     Delta sum_i(abs(ECN_i))/N"')
     if print_convergence:
         print("     Delta sum_i(abs(r_i))/N     Delta sum_i(abs(ECN_i))/N")
     while (np.sum(np.abs(ori_pre - ori)) / len(ori) > 10E-8) or (step < 2):
@@ -91,18 +227,34 @@ def ecndav_ropt(positions, chemical_symbols, plot_name='',
             ecn_pre = ecn * 1.
         pij = comp_pij_maxdamped(dij, ori, pij_max)
         results = optimize.minimize(comp_roptl2, ori, args=(dij, pij),
-                                    bounds=((0.5, 1.7),)*len(chemical_symbols),
+                                    bounds=((0.5, 1.9),)*len(chemical_symbols),
                                     method="L-BFGS-B", tol=1.E-7,
                                     options={"maxiter": 50, "disp": False})
         ori = results.x
         ecn = np.sum(pij, axis=1)
+        parameter1 = comp_aveabs(ori_pre - ori)
+        parameter2 = comp_aveabs(ecn - ecn_pre)
+        logging.debug('    {}    {}'.format(parameter1, parameter2))
         if print_convergence:
-            print('   ', comp_aveabs(ori_pre - ori),
-                  comp_aveabs(ecn - ecn_pre))
+            print('   ', parameter1, parameter2)
         step += 1
+    if not results.success:
+        logging.error('    Final r optimiation failed! see the massange: '
+                      '{:s}'.format(results.message))
+    else:
+        logging.debug('    Final r optimization successfully finished!')
+
+    logging.debug('    Self consistence achived!')
+
+    if roundpijtoecn:
+        logging.debug('    Rounding pij and calculating ECN')
+        ecn = np.sum(np.round(pij), axis=1)
 
     # dav
     ori_sum_orj = ori.reshape([1, -1]) + ori.reshape([-1, 1])
+    # logging.info(str(chemical_symbols[np.argmin(np.sum(pij, axis=1))]) + ' '
+    #              + str(min(np.sum(pij, axis=1))) + ' '
+    #              + str(np.min(dij, axis=1)) + ' ' + str(np.sum(pij, axis=1)))
     dav = np.sum((ori_sum_orj)*pij, axis=1) / np.sum(pij, axis=1)
 
     if plot_name:
@@ -124,6 +276,11 @@ def ecndav_ropt(positions, chemical_symbols, plot_name='',
             # ecn_int[i] = np.trapz(rd_per_atom[i,0:peaks[0]],
             #                       x=xvalues[0:peaks[0]])
             plt.savefig(plot_name + '_' + str(i) + '.png')
+
+    if print_convergence:
+        logging.info('    Analysis concluded!')
+    else:
+        logging.debug('    Analysis concluded!')
 
     return ecn, dav, ori, pij
 
@@ -160,6 +317,7 @@ def ecndav(positions, print_convergence=True):
     ecn = np.zeros_like(dij)
 
     step = 0
+    logging.debug('    Delta sum_i(abs(dav_i))/N    Delta sum_i(abs(ECN_i))/N')
     if print_convergence:
         print("     Delta sum_i(abs(dav_i))/N     Delta sum_i(abs(ECN_i))/N")
     while (np.sum(np.abs(dav_pre - dav))/len(dav) > 10E-8) or (step < 2):
@@ -174,8 +332,10 @@ def ecndav(positions, print_convergence=True):
             print('   ' + str(np.sum(np.abs(dav_pre - dav)) / qtna)
                   + '  ' + str(np.sum(np.abs(ecn - ecn_pre)) / qtna))
         step += 1
+
     if print_convergence:
         print("Converged")
+        logging.debug('    Self consistence achived!')
 
     return ecn, dav, pij
 
