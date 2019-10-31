@@ -13,8 +13,6 @@ import matplotlib.pylab as plt
 from matplotlib.legend import Legend
 import matplotlib.lines as mlines
 from scipy.stats import spearmanr
-from scipy.stats import kendalltau
-from scipy.stats import pearsonr
 from scipy import stats as scipystats
 from sklearn.utils import resample
 #from npeet import entropy_estimators
@@ -38,71 +36,13 @@ def data2rownp(data):
         rownp = np.array(data).flatten()
     elif isinstance(data, pd.DataFrame):
         print('WARNING: you can not transform a pandas.DataFrame in a '
-              'numpy row array. Tip: check if there are two columns with '
-              'the name {} in your pandas.DataFrame.)'.format(
-                 data.columns[0]))
+              'numpy row array.'.format(data.columns[0]))
         logging.error('WARNING: you can not transform a pandas.DataFrame '
                       'in a numpy row array. Tip: check if there are two '
                       'columns with the name {} in your '
                       'pandas.DataFrame.)'.format(data.columns[0]))
         sys.exit(1)
     return rownp
-
-
-def tonparray(*data, dropnan=True):
-    """Converta data (pd series or non-flatten numpy array) to a flatten numpy
-    array. Droping nans by default..."""
-    if len(data) == 2:
-        data1 = data[0]
-        data2 = data[1]
-        if isinstance(data1, pd.core.series.Series):
-            data1 = data1.values.flatten()
-        elif isinstance(data1, np.ndarray):
-            data1 = data1.flatten()
-        elif isinstance(data1, list):
-            data1 = np.array(data1).flatten()
-        else:
-            print('ERROR: the type {} (for data1) is not suported in tonoparray.'.format(
-                type(data1)))
-            logging.error('ERROR: the type {} (for data1) is not suported in tonoparray.'.format(
-                type(data1)))
-        if isinstance(data2, pd.core.series.Series):
-            data2 = data2.values.flatten()
-        elif isinstance(data2, np.ndarray):
-            data2 = data2.flatten()
-        elif isinstance(data2, list):
-            data2 = np.array(data2).flatten()
-        else:
-            print('ERROR: the type {} (for data2) is not suported in tonoparray.'.format(
-                type(data2)))
-            logging.error('ERROR: the type {} (for data2) is not suported in tonoparray.'.format(
-                type(data2)))
-        if dropnan:
-            usefulldata = np.logical_and(np.isnan(data1) == False,
-                                         np.isnan(data2) == False)
-            return data1[usefulldata], data2[usefulldata]
-        else:
-            return data1, data2
-
-    if len(data) == 1:
-        data1 = data[0]
-        if isinstance(data1, pd.core.series.Series):
-            data1 = data1.values.flatten()
-        elif isinstance(data1, np.ndarray):
-            data1 = data1.flatten()
-        elif isinstance(data1, list):
-            data1 = np.array(data1).flatten()
-        else:
-            print('ERROR: the type {} is not suported in tonoparray.'.format(
-                type(data1)))
-            logging.error('ERROR: the type {} is not suported in tonoparray.'.format(
-                type(data1)))
-        if dropnan:
-            usefulldata = np.isnan(data1) == False
-            return data1[usefulldata]
-        else:
-            return data1
-
 
 
 def johnatan_polyfit(data_1, data_2, degreee):
@@ -225,7 +165,8 @@ def comp_entroy(data_u, data_v):
 
 
 def bstaltrs(data_x, data_y, alpha=0.05, nresamp=2000, hist=''):
-    """This function bootstrap the Spearaman rank correlation.
+    """This function bootstrap the Spearaman rank correlation (under the
+    alternative hipotheses).
 
     Parameters
     ----------
@@ -430,43 +371,32 @@ def bstnullrs(data_x, data_y, alpha=0.05, nresamp=2000, hist=''):
 
     return reject_null, pvalue
 
-def comp_spearman(data_u, data_v):
-    """Compute the spearmanr correlation index"""
-    data_u, data_v = tonparray(data_u, data_v)
-    if ((len(data_u) < 2) or all(data_u == data_u[0]) or all(data_v == data_v[0])):
+def comp_spearman(data_u, data_v, print=False):
+    data_u = data2rownp(data_u)
+    data_v = data2rownp(data_v)
+    nan_data = np.logical_or(np.isnan(data_u), np.isnan(data_v))
+    real_data = nan_data == False
+    real_data_u = data_u[real_data]
+    real_data_v = data_v[real_data]
+    if print:
+        print('real_data_u:', real_data_u.tolist())
+        print('real_data_v:', real_data_v.tolist())
+        print('real_data:', real_data.tolist())
+    if len(real_data_u) == 0:
+        result = 0.
+    elif (all(real_data_u == real_data_u[0]) or all(real_data_v == real_data_v[0])):
         result = 0.
     else:
-        result = spearmanr(data_u, data_v)[0]
+        result = spearmanr(real_data_u, real_data_v)[0]
     return result
 
 
-def comp_kendall(data_u, data_v):
-    """Compute the kendalltau correlation index"""
-    data_u, data_v = tonparray(data_u, data_v)
-    if ((len(data_u) < 2) or all(data_u == data_u[0]) or all(data_v == data_v[0])):
-        result = 0.
-    else:
-        result = kendalltau(data_u, data_v)[0]
-    return result
-
-
-def comp_pearson(data_u, data_v):
-    """Compute the pearsonr correlation index"""
-    data_u, data_v = tonparray(data_u, data_v)
-    if ((len(data_u) < 2) or all(data_u == data_u[0]) or all(data_v == data_v[0])):
-        result = 0.
-    else:
-        result = pearsonr(data_u, data_v)[0]
-    return result
-
-def scatter_colorbar(pd_df, mainprop, features, colsplit, celsplit,
-                     celdict, fdict='', coldict='', x_labels='', y_labels='',
-                     cblabel='Spearman Rank Correlation',
-                     xmatrixlabel='Relative Energy (eV)', xmatrixlabelr='',
-                     ymatrixlabel='Features', cbcomp=comp_spearman,
-                     figure_name='figure', cbnorm=(-1., 1.), bootstrap=False,
-                     alpha=0.25, nresamp=5000, bootstrapcutoff='',
-                     bootstraplabels=True):
+def pcolor(pd_df, mainprop, features, colsplit, celsplit, celdict, fdict='',
+           coldict='', x_labels='', y_labels='',
+           cblabel='Spearman Rank Correlation',
+           xmatrixlabel='Relaive Energy (eV)', xmatrixlabelr='',
+           ymatrixlabel='Features', cbcomp=comp_spearman, figure_name='figure',
+           cbnorm=(-1., 1.), bootstrap=False, alpha=0.10, nresamp=5000):
     """This function plot a lot of data
     infocb 'spearman' , 'kendall' , 'pearson' , 'mi' , 'entropy'
     mainprop: str.
@@ -536,9 +466,9 @@ def scatter_colorbar(pd_df, mainprop, features, colsplit, celsplit,
     # Correlation Bootstrap
     if bootstrap:
         print('Bootstrap analysis')
-        null_test = np.zeros([depth, height, width], dtype=bool)
+        null_test = np.zeros([depth, height, width])
         null_test_pval = np.zeros([depth, height, width])
-        alt_test = np.zeros([depth, height, width], dtype=bool)
+        alt_test = np.zeros([depth, height, width])
         for findex, feature in enumerate(features):
             for colindex in range(width):
                 for celindex in range(depth):
@@ -552,8 +482,6 @@ def scatter_colorbar(pd_df, mainprop, features, colsplit, celsplit,
                     #                                    nresamp=nresamp,
                     #                                    alpha=alpha)
             print("completed: ", findex + 1, ' of ', len(features))
-        if bootstrapcutoff:
-            info_plot[null_test == False] = 0.0
 
     # Iniciando a plotagem!
     plt.close('all')
@@ -578,62 +506,33 @@ def scatter_colorbar(pd_df, mainprop, features, colsplit, celsplit,
     #         vmax=max(np.append(plot_in_colors_42.flatten(),
     #         plot_in_colors_13.flatten())))
     # colors42 = [cmap(normalize(value)) for value in plot_in_colors_42]
-
     cmap = matplotlib.cm.get_cmap('coolwarm')
     normalize = matplotlib.colors.Normalize(vmin=cbnorm[0], vmax=cbnorm[1])
     colors = [cmap(normalize(value)) for value in info_plot]
     colors = np.array(colors)
 
     # label sizes:
-    axis_title_font_size = 30
-    axis_label_font_size = 25
+    axis_title_font_size = 38
+    axis_label_font_size = 30
     tick_label_font_size = 25
-    anotation_font_size = 15
-    marker_size = 50
+    anotation_font_size = 13
+    marker_size = 60
 
     slines = ['-', '--', ':', '-.']
     scolors = ['k', 'm', 'y', 'g', 'c', 'b', 'r']
-    smarker = ['o', 's', 'D', '^', '*', 'o', 's', 'x', 'D', '+', '^', 'v', '>', '<']
-    angular_parameter = np.zeros([depth, height, width])
+    smarker = ['*', 'o', 's', 'x', 'D', '+', '^', 'v', '>', '<']
     for indf, feature in enumerate(features):
         for colindex in range(width):
             for celindex in range(depth):
                 group = grouped.get_group((colindex, celindex))
-                #if ((not all(group[feature] == 0.0))
-                #        and (not all(np.isnan(group[feature])))):
-                datax, datay = tonparray(group[mainprop], group[feature])
-                if datax.tolist():
-                    if (len(datax) > 1) and (not np.all(datax == datax[0])):
-                        # Linear Regresion
-                        parameters = johnatan_polyfit(datax, datay, 1)
-                        fit_fn = np.poly1d(parameters)
-                        angular_parameter[celindex, indf, colindex] = parameters[0]
-                        # variavel auxiliar pra nao plotar o linha obtida na
-                        # regressao alem dos dados do set (isso pode acontecer
-                        # para as variaveisb2 onde nem todos os samples
-                        # apresentam dados)
-                        yfited_values = np.array(fit_fn(datax))
-                        argmin = np.argmin(datax)
-                        argmax = np.argmax(datax)
-                        trend_x = datax[[argmin, argmax]]
-                        trend_y = yfited_values[[argmin, argmax]]
-                        # plotando linha obtida com dados da regressao
-                        axis[indf, colindex].plot(trend_x, trend_y,
-                                                  marker=None,
-                                                  linestyle=slines[celindex],
-                                                  color='k')
-                    # plotando dados da celula
-                    axis[indf, colindex].scatter(datax, datay,
-                                         marker=smarker[celindex], s=marker_size,
-                                         linestyle='None',
-                                         label=celdict[group[celsplit].values[0]],
-                                         color=colors[celindex,indf,colindex])
-                    axis[indf, colindex].legend( )
+                c = axis[indf, colindex].pcolor(
+                    info_plot[:, indf, colindex].reshape([-1,1]),
+                    cmap='coolwarm', vmin=-1,vmax=1)
 
-                axis[indf, colindex].xaxis.set_tick_params(direction='in',
-                                                       length=5, width=0.9)
-                axis[indf, colindex].yaxis.set_tick_params(direction='in',
-                                                       length=5, width=0.9)
+    #            axis[indf, colindex].xaxis.set_tick_params(direction='in',
+    #                                                   length=5, width=0.9)
+    #            axis[indf, colindex].yaxis.set_tick_params(direction='in',
+    #                                                   length=5, width=0.9)
 
             # Ajuste do alinhamento dos labels, quantidade de casa deciamais,
             # tamanho de fonte e etc
@@ -641,15 +540,15 @@ def scatter_colorbar(pd_df, mainprop, features, colsplit, celsplit,
             axis[0, colindex].set_xlabel(x_labels[colindex], va='center', ha='center',
                                      labelpad=40, size=axis_label_font_size)
             axis[indf, 0].set_ylabel(y_labels[indf], va='center', ha='center',
-                                     labelpad=30, size=axis_label_font_size,
-                                     rotation='vertical')
-            axis[indf, 0].yaxis.set_major_formatter(FormatStrFormatter('%.1f'))
-            for tikslabel in axis[indf, 0].yaxis.get_ticklabels():
-                tikslabel.set_fontsize(tick_label_font_size)
-            axis[-1, colindex].xaxis.set_major_formatter(FormatStrFormatter('%.1f'))
-            for tikslabel in axis[-1, colindex].xaxis.get_ticklabels():
-                tikslabel.set_fontsize(tick_label_font_size)
-                tikslabel.set_rotation(60)
+                                     labelpad=60, size=axis_label_font_size,
+                                     rotation='horizontal')
+    #        axis[indf, 0].yaxis.set_major_formatter(FormatStrFormatter('%.1f'))
+    #        for tikslabel in axis[indf, 0].yaxis.get_ticklabels():
+    #            tikslabel.set_fontsize(tick_label_font_size)
+    #        axis[-1, colindex].xaxis.set_major_formatter(FormatStrFormatter('%.1f'))
+    #        for tikslabel in axis[-1, colindex].xaxis.get_ticklabels():
+    #            tikslabel.set_fontsize(tick_label_font_size)
+    #            tikslabel.set_rotation(60)
 
     # b=mlines.Line2D([], [], color='grey', marker=marker[1], linestyle='None',
     #                 markersize=15, label='\ce{Pt42TM13}')
@@ -696,7 +595,7 @@ def scatter_colorbar(pd_df, mainprop, features, colsplit, celsplit,
                         hspace=0.0)
 
     # Caso queira, aqui adiciona-se as anotações na figura
-    if bootstrap and bootstraplabels:
+    if bootstrap:
         for indf, feature in enumerate(features):
             for colindex in range(width):
                 for celindex in range(depth):
@@ -715,23 +614,12 @@ def scatter_colorbar(pd_df, mainprop, features, colsplit, celsplit,
                                                            colindex].transAxes,
                                                   bbox=dict(facecolor='yellow',
                                                             alpha=0.1))
-    if False:
-        for indf, feature in enumerate(features):
-            for colindex in range(width):
-                for celindex in range(depth):
-                    if not all(group[feature] == 0.0):
-                        labelstr = str(round(angular_parameter[celindex, indf,
-                                                               colindex], 2))
-                        axis[indf, colindex].text(0.06, 0.155, labelstr,
-                          fontsize=anotation_font_size,
-                          transform=axis[indf, colindex].transAxes,
-                          bbox=dict(facecolor='yellow', alpha=0.1))
 
     # Adicionando os principais captions da figura.
     fig.text(0.04, 0.524, ymatrixlabel, ha='center', rotation='vertical',
              size=axis_title_font_size)
     fig.text(0.5, 0.95, xmatrixlabelr, ha='center', size=axis_title_font_size)
-    fig.text(0.5, 0.02, xmatrixlabel, ha='center', size=axis_title_font_size)
+    fig.text(0.5, 0.045, xmatrixlabel, ha='center', size=axis_title_font_size)
     cbar.set_label(cblabel, size=axis_title_font_size)
 
     # Salvando a figura para um arquivo
@@ -739,174 +627,3 @@ def scatter_colorbar(pd_df, mainprop, features, colsplit, celsplit,
     plt.savefig(figure_name + ".png", dpi=300)
 
     return
-
-
-def scatter_allvsall(pd_df, regs, splitfeature, axismarks=['ecn', 'dav', 'ori',
-                                                           'exposition',
-                                                           'qtn']):
-    """ERRORS!!!!!!!!!..."""
-
-    rc('text', usetex=False)
-
-    if not os.path.isdir('qdfigures_allvsall'):
-        os.mkdir('qdfigures_allvsall')
-
-    sns.pairplot(pd_df, x_vars=regs, y_vars=regs, hue=splitfeature,
-                 dropna=True)
-
-    axiss = []
-    for axismark in axismarks:
-        axiss.append([])
-        for name in regs:
-            if axismark in name:
-                axiss[-1].append(name)
-    axiss = [[regs[5:]]]
-    for axis, name in zip(axiss, axismarks):
-        if axis:
-            plt.close('all')
-            print(axis)
-            figure = sns.pairplot(pd_df, x_vars=axis, y_vars=axis,
-                                                      dropna=True)
-            print('saving...')
-            figure.savefig('pairplot_' + name + '_' + name + '.png')
-
-    for counter_1, (axis_1, name_1) in enumerate(zip(axiss, axismarks)):
-        for counter_2, (axis_2, name_2) in enumerate(zip(axiss, axismarks)):
-            if (counter_1 > counter_2) and axis_1 and axis_2:
-                plt.close('all')
-                figure = sns.pairplot(pd_df, x_vars=axis_1, y_vars=axis_2,
-                                      hue=splitfeature, dropna=True)
-                figure.savefig('pairplot_' + name_1 + '_' + name_2 + '.png')
-
-
-
-FEATURES_DICT = {
-    'homos1_final': 'HOMO',
-    'lumos1_final': 'LUMO',
-    'gap_final': '$E_{\\textrm{gap}}$',
-    'cnav_total': '$CN_{av}$',
-    'dav_total': '$d_{av}$',
-    'total_bonds': '$N^{\\circ}$ bonds',
-    'sigma': '$\sigma$',
-    'rav': '$R_{av}$',
-    'cnav_Ce': '$CN_{av}^{\\ce{Ce}}$',
-    'cnav_Zr': '$CN_{av}^{\\ce{Zr}}$',
-    'cnav_O': '$CN_{av}^{\\ce{O}}$',
-    'dav_Ce': '$d_{av}^{\\ce{Ce}}$',
-    'dav_Zr': '$d_{av}^{\\ce{Zr}}$',
-    'dav_O': '$d_{av}^{\\ce{O}}$',
-    'bonds_Ce_O': '$N$ \ce{Ce}-\ce{O}',
-    'bonds_Zr_O': '$N$ \ce{Zr}-\ce{O}',
-    'bonds_O_O': '$N$ \ce{O}-\ce{O}',
-    'TM': '\\ce{TM}',
-    'qtn_atoms_Pt': '$N$ \\ce{Pt}',
-    'exc_energy': '$E_{\\textrm{exc}}$',
-    'bound_energy': '$E_{b}$',
-    'qtn_atoms_TM': '$N$ \\ce{TM}',
-    'total_energy_final': '$E_{\\textrm{tot}}$',
-    'E_fermi': '$E_{fermi}$',
-    'cbm_final': '$E_{\\textrm{CBM}}$',
-    'vbm_final': '$E_{\\textrm{VBM}}$',
-    'mag_moment_final': '$\mu$',
-    'dav_Pt': '$d_{av}^{\\ce{Pt}}$',
-    'ecn_Pt': '$ECN_{av}^{\\ce{Pt}}$',
-    'dav_TM': '$d_{av}^{\\ce{TM}}$',
-    'ecn_TM': '$ECN_{av}^{\\ce{TM}}$',
-    'bonds_Pt_Pt': '$N$ \ce{Pt}-\ce{Pt}',
-    'bonds_TM_TM': '$N$ \ce{TM}-\ce{TM}',
-    'bonds_Pt_TM': '$N$ \ce{Pt}-\ce{TM}',
-    'surface_atoms': '$N$ Surf',
-    'core_atoms': '$N$ Core',
-    'Pt_surf': '$N$ \\ce{Pt}$_{surf}$',
-    'Pt_core': '$N$ \\ce{Pt}$_{core}$',
-    'TM_surf': '$N$ \ce{TM}$_{surf}$' ,
-    'TM_core': '$N$ \\ce{TM}$_{core}$',
-    'cluster_radius': '$R_{av}$',
-    'total_surface_energy': '$E_{Surf}^{tot}$',
-    'surface_energy': '$E_{Surf}$',
-    'surface_area': '$A_{surf}$',
-    'mag_moment_surf': '$\mu_{surf}$',
-    'mag_moment_core': '$\mu_{core}$',
-    'ecn_surf': '$ECN_{surf}$',
-    'ecn_core': '$ECN_{core}$',
-    'dav_surf': '$d_{av}^{surf}$',
-    'dav_core': '$d_{av}^{core}$',
-    'avarage_surface_exposition_surf': '$A_{exp}$',
-    'charge_pt': '$Q_{\\ce{Pt}}$',
-    'charge_tm': '$Q_{\\ce{TM}}$',
-    'reg_total_energy_final': '$E_{\\textrm{tot}}$',
-    'reg_gap_final': '$E_{\\textrm{gap}}$',
-    'reg_E_fermi': '$E_{fermi}$',
-    'reg_cbm_final': '$E_{\\textrm{CBM}}$',
-    'reg_vbm_final': '$E_{\\textrm{VBM}}$',
-    'reg_mag_moment_final': '$\mu$',
-    'reg_exc_energy': '$E_{\\textrm{exc}}$',
-    'reg_bound_energy': '$E_{b}$',
-    'reg_total_surface_energy': '$E_{Surf}^{tot}$',
-    'reg_surface_energy': '$E_{Surf}$',
-    'reg_surface_area': '$A_{surf}$',
-    'reg_cluster_radius': '$R_{av}$',
-    'reg_sigma': '$\sigma$',
-    'reg_bonds_Pt_Pt': '$N_{\ce{Pt}-\ce{Pt}}$',
-    'reg_bonds_TM_TM': '$N_{\ce{TM}-\ce{TM}}$',
-    'reg_bonds_Pt_TM': '$N_{\ce{Pt}-\ce{TM}}$',
-    #
-    'reg_av_b1_surf_charges': '$Q^{surf}$',
-    'reg_av_b1_core_charges': '$Q^{core}$',
-    'reg_av_b1_Pt_charges': '$Q^{\\ce{Pt}}$',
-    'reg_av_b1_TM_charges': '$Q^{\\ce{TM}}$',
-    'reg_av_b2_surf_Pt_charges': '$Q^{surf,\\ce{Pt}}$',
-    'reg_av_b2_surf_TM_charges': '$Q^{surf,\\ce{TM}}$',
-    'reg_av_b2_core_Pt_charges': '$Q^{core,\\ce{Pt}}$',
-    'reg_av_b2_core_TM_charges': '$Q^{core,\\ce{TM}}$',
-    'reg_av_b1_all_charges': '$Q^{all}$',
-    'reg_av_b1_surf_mag_moments': '$\overline{m}^{surf}$',
-    'reg_av_b1_core_mag_moments': '$\overline{m}^{core}$',
-    'reg_av_b1_Pt_mag_moments': '$m^{\\ce{Pt}}$',
-    'reg_av_b1_TM_mag_moments': '$\overline{m}^{\\ce{TM}}$',
-    'reg_av_b2_surf_Pt_mag_moments': '$m^{surf,\\ce{Pt}}$',
-    'reg_av_b2_surf_TM_mag_moments': '$m^{surf,\\ce{TM}}$',
-    'reg_av_b2_core_Pt_mag_moments': '$m^{core,\\ce{Pt}}$',
-    'reg_av_b2_core_TM_mag_moments': '$m^{core,\\ce{TM}}$',
-    'reg_av_b1_all_mag_moments': '$m^{all}$',
-    'reg_av_b1_surf_dav': '$d_{av}^{surf}$',
-    'reg_av_b1_core_dav': '$d_{av}^{core}$',
-    'reg_av_b1_Pt_dav': '$d_{av}^{\\ce{Pt}}$',
-    'reg_av_b1_TM_dav': '$\overline{d_{av}}^{\\ce{TM}}$',
-    'reg_av_b2_surf_Pt_dav': '$d_{av}^{surf,\\ce{Pt}}$',
-    'reg_av_b2_surf_TM_dav': '$d_{av}^{surf,\\ce{TM}}$',
-    'reg_av_b2_core_Pt_dav': '$d_{av}^{core,\\ce{Pt}}$',
-    'reg_av_b2_core_TM_dav': '$d_{av}^{core,\\ce{TM}}$',
-    'reg_av_b1_all_dav': '$d_{av}^{all}$',
-    'reg_av_b1_surf_ecn': '$ECN^{surf}$',
-    'reg_av_b1_core_ecn': '$ECN^{core}$',
-    'reg_av_b1_Pt_ecn': '$ECN^{\\ce{Pt}}$',
-    'reg_av_b1_TM_ecn': '$\overline{ECN}^{\\ce{TM}}$',
-    'reg_av_b2_surf_Pt_ecn': '$ECN^{surf,\\ce{Pt}}$',
-    'reg_av_b2_surf_TM_ecn': '$ECN^{surf,\\ce{TM}}$',
-    'reg_av_b2_core_Pt_ecn': '$ECN^{core,\\ce{Pt}}$',
-    'reg_av_b2_core_TM_ecn': '$ECN^{core,\\ce{TM}}$',
-    'reg_av_b1_all_ecn': '$ECN^{all}$',
-    #
-    'reg_surface_atoms': '$N^{surf}$',
-    'reg_core_atoms': '$N^{core}$',
-    'reg_Pt_surf': '$N^{\\ce{Pt},surf}$',
-    'reg_Pt_core': '$N^{\\ce{Pt},core}$',
-    'reg_TM_surf': '$N^{\\ce{TM},surf}$',
-    'reg_TM_core': '$N^{\\ce{TM},core}$',
-    'reg_qtn_Pt': '$N^{\\ce{Pt}}$',
-    'reg_qtn_TM': '$N^{\\ce{TM}}$'
-    }
-
-
-#
-#def cost(ri, dij, A, C, baserad):
-#   Rij = baserad.reshape([1, -1]) + baserad.reshape([-1, 1])
-#   rij = ri.reshape([1, -1]) + ri.reshape([-1, 1])
-#   size = len(x)
-#   act = (1-1/(1 + 2.7**(10*(dij - rij))))*(np.ones([size,size]) - np.eye(size))
-#   B=1-A
-#   partA= A*np.sum(((dij - rij)**2)*act)
-#   partB= B*np.sum(- act)
-#   return A*np.sum(((dij - rij)**2)*act) + B*np.sum(- act) + C*np.sum(((rij - Rij)**2)*act) #(1-1/(1 + 2.7**(10*(dij - x))))*(-3 + 100*(dij - x)**2)
-#optimize.minimize(cost, np.min(dij,axis=0), args=(dij,0.010,0.2,baserad), method="L-BFGS-B", bounds=((0.0, 1.7),)*len(positions), tol=1.E-7, options={"maxiter": 50, "disp": False})

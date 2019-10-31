@@ -9,18 +9,120 @@ import logging
 import re
 import pandas as pd
 import numpy as np
-from quandarium.analy.aux import arr2bag
+import ase.io
+from quandarium.analy.aux import logcolumns
+
 
 logging.basicConfig(filename='/home/johnatan/quandarium_module.log',
                     level=logging.INFO)
 logging.info('The logging level is INFO')
 
 
+def getcharges(folder, filename='', code='fhi', chargetype='hirs'):
+    """This function get the hirshfield charges of an 'fhi' code calculations
+    """
+    # problema: fileout é o arquivo outcar do vasp e os dados de carga estão
+    #           no acf...
+    if code == 'VASP':
+        atoms = ase.io.read(folder + "POSCAR", format="vasp")
+        with open("POSCAR", "r") as file:
+            poscar = file.readlines()
+        with open("OUTCAR", "r") as file:
+            outcar = file.readlines()
+        with open("ACF.dat", "r") as file:
+            acfdat = file.readlines()
+
+        if chargetype == 'bader':
+            badercharge = []
+            for i in range(2, len(acfdat) - 4):
+                badercharge.append(acfdat[i].split()[4])
+            badercharge = np.array(badercharge, dtype=float)
+
+            nuclearcharge = []
+            nucleous = []
+            for ind, line in enumerate(outcar):
+                if "; ZVAL   =" in line:
+                    nucleous.append(line.split()[5])
+            nucleous = np.array(nucleous, dtype=float)
+            quantity_of_each_specie = np.array(poscar[6].split(), dtype=int)
+            for ind, line in enumerate(quantity_of_each_specie):
+                for j in range(line):  # talvez tenha um problema aqui
+                    nuclearcharge.append(nucleous[ind])
+            nuclearcharge = np.array(nuclearcharge, dtype=float)
+
+            charges = nuclearcharge - badercharge
+
+    if code == 'fhi':
+        if filename == '':
+            filename = folder + '/aims.out'
+        with open(filename, "r") as file:
+            aimsout = file.readlines()
+
+        for line in aimsout:
+            if re.findall('.*Number of atoms.*', line):
+                number_of_atoms = int(re.search('.*Number of atoms.*',
+                                                line).string.split()[5])
+
+        if chargetype == 'mull':
+            charges = []
+            for ind, line in enumerate(aimsout):
+                if "Performing Mulliken charge analysis on all atoms" in line:
+                    for jnd in range(ind + 5, ind + 5 + number_of_atoms):
+                        charges.append(aimsout[jnd].split()[3])
+                    break
+            charges = np.array(charges, dtype=float)
+
+        if chargetype == 'hirs':
+            charges = []
+            aimsout.reverse()
+            for ind, line in enumerate(aimsout):
+                if "  |   Hirshfeld charge        :" in line:
+                    charges.append(line.split()[4])
+                    if len(charges) == number_of_atoms:
+                        charges.reverse()
+                        charges = np.array(charges, dtype=float)
+                        break  # it breaks the for...
+    return charges
+
+
+def rec_getcharges(folders, code, chargetype):
+    """This function open VASP and fhi output files, read it, and return the
+    atoms charges.
+    Parameters
+    ----------
+    folders: np.array
+             A numpy array with the names of the folders with calculations.
+    code: str, (one of: 'fhi', 'VASP')
+          The code used to the calculation file name.
+    chargetype: str, (one of: 'hirs', 'mull','bader')
+                The name of the charge analysis. For code='fhi', 'hirs', 'mull'
+                are avaliable, while 'bader' is avaliable for code='VASP'.
+    Return
+    ------
+    bag_charges: np.array, of lenght equal to the size of calcfolder
+                 It return a bag with the atomic charges
+    """
+
+    folders = np.array(folders.values)
+    charges_list = []
+    print("Initializing charges extraction:")
+    logging.info("Initializing charges extraction:")
+    for index in range(len(folders)):
+        folder = folders[index]
+        logging.info("    {}".format(folder))
+        charges = getcharges(folder, code=code, chargetype=chargetype)
+        charges_bag = charges.tolist()
+        charges_list.append(charges_bag)
+        if index % 50 == 0:
+            print("    concluded %3.1f%%" % (100*index/len(folders)))
+    print("    concluded %3.1f%%" % (100))
+
+    return np.array(charges_list)
 
 
 def extractor_fhi(outfile='aims.out'):
-    """This function open a fhi output file and read and return the important
-    informations.
+    """This function open a fhi output file (outfile) and read and return the
+    important informations.
     Parameters
     ----------
     outfile: string (optional, default='aims.out')
@@ -115,7 +217,7 @@ def extractor_fhi(outfile='aims.out'):
                           line).string.split()[1:4], dtype=float))
     positions = np.array(positions)
     chemical_elementsaux = np.array(chemical_elements)
-    cebag = np.array(["\"" + ce + "\"" for ce in chemical_elementsaux])
+    cebag = np.array([ce for ce in chemical_elementsaux])
 
     # Chamical formula
     chemical_species, chemical_species_qtn = np.unique(chemical_elements,
@@ -128,20 +230,18 @@ def extractor_fhi(outfile='aims.out'):
     return gap, homo, lumo, mag, energy_tot, positions, cebag, chemical_formula
 
 
-def extractfhi_fromfolders(folders, output_file_name='aims.out', csv_name=''):
+def extractfhi_fromfolders(folders, output_file_name='aims.out',
+                           csv_name=''):
     """It get data from fhi calculation folders.
     Parameters
     ----------
-    folders: list of str.
-             List with all the fhi calculation paths.
+    folders: np.array
+             A numpy array with the names of the folders with calculations.
     output_file_name: str, (optional, default='aims.out')
                       The output file name.
-    csv_name: str, optional (default='')
-              If provided, csv file with this name will be writed.
     Return
     ------
-    dataset: pd.DataFrame
-             A pandas data frame with all the information.
+    newdata: np.array with coluns for each new feature.
     """
 
     # The lists list_of_new_features_data and list_of_new_features_name, colect
@@ -158,23 +258,25 @@ def extractfhi_fromfolders(folders, output_file_name='aims.out', csv_name=''):
     positions_list = []
     cheme_list = []
     chemf_list = []
+    folders = np.array(folders.values)
     print("Initializing data extraction:")
     logging.info("Initializing data extraction:")
-    for index, folder in enumerate(folders):
+    for index in range(len(folders)):
+        folder = folders[index]
         logging.info("    {}".format(folder))
         gap, homo, lumo, mag, etot, positions, cheme, chemf = extractor_fhi(
-            folder + '/aims.out')
+            folder + '/' + output_file_name)
         if index % 50 == 0:
             print("    concluded %3.1f%%" % (100*index/len(folders)))
-        positions_bag = arr2bag(positions)
-        cheme_bag = arr2bag(cheme)
+        positions = positions.tolist()
+        cheme = cheme.tolist()
         gap_list.append(gap)
         homo_list.append(homo)
         lumo_list.append(lumo)
         mag_list.append(mag)
         etot_list.append(etot)
-        positions_list.append(positions_bag)
-        cheme_list.append(cheme_bag)
+        positions_list.append(positions)
+        cheme_list.append(cheme)
         chemf_list.append(chemf)
     print("    concluded %3.1f%%" % (100))
     # Adding new features data and name to its lists
@@ -194,6 +296,7 @@ def extractfhi_fromfolders(folders, output_file_name='aims.out', csv_name=''):
     allspecies_list = np.unique(allspeciesrepeated).tolist()
     list_features_qtn_atoms_data = []
     list_features_qtn_atoms_name = []
+
     for specie in allspecies_list:
         list_features_qtn_atoms_name.append('reg_qtn_' + specie)
         list_of_qnt = []
@@ -206,24 +309,10 @@ def extractfhi_fromfolders(folders, output_file_name='aims.out', csv_name=''):
             list_of_qnt.append(int(number))
         list_features_qtn_atoms_data.append(list_of_qnt)
     # Adding new features data and name to its lists
+
     for new_feature_data in list_features_qtn_atoms_data:
         list_of_new_features_data.append(new_feature_data)
     for new_feature_name in list_features_qtn_atoms_name:
         list_of_new_features_name.append(new_feature_name)
 
-    # calculation folder
-    calcfolder = []
-    for folder in folders:
-        calcfolder.append(folder.split('/')[-1])
-    # Adding new features data and name to its lists
-    list_of_new_features_data.append(calcfolder)
-    list_of_new_features_name.append('calcfolder')
-
-    # Creating the pandas DataFrame
-    new_dataframe = pd.DataFrame(np.array(list_of_new_features_data).T,
-                                 columns=list_of_new_features_name)
-
-    if csv_name:
-        new_dataframe.to_csv('new_dataframe.csv', sep=' ', index=False)
-
-    return new_dataframe
+    return list_of_new_features_name, np.array(list_of_new_features_data)

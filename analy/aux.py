@@ -4,6 +4,7 @@ import logging
 import sys
 import ase.io
 import numpy as np
+import pandas as pd
 from sklearn.cluster import DBSCAN
 
 logging.basicConfig(filename='/home/johnatan/quandarium_module.log',
@@ -16,6 +17,28 @@ class Log(object):
 Logging_function_np = Log()
 np.seterr(all='log')
 np.seterrcall(Logging_function_np)
+
+def to_nparray(data):
+    """This functions recive a data and return a numpy array"""
+    if isinstance(data, list):
+        return np.array(data)
+    if isinstance(data, pd.Series):
+        return np.array(data.values)
+    if isinstance(data, pd.DataFrame):
+        return np.array(data.values)
+    if ininstance(data, np.ndarray):
+        return data
+
+def to_list(data):
+    """This functions recive a data and return a list"""
+    if isinstance(data, list):
+        return data
+    if isinstance(data, pd.Series):
+        return np.array(data.values).tolist()
+    if isinstance(data, pd.DataFrame):
+        return np.array(data.values).tolist()
+    if isinstance(data, np.ndarray):
+        return data.tolist()
 
 def checkmissingkeys(keys, dictlist, massange):
     """It return the missing keys of a dictionary or list"""
@@ -41,6 +64,15 @@ def logcolumns(lvl, massange, pd_df):
     logging.log(lvldict[lvl], '{}'.format(massange))
     for index, column in enumerate(pd_df.columns.to_list()):
         logging.log(lvldict[lvl], '{:>4d} : {}'.format(index, column))
+
+
+def translate_list(dictionary, list_to_be_translated):
+    """For a given list with entries and a dictionary, it return a new list
+    with the translated entries"""
+    translated = []
+    for i in list_to_be_translated:
+        translated.append(dictionary[i])
+    return translated
 
 
 def comp_minmaxbond(atom1, atom2):
@@ -148,46 +180,32 @@ def comp_aveabs(values):
 
 
 def logistic(dij, ri, k):
-    rij = ri.reshape(1, -1) + ri.reshape(-1, 1)
-    return 1./(1. + np.exp(k*(dij - rij)))
+    ri_sum_rj = ri.reshape(1, -1) + ri.reshape(-1, 1)
+    return 1./(1. + np.exp(k*(dij - ri_sum_rj)))
 
 
-def comp_rs(rs, dij, k, R):
+def comp_rs(ori, dij, k, R, rcutp, w=[0.1,0.60,0.42]):
     """Cost function optimized in ecn_rsopt function."""
-    rcut = rs[:int(len(rs)/2)]
-    ori = rs[int(len(rs)/2):]
+    rcut = ori * rcutp
 
-    ew = 0.005
-    ewe = 0.000
-    ewd = 1 - ewe
-
-    rw = 1 - ew
-    rwR = 0.57
-    rwd = 0.4
-    rwc = 1 - rwR - rwd
+    ew = w[0]
+    rRw = w[1]
+    rdw = w[2]
 
     pij = logistic(dij, rcut, k)
     pijsum = np.sum(pij)
 
     # ecn costs
     ecn = np.sum(pij, axis=1)
-    ecn_cost = ew * ewe * np.average(np.exp(-ecn))  # size invariant
-    ecndump_cost = ew * ewd * np.average(ecn**(-1))  # size invariant
+    ecn_cost = ew * np.average(np.exp(-ecn))
 
     # r costs
     ori_sum_orj = ori.reshape([1, -1]) + ori.reshape([-1, 1])
-    rdij_cost = rw * rwd * np.sum(((dij - ori_sum_orj)**2)*pij)/pijsum
+    rd_cost = rdw * np.sum(((dij - ori_sum_orj)**2)*pij)/pijsum
+    Ri_sum_Rj = R.reshape([1, -1]) + R.reshape([-1, 1])
+    rR_cost = rRw * np.sum(((ori_sum_orj - Ri_sum_Rj)**2)*pij)/pijsum
 
-    # ori_minus_orj = ori.reshape([1, -1]) - ori.reshape([-1, 1])
-    # Ri_minus_Rj = R.reshape([1, -1]) - R.reshape([-1, 1])
-    # rR_cost = rw * rwR * np.sum(10**(-(ori_minus_orj
-    #                                    - Ri_minus_Rj)**2)*pij)/pijsum
-
-    rR_cost = rw * rwR * np.average((ori - R)**2)
-
-    rrcut_cost = rw * rwc * np.sum(10**(-(ori + rcut)))
-
-    total = ecn_cost + ecndump_cost + rdij_cost + rR_cost + rrcut_cost
+    total = ecn_cost + rd_cost + rR_cost
 
     # print('{:2.2f}    {:2.2f}:      {:2.2f}        {:2.2f}      {:2.2f}    '
     #       '   {:2.2f}       {:2.2f}'.format(np.average(ecn), total,
@@ -206,8 +224,9 @@ def comp_roptl2(ori, dij, pij):
     """Compute the difference between ori + orj and the dij of the bonded
     atoms (pij) with a l2 norm."""
     ori_sum_orj = ori.reshape([1, -1]) + ori.reshape([-1, 1])
-    #return np.sum(((dij - ori_sum_orj)*pij)**2)
+    # return np.sum(((dij - ori_sum_orj)*pij)**2)
     return np.sum(((dij - ori_sum_orj)**2)*pij)
+
 
 def cost_l2(ori, dij, pij):
     """L2 cost function for the difference between sum of two atoms radii and
@@ -254,17 +273,26 @@ def arr2bag(nparray):
     bagstring: str.
                The string with the nparray info in the bagformat.
     """
+    addcommas=False  # if a array of strings were stored as a bag, each entry
+                     # need to be protected between ""
 
     if isinstance(nparray, np.ndarray):
-        bagstring = '[' + ','.join(str(row) for row in
-                                   nparray.tolist()).replace(' ', '') + ']'
+        if isinstance(nparray.flatten()[0], str):
+            bagstring = '[\"' + '\",\"'.join(str(row) for row in
+                 nparray.tolist()).replace(' ', '') + '\"]'
+        else:
+            bagstring = '[' + ','.join(str(row) for row in
+                 nparray.tolist()).replace(' ', '') + ']'
+        #bagstring = '[' + ','.join(str(row) for row in
+        #     nparray.tolist()).replace(' ', '') + ']'
     elif isinstance(nparray, list):
-        bagstring = '[' + ','.join(str(row) for row in nparray
-                                   ).replace(' ', '') + ']'
+        if isinstance(np.array(nparray).flatten()[0], str):
+            bagstring = '[\"' + '\",\"'.join(str(row) for row in nparray).replace(' ', '') + '\"]'
+        else:
+            bagstring = '[' + ','.join(str(row) for row in nparray).replace(' ', '') + ']'
     else:
         print("ERRO: the argument should be a array or list."
               "A {} was given.".format(type(nparray)))
-
     return bagstring
 
 
@@ -283,12 +311,7 @@ def bag2arr(bagstring, dtype=''):
              It contains the values which will be converted in the string
              format.
     """
-    #C='C'
-    #H='H'
-    #Cu='Cu'
-    #Fe='Fe'
-    #Co='Co'
-    #Ni='Ni'
+    #
     nan = np.nan
 
     if dtype:

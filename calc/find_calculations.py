@@ -1,9 +1,12 @@
 """Several tools to deal with QC calculations."""
 
 import sys
+import numpy as np
+import pandas as pd
 import logging
 import os.path
 from distutils.dir_util import copy_tree
+from quandarium.analy.aux import logcolumns
 
 logging.basicConfig(filename='/home/johnatan/quandarium_module.log',
                     level=logging.INFO)
@@ -32,30 +35,33 @@ def find(code_or_file, path_to_start_the_search='.', recursivity=True):
 
     Returns
     -------
-    list_with_all_calculations_folder: list
-                                       A list with the calculations found in
-                                       the search.
+    calcfolder: np.array, of size equal to the number of calculations foud.
+                The path to the folder with the calculations.
 
     Examples
     --------
+    >>> import pandas as pd
     >>> from quandarium.calculations import find
-    >>> list_with_calculations_path = find('VASP', '.')
+    >>>
+    >>> dataframe = pd.DataFrame()
+    >>> dataframe['calcfolder'] = find('VASP', '.')
     """
 
     logging.info("Initializing find_calculation function...")
 
     # Variables unit tests
-    logging.info('code_or_file: ' + str(code_or_file))
+    logging.info('code_or_file: {}'.format(code_or_file))
     if not isinstance(code_or_file, str):
         logging.error("code_or_file must be a string! Aborting...")
         sys.exit(1)
 
-    logging.info('path_to_start_the_search: ' + str(path_to_start_the_search))
+    logging.info('path_to_start_the_search: {}'.format(
+        path_to_start_the_search))
     if not isinstance(path_to_start_the_search, str):
         logging.error("path_to_start_the_search must be a string! Aborting...")
         sys.exit(1)
 
-    logging.info('recursivity: ' + str(recursivity))
+    logging.info('recursivity: {}'.format(recursivity))
     if not isinstance(recursivity, bool):
         logging.error("recursivity must be an bool! Aborting...")
         sys.exit(1)
@@ -63,7 +69,7 @@ def find(code_or_file, path_to_start_the_search='.', recursivity=True):
     # Other verification tests
     if not os.path.isdir(path_to_start_the_search):
         logging.error("The path_to_start_the_search is not a directory! "
-                      + "Aborting...")
+                      "Aborting...")
         sys.exit(1)
     else:
         logging.debug('path_to_start_the_search is a directory!')
@@ -78,18 +84,18 @@ def find(code_or_file, path_to_start_the_search='.', recursivity=True):
         logging.debug('code_or_file will be considered as the output file '
                       'name.')
         output_file_name = code_or_file
-    logging.debug('The output_file_name variable were selected to '
-                   + output_file_name + '.' )
+    logging.debug('The output_file_name variable were selected to {}.'.format(
+        output_file_name))
 
     # Find the list with paths
     if recursivity:
         list_of_folders = [x[0] for x in os.walk(path_to_start_the_search
                                                  + '/')]
     if not recursivity:
-        list_of_folders =[x for x in os.listdir(path_to_start_the_search + '/')
+        list_of_folders= [x for x in os.listdir(path_to_start_the_search + '/')
                           if os.path.isdir(path_to_start_the_search + '/' + x)]
-    logging.debug('list_of_folders were find, it present len of'
-                  + str(len(list_of_folders)) + '.')
+    logging.debug('list_of_folders were find, it present len of {}.'.format(
+        len(list_of_folders)))
 
     # Test
     if len(list_of_folders) == 0:
@@ -109,14 +115,15 @@ def find(code_or_file, path_to_start_the_search='.', recursivity=True):
         # Printing folders with calculations
         logging.debug('The following folders present calculation:')
         for folder in list_with_all_calculations_folder:
-            logging.debug('    ' + folder)
+            logging.debug('    {}'.format(folder))
 
     logging.info('Folders founded:')
     for i in list_with_all_calculations_folder:
         logging.info('    {}'.format(i))
 
-    # It must be the full name of the path, without abbreviations!
-    return list_with_all_calculations_folder
+    list_with_all_calculations_folder.sort()
+
+    return np.array(list_with_all_calculations_folder)
 
 
 def cp_folders(list_with_all_calculations_folder, final_folder):

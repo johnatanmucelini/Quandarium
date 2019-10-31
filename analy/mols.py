@@ -25,6 +25,7 @@ from quandarium.analy.aux import comp_pij_classed
 from quandarium.analy.aux import comp_minmaxbond
 from quandarium.analy.aux import comp_rs
 from quandarium.analy.aux import logistic
+from quandarium.analy.aux import translate_list
 
 logging.basicConfig(filename='/home/johnatan/quandarium_module.log',
                     level=logging.INFO)
@@ -63,7 +64,8 @@ def avradius(positions, raddii, useradius=True):
     return average_radius
 
 
-def ecndav_rsopt(positions, cheme, kinfo, Rinfo, roundpijtoecn=False):
+def ecndav_rsopt(positions, cheme, kinfo, Rinfo, roundpijtoecn=False,
+                 rcutp=1.15, w=''):
     """Return an effective coordination number (ecn), the optimized atomic
     radius (ori), the bond distance average (dav), and the conective index
     matrix pij. The radius are optimized...
@@ -83,11 +85,13 @@ def ecndav_rsopt(positions, cheme, kinfo, Rinfo, roundpijtoecn=False):
     Rinfo : np.array or a dict.
             The atomic tabeled radius. If a dict, each element radius will be
             consider as dict[cheme[i]].
+    rcutp: float bigger than one.
+           The rcut is the radius ori scaled by this parameter.
     roundpijtoecn: If true the pij is rounded to calculate the ecn.
 
     Returns
     -------
-    ecn, dav, ori : numpy.array, (n,) shaped.
+    ecn, dav, ori: numpy.array, (n,) shaped.
                    They contain the calculated ecn, optimized radius, and dav
                    for each atom.
     pij: numpy.array, (n,n) shaped.
@@ -106,51 +110,63 @@ def ecndav_rsopt(positions, cheme, kinfo, Rinfo, roundpijtoecn=False):
         k = kinfo
 
     if isinstance(Rinfo, dict):
-        R = np.array([kinfo[e1] for e1 in cheme])
+        R = np.array([Rinfo[e1] for e1 in cheme])
     else:
         R = Rinfo
 
-    rs = np.zeros(qtna*2)
-    rcut_min = np.min(dij, axis=1) * 0.30
-    rcut_max = 3*rcut_min
-    bounds = []
-    # rcut
-    for ind, ce in enumerate(cheme):
-        rs[ind] = R[ind]
-        bounds.append((rcut_min[ind], rcut_max[ind]))
-    # ori
-    for ind, ce in enumerate(cheme):
-        rs[ind + len(positions)] = R[ind] * 1.9
-        bounds.append((rcut_min[ind], rcut_max[ind]))
-    bounds = tuple(map(tuple, bounds))
-    # print('{:<3}  {:^3}  {:^3}  {:^3}'.format('ce','r_min','r_max','rcut'))
-    # for ind in range(len(positions)):
-    #     print('{}   {}   {}   {}'.format(cheme[ind], bounds[ind][0],
-    #                                      bounds[ind][1], rs[ind]))
-    # print(bounds)
+    if len(positions) == 1:
+        ecn = np.array([0.])
+        dav = np.array([0.])
+        ori = np.array([R[0]])
+        pij = np.array([[0.]])
+        return ecn, dav, ori, pij
 
-    rs_opt = optimize.minimize(comp_rs, rs, args=(dij, k, R),
-                               bounds=bounds,
-                               method="L-BFGS-B", tol=1.E-6,
-                               options={"maxiter": 250, "disp": False})
+    ori = R *1.
+    rcut = ori * rcutp
+    bounds = []
+
+    for ind, ce in enumerate(cheme):
+        bounds.append((R[ind]*0.6, R[ind]*1.4))
+    bounds = tuple(map(tuple, bounds))
+    #print('{:<3}  {:^3}  {:^3}  {:^3}'.format('ce','r_min','r_max','rcut'))
+    #for ind in range(len(positions)):
+    #    print('{}   {}   {}   {}'.format(cheme[ind], bounds[ind][0],
+    #                                     bounds[ind][1], rs[ind]))
+    #print(bounds)
+
+    if w:
+        rs_opt = optimize.minimize(comp_rs, ori, args=(dij, k, R, rcutp, w),
+                                   bounds=bounds,
+                                   method="L-BFGS-B", tol=1.E-6,
+                                   options={"maxiter": 250, "disp": False})
+    else:
+        rs_opt = optimize.minimize(comp_rs, ori, args=(dij, k, R, rcutp),
+                                   bounds=bounds,
+                                   method="L-BFGS-B", tol=1.E-6,
+                                   options={"maxiter": 250, "disp": False})
 
     # print('av_ecn,  total,     rdij,         rR,      rrcut,       ecn,     '
     #       'ecndump')
     # print('\n\n' + str(rs_opt.message) + '\n' + str(rs_opt.success) + '\n\n')
     if not rs_opt.success:
-        logging.warning('Otimization do not converg.')
+        logging.warning('Otimization has not converged.')
 
-    rcut = rs_opt.x[:qtna]
-    ori = rs_opt.x[qtna:]
+    ori = rs_opt.x
+    rcut = ori * rcutp
     pij = logistic(dij, rcut, k)
     ecn = np.sum(pij, axis=1)
+    # calcuating dav avoiding division by 0
     ecn_aux = ecn < 1.
-    print(ecn[ecn_aux == False], np.ones_like(ecn)[ecn_aux])
-    ecn_aux2 = ecn
-    ecn_aux2[ecn_aux] = 1. 
+    ecn_aux2 = ecn * 1.
+    ecn_aux2[ecn_aux] = 1.
     dav = np.sum(dij*pij, axis=1) / ecn_aux2
     if roundpijtoecn:
         ecn = np.sum(np.round(pij), axis=1)
+
+    bounds = np.array(list(map(list, bounds)))[:,0]
+    if np.any(ori==bounds):
+        print(ecn[ori==bounds])
+        print(ori[ori==bounds])
 
     return ecn, dav, ori, pij
 
@@ -457,173 +473,279 @@ def findsc(positions, atomic_radii, adatom_radius, remove_is=True,
         return is_surface, exposition
 
 
-def bond_connective(positions, chemical_symbols):
-    printt( pl , 1 , "\n\nBound counting analysis...")
+def connections(positions, cheme, pij, stype='bl', dictcheme='', baseucheme='',
+                print_analysis=True):
+    """This analysis seach for conectivities in the atoms neighborhood based if
+    the chemical element cheme (or other discrete feature). In the actual
+    version, the connectivity go until the 3rd degree, e.g., in a ABCD
+    molecule, the connectivity -B-C-D is computde for A.
+    Parameters
+    ----------
+    positions: np.array (3,n) shaped of floats.
+               The atomic positions.
+    cheme: np.array (n,) shaped of stings.
+           The chemical elements.
+    pij: np.array (n,n) shaped of floats.
+         The weight of the conectivity between the atoms pairs.
+    stype: string, optional (default='bl').
+           A string determining the type of conection to seach for: 'bb', 'bc',
+           or 'bl'. 'bb' indicate back bonds, 'bc' indicate ciclic bonds, while
+           bl indicate line bonds.
+    dictcheme: dictionary (optional).
+               If dictcheme was seted, before the seach started, the cheme
+               entries are translated by this dictionary.
+    baseucheme: np.array of str.
+                If seted, it is considered the base chemical elements to look
+                for connections.
+    Return
+    ------
+    fd_connect: np.array (n,m) shaped were m is the number of atoms types.
+                The nearest (first degree) neighbors connections types. All in
+                alphabatic order. For instance, in a molecule with atoms of
+                types A an B: [-A, -B].
+    sd_connect: np.array (n,m**2) shaped were m is the number of atoms types.
+                The second degree neighbors connections. All in alphabatic
+                order. For instance, in a molecule with atoms of types A an B:
+                [-A-A, -A-B, -B-A, -B-B].
+    td_connect: np.array (n,m**3) shaped were m is the number of atoms types.
+                The third degree neighbors connections. All in alphabatic
+                order. For instance, in a molecule with atoms of types A an B:
+                [-A-A-A, -A-A-B, -A-B-A, -A-B-B, -B-A-A, -B-A-B, -B-B-A,
+                -B-B-B].
+    """
 
-    def translate_list (dictionary , list_to_be_translated ) :
-        translated=[]
-        for i in list_to_be_translated:
-            translated.append( dictionary[i] )
-        return translated
+    if print_analysis:
+        print("Initializing connections analysis.")
+        logging.info("Initializing connections analysis.")
+        logging.info('positions: {}'.format(positions))
+        logging.info('cheme: {}'.format(cheme))
+        logging.info('pij: {}'.format(pij))
+        logging.info('stype: {}'.format(stype))
+        logging.info('dictcheme: {}'.format(dictcheme))
 
-    quantity_of_atoms = Qtna
-    distance = cdist( positions , positions )
+    qtna = len(positions)
+    distance = cdist(positions, positions)
 
+    # types of atoms
+    if isinstance(dictcheme, dict):
+        cheme = np.array(translate_list(dictcheme, cheme.tolist()))
+    if isinstance(baseucheme, np.ndarray):
+        ucheme = baseucheme
+        ucheme.sort()
+    else:
+        ucheme = np.unique(cheme)
+    qtnuc = len(ucheme)
+
+    # atoms present the labels of each atom
     atoms = []
-    atoms_types = []
-    for i in range( 0 , quantity_of_atoms ) :
-        atoms_types.append( chemical_symbols[i] )
-        atoms.append( chemical_symbols[i] + "_" + str(i) )
+    for i in range(qtna):
+        atoms.append(cheme[i] + "_" + str(i))
 
     # bonds
-    bonded_ecn_condition = 1.
-    print( '    Bonded condition: ECN_{ij} ==' , bonded_ecn_condition )
-    bonded = pij == 1.
-    ##
+    bonded = pij > 0.8
 
-    ##
     # processing
-    ti_processing = time.time()
-    G = nx.Graph()
-    for i in range( 0 , quantity_of_atoms ):
-        G.add_node( atoms[i] , atom_type=atoms_types[i] )
-    for i in range(0 , quantity_of_atoms ) :
-        for j in range( i+1 , quantity_of_atoms ) :
-            if bonded[i,j]:
-                G.add_edge( atoms[i], atoms[j] , distance=distance[i,j])
+    graph = nx.Graph()
+    for i in range(qtna):
+        graph.add_node(atoms[i], atom_type=cheme[i])
+    for i in range(qtna):
+        for j in range(i+1, qtna):
+            if bonded[i, j]:
+                graph.add_edge(atoms[i], atoms[j], distance=distance[i, j])
 
-    recorrent_bonds = []
-    nonrecorrent_bonds = []
-    atom_type = nx.get_node_attributes(G , 'atom_type' )
-    #types_of_atoms = np.unique(atoms_types)
-    types_of_atoms = [ 'Zr' , 'Ce' , 'O' ]
-    atoms_dummy_class = np.zeros( [len(atoms),len(types_of_atoms)] , dtype=int )
-    first_degree_bonds_in_lines = np.zeros( [len(atoms),len(types_of_atoms)] , dtype=int )
-    second_degree_bonds_in_lines = np.zeros( [len(atoms),len(types_of_atoms),len(types_of_atoms)] , dtype=int )
-    third_degree_bonds_in_lines = np.zeros( [len(atoms),len(types_of_atoms),len(types_of_atoms),len(types_of_atoms)] , dtype=int )
-    first_degree_bonds_in_cicles = np.zeros( [len(atoms),len(types_of_atoms)] , dtype=int )
-    second_degree_bonds_in_cicles = np.zeros( [len(atoms),len(types_of_atoms),len(types_of_atoms)] , dtype=int )
-    third_degree_bonds_in_cicles = np.zeros( [len(atoms),len(types_of_atoms),len(types_of_atoms),len(types_of_atoms)] , dtype=int )
-    first_degree_bonds_in_backs = np.zeros( [len(atoms),len(types_of_atoms)] , dtype=int )
-    second_degree_bonds_in_backs = np.zeros( [len(atoms),len(types_of_atoms),len(types_of_atoms)] , dtype=int )
-    third_degree_bonds_in_backs = np.zeros( [len(atoms),len(types_of_atoms),len(types_of_atoms),len(types_of_atoms)] , dtype=int )
+    # recorrent_bonds = []
+    # nonrecorrent_bonds = []
+    # atoms_dummy_class = np.zeros([qtna, qtnuc], dtype=int)
+    cedict = nx.get_node_attributes(graph, 'atom_type')
 
-    for atom_index in range(0 , len(atoms)) :
-        recorrent_bonds.append( [] )
-        nonrecorrent_bonds.append( [] )
-        current_atom = atoms[atom_index]
-        for atom_type_index in range(0 , len(types_of_atoms)) :
-            if atom_type[current_atom] == types_of_atoms[atom_type_index] :
-                atoms_dummy_class[ atom_index , atom_type_index ] = 1
-        neighbors1 = list(G.neighbors(current_atom))
-        neighbors1_types = np.array(translate_list( atom_type, neighbors1 ))
-        for neighborn1 in neighbors1 :
-            for neighborn1_atom_type_index in range(0 , len(types_of_atoms)) :
-                first_degree_bonds_in_lines[ atom_index , neighborn1_atom_type_index ] += int( atom_type[neighborn1]  == types_of_atoms[neighborn1_atom_type_index] )
-                first_degree_bonds_in_cicles[ atom_index , neighborn1_atom_type_index ] += int( atom_type[neighborn1]  == types_of_atoms[neighborn1_atom_type_index] )
-                first_degree_bonds_in_backs[ atom_index , neighborn1_atom_type_index ] += int( atom_type[neighborn1]  == types_of_atoms[neighborn1_atom_type_index] )
-            neighbors2 = list(G.neighbors(neighborn1))
-            neighbors2_types = np.array(translate_list( atom_type, neighbors2 ))
-            for neighborn2 in neighbors2 :
-                for neighborn1_atom_type_index in range(0 , len(types_of_atoms)) :
-                    for neighborn2_atom_type_index in range(0 , len(types_of_atoms)) :
-                        second_degree_bonds_in_backs[ atom_index , neighborn1_atom_type_index , neighborn2_atom_type_index ] += int( (atom_type[neighborn1] == types_of_atoms[neighborn1_atom_type_index] )*( atom_type[neighborn2] == types_of_atoms[neighborn2_atom_type_index]) )
-                        if current_atom != neighborn2 :
-                            second_degree_bonds_in_cicles[ atom_index , neighborn1_atom_type_index , neighborn2_atom_type_index ] += int( (atom_type[neighborn1] == types_of_atoms[neighborn1_atom_type_index] )*( atom_type[neighborn2] == types_of_atoms[neighborn2_atom_type_index]) )
-                        if len(set([current_atom , neighborn1, neighborn2])) == 3 :
-                            second_degree_bonds_in_lines[ atom_index , neighborn1_atom_type_index , neighborn2_atom_type_index ] += int( (atom_type[neighborn1] == types_of_atoms[neighborn1_atom_type_index] )*( atom_type[neighborn2] == types_of_atoms[neighborn2_atom_type_index]) )
-                neighbors3 = list(G.neighbors(neighborn2))
-                neighbors3_types = np.array(translate_list( atom_type, neighbors3 ))
-                for neighborn3 in neighbors3 :
-                    for neighborn1_atom_type_index in range(0 , len(types_of_atoms)) :
-                        for neighborn2_atom_type_index in range(0 , len(types_of_atoms)) :
-                            for neighborn3_atom_type_index in range(0 , len(types_of_atoms)) :
-                                third_degree_bonds_in_backs[ atom_index , neighborn1_atom_type_index , neighborn2_atom_type_index , neighborn3_atom_type_index ] += int( (atom_type[neighborn1] == types_of_atoms[neighborn1_atom_type_index] )*( atom_type[neighborn2] == types_of_atoms[neighborn2_atom_type_index])*( atom_type[neighborn3] == types_of_atoms[neighborn3_atom_type_index]) )
-                                if current_atom != neighborn2 and neighborn1 != neighborn3 :
-                                    third_degree_bonds_in_cicles[ atom_index , neighborn1_atom_type_index , neighborn2_atom_type_index , neighborn3_atom_type_index ] += int( (atom_type[neighborn1] == types_of_atoms[neighborn1_atom_type_index] )*( atom_type[neighborn2] == types_of_atoms[neighborn2_atom_type_index])*( atom_type[neighborn3] == types_of_atoms[neighborn3_atom_type_index]) )
-                                if len(set([current_atom , neighborn1, neighborn2, neighborn3 ])) == 4 :
-                                    third_degree_bonds_in_lines[ atom_index , neighborn1_atom_type_index , neighborn2_atom_type_index , neighborn3_atom_type_index ] += int( (atom_type[neighborn1] == types_of_atoms[neighborn1_atom_type_index] )*( atom_type[neighborn2] == types_of_atoms[neighborn2_atom_type_index])*( atom_type[neighborn3] == types_of_atoms[neighborn3_atom_type_index]) )
-                    recorrent_bonds[atom_index].append( [ neighborn1, neighborn2 , neighborn3] )
-                    if atoms[atom_index] != neighborn2 and neighborn1 != neighborn3:
-                        nonrecorrent_bonds[atom_index].append( [ neighborn1 , neighborn2 , neighborn3] )
+    if stype == 'bb':
+        fd_bb = np.zeros([qtna, qtnuc], dtype=int)
+        sd_bb = np.zeros([qtna, qtnuc * qtnuc], dtype=int)
+        td_bb = np.zeros([qtna, qtnuc * qtnuc * qtnuc], dtype=int)
+        for ca_ind in range(qtna):
+            # recorrent_bonds.append([])
+            # nonrecorrent_bonds.append([])
+            current_atom = atoms[ca_ind]
+            # for cedict_index in range(qtnuc):
+            #    if cedict[current_atom] == ucheme[cedict_index]:
+            #         atoms_dummy_class[ca_ind, cedict_index] = 1
+            ns1 = list(graph.neighbors(current_atom))
+            for n1 in ns1:
+                # ns1_types = np.array(translate_list(cedict, ns1))
+                for n1ce_ind in range(qtnuc):
+                    fd_bb[ca_ind, n1ce_ind] += int(cedict[n1] == ucheme[n1ce_ind])
+                ns2 = list(graph.neighbors(n1))
+                # ns2_types = np.array(translate_list(cedict, ns2))
+                for n2 in ns2:
+                    for n1ce_ind in range(qtnuc):
+                        for n2ce_ind in range(qtnuc):
+                            sd_bb[ca_ind, n1ce_ind * qtnuc + n2ce_ind] += int((cedict[n1] == ucheme[n1ce_ind])*(cedict[n2] == ucheme[n2ce_ind]))
+                    ns3 = list(graph.neighbors(n2))
+                    # ns3_types = np.array(translate_list(cedict, ns3))
+                    for n3 in ns3:
+                        for n1ce_ind in range(qtnuc):
+                            for n2ce_ind in range(qtnuc):
+                                for n3ce_ind in range(qtnuc):
+                                    td_bb[ca_ind, n1ce_ind * qtnuc * qtnuc + n2ce_ind * qtnuc + n3ce_ind] += int((cedict[n1] == ucheme[n1ce_ind])*(cedict[n2] == ucheme[n2ce_ind])*(cedict[n3] == ucheme[n3ce_ind]))
+                        # recorrent_bonds[ca_ind].append([n1, n2, n3])
+                        # if atoms[ca_ind] != n2 and n1 != n3:
+                        #     nonrecorrent_bonds[ca_ind].append([n1, n2, n3])
+        return fd_bb, sd_bb, td_bb
 
+    if stype == 'bc':
+        fd_bc = np.zeros([qtna, qtnuc], dtype=int)
+        sd_bc = np.zeros([qtna, qtnuc * qtnuc], dtype=int)
+        td_bc = np.zeros([qtna, qtnuc * qtnuc * qtnuc], dtype=int)
+        for ca_ind in range(qtna):
+            # recorrent_bonds.append([])
+            # nonrecorrent_bonds.append([])
+            current_atom = atoms[ca_ind]
+            # for cedict_index in range(qtnuc):
+            #     if cedict[current_atom] == ucheme[cedict_index]:
+            #         atoms_dummy_class[ca_ind, cedict_index] = 1
+            ns1 = list(graph.neighbors(current_atom))
+            for n1 in ns1:
+                # ns1_types = np.array(translate_list(cedict, ns1))
+                for n1ce_ind in range(qtnuc):
+                    fd_bc[ca_ind, n1ce_ind] += int(cedict[n1] == ucheme[n1ce_ind])
+                ns2 = list(graph.neighbors(n1))
+                # ns2_types = np.array(translate_list(cedict, ns2))
+                for n2 in ns2:
+                    for n1ce_ind in range(qtnuc):
+                        for n2ce_ind in range(qtnuc):
+                            if current_atom != n2:
+                                sd_bc[ca_ind, n1ce_ind * qtnuc + n2ce_ind] += int((cedict[n1] == ucheme[n1ce_ind])*(cedict[n2] == ucheme[n2ce_ind]))
+                    ns3 = list(graph.neighbors(n2))
+                    # ns3_types = np.array(translate_list(cedict, ns3))
+                    for n3 in ns3:
+                        for n1ce_ind in range(qtnuc):
+                            for n2ce_ind in range(qtnuc):
+                                for n3ce_ind in range(qtnuc):
+                                    if current_atom != n2 and n1 != n3:
+                                        td_bc[ca_ind, n1ce_ind * qtnuc * qtnuc + n2ce_ind * qtnuc + n3ce_ind] += int((cedict[n1] == ucheme[n1ce_ind])*(cedict[n2] == ucheme[n2ce_ind])*(cedict[n3] == ucheme[n3ce_ind]))
+                        # recorrent_bonds[ca_ind].append([n1, n2, n3])
+                        # if atoms[ca_ind] != n2 and n1 != n3:
+                        #     nonrecorrent_bonds[ca_ind].append([n1, n2, n3])
+        return fd_bc, sd_bc, td_bc
 
-    atom_types_to_be_printed = types_of_atoms.copy()
+    if stype == 'bl':
+        fd_bl = np.zeros([qtna, qtnuc], dtype=int)
+        sd_bl = np.zeros([qtna, qtnuc * qtnuc], dtype=int)
+        td_bl = np.zeros([qtna, qtnuc * qtnuc * qtnuc], dtype=int)
+        for ca_ind in range(qtna):
+            # recorrent_bonds.append([])
+            # nonrecorrent_bonds.append([])
+            current_atom = atoms[ca_ind]
+            # for cedict_index in range(qtnuc):
+            #     if cedict[current_atom] == ucheme[cedict_index]:
+            #         atoms_dummy_class[ca_ind, cedict_index] = 1
+            ns1 = list(graph.neighbors(current_atom))
+            for n1 in ns1:
+                # ns1_types = np.array(translate_list(cedict, ns1))
+                for n1ce_ind in range(qtnuc):
+                    fd_bl[ca_ind, n1ce_ind] += int(cedict[n1] == ucheme[n1ce_ind])
+                ns2 = list(graph.neighbors(n1))
+                # ns2_types = np.array(translate_list(cedict, ns2))
+                for n2 in ns2:
+                    for n1ce_ind in range(qtnuc):
+                        for n2ce_ind in range(qtnuc):
+                            if len(set([current_atom, n1, n2])) == 3:
+                                sd_bl[ca_ind, n1ce_ind * qtnuc + n2ce_ind] += int((cedict[n1] == ucheme[n1ce_ind])*(cedict[n2] == ucheme[n2ce_ind]))
+                    ns3 = list(graph.neighbors(n2))
+                    # ns3_types = np.array(translate_list(cedict, ns3))
+                    for n3 in ns3:
+                        for n1ce_ind in range(qtnuc):
+                            for n2ce_ind in range(qtnuc):
+                                for n3ce_ind in range(qtnuc):
+                                    if len(set([current_atom, n1, n2, n3])) == 4:
+                                        td_bl[ca_ind, n1ce_ind * qtnuc * qtnuc + n2ce_ind * qtnuc + n3ce_ind] += int((cedict[n1] == ucheme[n1ce_ind])*(cedict[n2] == ucheme[n2ce_ind])*(cedict[n3] == ucheme[n3ce_ind]))
+                        # recorrent_bonds[ca_ind].append([n1, n2, n3])
+                        # if atoms[ca_ind] != n2 and n1 != n3:
+                        #     nonrecorrent_bonds[ca_ind].append([n1, n2, n3])
+        return fd_bl, sd_bl, td_bl
 
-    print( '    Counting type:', count)
-    if count == 'lines' :
-        first_degree_bonds = first_degree_bonds_in_lines
-        second_degree_bonds = second_degree_bonds_in_lines
-        third_degree_bonds = third_degree_bonds_in_lines
-    if count == 'cicles' :
-        first_degree_bonds = first_degree_bonds_in_cicles
-        second_degree_bonds = second_degree_bonds_in_cicles
-        third_degree_bonds = third_degree_bonds_in_cicles
-    if count == 'backs' :
-        first_degree_bonds = first_degree_bonds_in_backs
-        second_degree_bonds = second_degree_bonds_in_backs
-        third_degree_bonds = third_degree_bonds_in_backs
+    # atom_types_to_be_printed = ucheme.copy()
 
-    string0=[]
-    string1=[]
-    string2=[]
-    string3=[]
-    for atom_index in range(0 , len(atoms)) :
-        string0.append( ','.join(np.array( atoms_dummy_class[atom_index]             , dtype=str )) )
-        string1.append( ','.join(np.array( first_degree_bonds[atom_index].flatten()  , dtype=str )) )
-        string2.append( ','.join(np.array( second_degree_bonds[atom_index].flatten() , dtype=str )) )
-        string3.append( ','.join(np.array( third_degree_bonds[atom_index].flatten()  , dtype=str )) )
-    string0 = np.array(string0)
-    string1 = np.array(string1)
-    string2 = np.array(string2)
-    string3 = np.array(string3)
+    # if count == 'lines' :
+    #     fd_bonds = fd_bl
+    #     sd_bonds = sd_bl
+    #     td_bonds = td_bl
+    # if count == 'cicles' :
+    #     fd_bonds = fd_bc
+    #     sd_bonds = sd_bc
+    #     td_bonds = td_bc
+    # if count == 'backs' :
+    #     fd_bonds = fd_bb
+    #     sd_bonds = sd_bb
+    #     td_bonds = td_bb
+    # string0 = []
+    # string1 = []
+    # string2 = []
+    # string3 = []
+    # for atom_index in range(0 , qtna) :
+    #     string0.append(','.join(np.array(atoms_dummy_class[atom_index],
+    #                                      dtype=str)))
+    #     string1.append(','.join(np.array(fd_bonds[atom_index].flatten(),
+    #                                      dtype=str)))
+    #     string2.append(','.join(np.array(sd_bonds[atom_index].flatten(),
+    #                                      dtype=str)))
+    #     string3.append(','.join(np.array(td_bonds[atom_index].flatten(),
+    #                                      dtype=str)))
+    # string0 = np.array(string0)
+    # string1 = np.array(string1)
+    # string2 = np.array(string2)
+    # string3 = np.array(string3)
 
     # header
-    header0=','.join(np.array(types_of_atoms,dtype=str))
-    bonds_string=[]
-    for i in itertools.product(',',types_of_atoms):
-        bonds_string.append( '-'.join(i) )
-    header1= ''.join(bonds_string)[1:]
-    bonds_string=[]
-    for i in itertools.product(',',types_of_atoms,types_of_atoms):
-        bonds_string.append( '-'.join(i) )
-    header2= ''.join(bonds_string)[1:]
-    bonds_string=[]
-    for i in itertools.product(',',types_of_atoms,types_of_atoms,types_of_atoms):
-        bonds_string.append( '-'.join(i) )
-    header3= ''.join(bonds_string)[1:]
+    # header0 = ','.join(np.array(ucheme, dtype=str))
+    # bonds_string = []
+    # for i in itertools.product(',', ucheme):
+    #     bonds_string.append('-'.join(i))
+    # header1 = ''.join(bonds_string)[1:]
+    # bonds_string = []
+    # for i in itertools.product(',', ucheme, ucheme):
+    #     bonds_string.append('-'.join(i))
+    # header2= ''.join(bonds_string)[1:]
+    # bonds_string = []
+    # for i in itertools.product(',', ucheme, ucheme, ucheme):
+    #     bonds_string.append('-'.join(i))
+    # header3 =  ''.join(bonds_string)[1:]
 
-    sep=np.array( [',',',',','] )
+    # sep=np.array([',',',',','])
+    # if degree == 1 :
+    #     header2 = ''
+    #     header3 = ''
+    #     string2[:] = ''
+    #     string3[:] = ''
+    #     sep[1:] = ''
+    # if degree == 2 :
+    #     header1 = ''
+    #     header3 = ''
+    #     string1[:] = ''
+    #     string3[:] = ''
+    #     sep[1:] = ''
+    # if degree == 3 :
+    # header2 = ''
+    # header1 = ''
+    # string2[:] = ''
+    # string1[:] = ''
+    # sep[1:] = ''
 
-    #if degree == 1 :
-    #    header2 = ''
-    #    header3 = ''
-    #    string2[:] = ''
-    #    string3[:] = ''
-    #    sep[1:] = ''
-    #if degree == 2 :
-    #    header1 = ''
-    #    header3 = ''
-    #    string1[:] = ''
-    #    string3[:] = ''
-    #    sep[1:] = ''
-    #if degree == 3 :
-    #header2 = ''
-    #header1 = ''
-    #string2[:] = ''
-    #string1[:] = ''
-    #sep[1:] = ''
+    # header_string = '[' + header0 + sep[0] + header1 + sep[1] + header2 \
+    #                 + sep[2] + header3 + ']'
 
-    header_string = '[' + header0 + sep[0] + header1 + sep[1] + header2 + sep[2] + header3 + ']'
-
-    print( '    bag_conections_information:' + header_string )
-    final=','
-    initial='    bag_of_bag_of_conections: ['
-    for atom_index in range(0 , quantity_of_atoms) :
-        if atoms_types[atom_index] in atom_types_to_be_printed :
-           if atom_index == quantity_of_atoms - 1 : final=']\n'
-           if atom_index > 0 : initial=''
-           print( initial + '[' + string0[atom_index] + sep[0] + string1[atom_index] + sep[1] + string2[atom_index] + sep[2] + string3[atom_index] + ']' , end =final )
+    # print('    bag_conections_information:' + header_string)
+    # final = ','
+    # initial = '    bag_of_bag_of_conections: ['
+    # for atom_index in range(qtna):
+    #     if cheme[atom_index] in atom_types_to_be_printed:
+    #        if atom_index == qtna - 1:
+    #            final = ']\n'
+    #        if atom_index > 0:
+    #            initial = ''
+    #        print(initial + '[' + string0[atom_index] + sep[0] + \
+    #              string1[atom_index] + sep[1] + string2[atom_index] \
+    #              + sep[2] + string3[atom_index] + ']', end=final)
 
 
 

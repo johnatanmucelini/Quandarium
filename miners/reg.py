@@ -9,8 +9,7 @@ import logging
 import sys
 import pandas as pd
 import numpy as np
-from quandarium.analy.aux import bag2arr
-from quandarium.analy.aux import arr2bag
+from quandarium.analy.aux import to_nparray
 from quandarium.analy.aux import logcolumns
 from quandarium.analy.aux import checkmissingkeys
 from quandarium.analy.mols import avradius
@@ -20,63 +19,45 @@ logging.basicConfig(filename='/home/johnatan/quandarium_module.log',
 logging.info('The logging level is INFO')
 
 
-# relative energies
-def relative_energy(pd_df, relativefeature='reg_energy_tot',
-                    relativefeaturen='reg_erel',
-                    groupbyfeature='reg_chemical_formula'):
-    """It calculate the relative energy for each chemical formula. Indeed, it
-    calculate the relative feature for the groups of samples with the same
-    valeu for the groupby feature. In other words, the complete dataset will be
-    divided in n smaller dataset where the samples divide the same value of
-    groupbyfeature, then the relative feature values will be calculated as the
-    value of the featuretorelativize minus the smallest value of this feature
-    in the group that it belongs to. Thus, any relative feuatere can be
-    calculated. The new regular feature return in a new dataframe, concatenate
-    with the input dataframe.
+def relativise(feature, groupbyfeature):
+    """It calculate the relative value of a feature for each value of
+    groupbyfeature. In other words, the complete dataset will be divided in n
+    smaller dataset where the samples divide the same value of groupbyfeature,
+    then the relative feature values will be calculated as the value of the
+    featuretorelativize minus the smallest value of this feature in the group
+    that it belongs to.
 
     Parameters
     ----------
-    pd_df: pandas.DataFrame.
-           A padas dataframe with coluns with the names in parameter
-           relativefeature and groupbyfeature.
-    relativefeature: str, (otional, default='reg_energy_tot')
-                     The name of the column in the dataframe of the main
-                     feature which will be compute the relative features.
-    groupbyfeature: str, (otional, default='reg_chemical_formula')
-                    The name of the column in the dataframe which will be
-                    employed to create the groups of samples.
+    feature: np.array, pandas.Series, or list
+             The data of feature which will be compute the relative features.
+    groupbyfeature: np.array, pandas.Series, or list
+                    The data of the feature which will be used to grup the
+                    samples.
     Return
     ------
-    combined_df: pandas.Datafram.
-                 The input dataframe concatenated with data obtained.
+    relativesed: np.array
+                 The reletivised feature values in a np.ndarray.
     """
 
-    print("Initializing analysis: relative_energy")
-    logging.info('    Initializing analysis: relative_energy')
-    logging.info('    relativefeature {}'.format(relativefeature))
-    logging.info('    relativefeaturen: {}'.format(relativefeaturen))
-    logging.info('    groupbyfeature: {}'.format(groupbyfeature))
-
-    chemical_compositions = np.unique(pd_df[[groupbyfeature]].values)
-    relative_energies = np.zeros(len(pd_df))
-    for chemical_compostion in chemical_compositions:
-        logging.info('    Proceding analysis of chemical composition: '
-                     ' {}'.format(chemical_compostion))
-        isserie = pd_df[groupbyfeature] == chemical_compostion
-        pd_s_etot = pd_df.loc[isserie, relativefeature].astype(float).values
-        pd_s_etotmin = pd_s_etot.min()
-        relative_energies[isserie] = pd_s_etot - pd_s_etotmin
-    new_df = pd.DataFrame(np.array([relative_energies]).T,
-                          columns=[relativefeaturen])
-    combined_df = pd.concat([pd_df, new_df], axis=1, sort=False)
-
-    logcolumns('info', "New columns: ", new_df)
-
-    return combined_df
+    print("Initializing analysis: relativising")
+    pd_df = pd.DataFrame()
+    pd_df['feature'] = to_nparray(feature)
+    pd_df['groupbyfeature'] = to_nparray(groupbyfeature)
+    #print(pd_df, feature, groupbyfeature, to_nparray(feature),to_nparray(groupbyfeature))
+    grouped = pd_df.groupby(groupbyfeature)
+    relativised = np.zeros(len(pd_df))
+    for group in grouped.groups:
+        logging.info('    Proceding analysis of group: '
+                     '{}'.format(group))
+        groupedby_df = grouped.get_group(group)
+        indexes = groupedby_df.index.tolist()
+        newdata = to_nparray(groupedby_df['feature']) - to_nparray(groupedby_df['feature']).min()
+        relativised[indexes] = np.array(newdata)
+    return np.array(relativised)
 
 
-def rec_avradius(pd_df, positionsfeature='bag_positions', useradius=True,
-                  davraddiifeature='bag_dav', davradius='dav'):
+def rec_avradius(positions, useradius=False, davraddii=[], davradius='dav'):
     """It calculate the the average radius of some molecule for all molecules
     in a pandas dataframe, and return in a new dataframe, concatenating the
     average radius with the input dataframe.
@@ -88,7 +69,7 @@ def rec_avradius(pd_df, positionsfeature='bag_positions', useradius=True,
     positionsfeature: str (optional, default='bag_positions')
                       The name of the fuature (bag type) in pd_df with
                       cartezian positions of the atoms.
-    davraddiifeature: str (optional, default='bag_dav')
+    davraddii: str (optional, default='bag_dav')
                       The name of the fuature in pd_df with atomic radii or dav
                       information (bag of floats).
     davradius: str ['dav','radii'] (optional, default='dav')
@@ -102,32 +83,25 @@ def rec_avradius(pd_df, positionsfeature='bag_positions', useradius=True,
     """
     print("Initializing analysis: rec_avradius")
     logging.info('    Initializing analysis: rec_avradius')
-    logging.info('    Positions from column {}'.format(positionsfeature))
-    logging.info('    davraddiifeature: {}'.format(davraddiifeature))
-    logging.info('    davradius: {}'.format(davradius))
-    logging.info('    useradius: {}'.format(useradius))
 
+    positions = to_nparray(positions).tolist()
+    davraddii = to_nparray(davraddii).tolist()
     new_data = []
-    for index in range(len(pd_df)):
+    for index in range(len(positions)):
         logging.info('    Proceding analysis of structure index {:04d}'.format(
             index))
-        positions = bag2arr(pd_df[positionsfeature][index])
+        positions_i = np.array(positions[index])
         if davradius == 'dav':
-            raddiiorhalfdav = bag2arr(pd_df[davraddiifeature][index])/2.
+            raddiiorhalfdav = np.array(davraddii[index])/2.
         if davradius == 'radius':
-            raddiiorhalfdav = bag2arr(pd_df[davraddiifeature][index])
-        result = avradius(positions, raddiiorhalfdav, useradius=useradius)
+            raddiiorhalfdav = np.array(davraddii[index])
+        result = avradius(positions_i, raddiiorhalfdav, useradius=useradius)
         new_data.append(result)
         if index % 50 == 0:
-            print("    concluded %3.1f%%" % (100*index/len(pd_df)))
+            print("    concluded %3.1f%%" % (100*index/len(positions)))
     print("    concluded %3.1f%%" % (100))
-    new_df = pd.DataFrame(np.array([new_data]).T,
-                          columns=['reg_avradius'])
-    combined_df = pd.concat([pd_df, new_df], axis=1, sort=False)
 
-    logcolumns('info', "New columns: ", new_df)
-
-    return combined_df
+    return np.array(new_data)
 
 
 def mine_bags(pd_df, classes, bags, classesn='', bagsn='', operators=[np.average],
@@ -184,15 +158,15 @@ def mine_bags(pd_df, classes, bags, classesn='', bagsn='', operators=[np.average
     list_of_new_features_data = []
 
     # Verificando quais bags não estão cheias
-    for sampleind in range(len(pd_df)):
-        for bag in bags:
-            data = bag2arr(pd_df[bag][sampleind], dtype=float)
-            if len(data) != 45:  # problem...
-                print(sampleind, bag, data)
-        for classa in classes:
-            data = bag2arr(pd_df[classa][sampleind], dtype=bool)
-            if len(data) != 45:  # problem...
-                print(sampleind, classa, data)
+    # for sampleind in range(len(pd_df)):
+    #     for bag in bags:
+    #        data = bag2arr(pd_df[bag][sampleind], dtype=float)
+    #        if len(data) != 45:  # problem...
+    #            print(sampleind, bag, data)
+    #    for classa in classes:
+    #        data = bag2arr(pd_df[classa][sampleind], dtype=bool)
+    #        if len(data) != 45:  # problem...
+    #            print(sampleind, classa, data)
 
     # criando os novos features
     for operation, oname in zip(operators, operatorsn):
