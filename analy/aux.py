@@ -26,7 +26,7 @@ def to_nparray(data):
         return np.array(data.values)
     if isinstance(data, pd.DataFrame):
         return np.array(data.values)
-    if ininstance(data, np.ndarray):
+    if isinstance(data, np.ndarray):
         return data
 
 def to_list(data):
