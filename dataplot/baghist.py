@@ -39,7 +39,7 @@ def histbag(figname, bag, grupbybag):
     bag = to_list(bag)
     grupbybag = to_list(grupbybag)
     data = []
-    for i in range(len(bag)):
+    for i, _ in enumerate(bag):
         data += to_list(bag[i])
     data = np.array(data)
 
