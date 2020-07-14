@@ -2,21 +2,14 @@
 Calculations, and related functions. The QC codes with extractors avaliable
 are:
 - FHI-aims
-- VESTA (not yet)
+- VASP
+- formats of ase.io
 """
 
-import logging
 import re
 import pandas as pd
 import numpy as np
 import ase.io
-from quandarium.analy.aux import logcolumns
-
-
-logging.basicConfig(filename='/home/johnatan/quandarium_module.log',
-                    level=logging.INFO)
-logging.info('The logging level is INFO')
-
 
 def extractor_aseengine(outfile):
     """This function open a generical file output (outfile), read it, and
@@ -27,17 +20,18 @@ def extractor_aseengine(outfile):
              The name of the output file.
     Return
     ------
-    gap, homo, lumo, mag, energy_tot: floats.
-                                      Information of gap, HOMO, LUMO,
-                                      magnetization, and total energy,
-                                      respectively.
+    energy_tot: float.
+                The total energy. 
+
     positions: np.array of floats, (n,3) shaped.
                The cartezian positions of the atoms.
-    chemical_species: np.array of floats, lengh n.
-                      The chemical species of the structure.
-    chemical_formula: str.
-                      String with the chemical species in alphabetical order
-                      followed by the quantity of atoms.
+
+    cheme: np.array of floats, lengh n.
+           The chemical species of the structure.
+
+    chemf: str.
+           String with the chemical species in alphabetical order
+           followed by the quantity of atoms.
     """
 
     # add tests of the input variables
@@ -61,18 +55,20 @@ def extractor_aseengine(outfile):
     return energy_tot, chemf, positions, cheme
 
 
-def extractfromfolders_aseengine(folders, output_file_name='aims.out',
-                                 csv_name=''):
+def fromfolders_extract_aseengine(folders, output_file_name='aims.out'):
     """It get data from fhi calculation folders.
     Parameters
     ----------
-    folders: np.array
-             A numpy array with the names of the folders with calculations.
+    folders: np.array, list, etc
+             The names of the folders with calculations.
     output_file_name: str, (optional, default='aims.out')
                       The output file name.
     Return
     ------
-    newdata: np.array with coluns for each new feature.
+    list_of_new_features_name: list of str 
+                               The new data name.
+    list_of_new_features_data: list of np.array 
+                               The new data.
     """
 
     # The lists list_of_new_features_data and list_of_new_features_name, colect
@@ -87,9 +83,7 @@ def extractfromfolders_aseengine(folders, output_file_name='aims.out',
     chemf_list = []
     folders = np.array(folders.values)
     print("Initializing data extraction:")
-    # logging.info("Initializing data extraction:")
     for index, folder in enumerate(folders):
-        # logging.info("    {}".format(folder))
         etot, chemf, positions, cheme = extractor_aseengine(folder + '/'
                                                             + output_file_name)
         if index % 50 == 0:
@@ -108,12 +102,10 @@ def extractfromfolders_aseengine(folders, output_file_name='aims.out',
                              'reg_chemf']:
         list_of_new_features_name.append(new_feature_name)
 
-    # Getting for each sample the quantity of each specie in the dataset
-
     return list_of_new_features_name, list_of_new_features_data
 
 
-def getcharges(folder, filename='', code='fhi', chargetype='hirs'):
+def extractor_charges(folder, filename='', code='fhi', chargetype='hirs'):
     """This function get the hirshfield charges of an 'fhi' code calculations
     """
     # problema: fileout é o arquivo outcar do vasp e os dados de carga estão
@@ -180,7 +172,7 @@ def getcharges(folder, filename='', code='fhi', chargetype='hirs'):
     return charges
 
 
-def rec_getcharges(folders, code, chargetype):
+def fromfolders_extract_charges(folders, code, chargetype):
     """This function open VASP and fhi output files, read it, and return the
     atoms charges.
     Parameters
@@ -200,12 +192,10 @@ def rec_getcharges(folders, code, chargetype):
 
     folders = np.array(folders.values)
     charges_list = []
-    print("Initializing charges extraction:")
-    logging.info("Initializing charges extraction:")
+    print("Initializing fromfolders_extract_charges:")
     for index in range(len(folders)):
         folder = folders[index]
-        logging.info("    {}".format(folder))
-        charges = getcharges(folder, code=code, chargetype=chargetype)
+        charges = extractor_charges(folder, code=code, chargetype=chargetype)
         charges_bag = charges.tolist()
         charges_list.append(charges_bag)
         if index % 50 == 0:
@@ -215,7 +205,7 @@ def rec_getcharges(folders, code, chargetype):
     return np.array(charges_list)
 
 
-def extract_fhi(outfile='aims.out'):
+def extractor_fhi(outfile='aims.out'):
     """This function open a fhi output file (outfile) and read and return the
     important informations.
     Parameters
@@ -325,8 +315,8 @@ def extract_fhi(outfile='aims.out'):
     return gap, homo, lumo, mag, energy_tot, positions, cebag, chemical_formula
 
 
-def extract_fhi_ff(folders, output_file_name='aims.out',
-                           csv_name=''):
+def fromfolders_extract_fhi(folders, output_file_name='aims.out'):
+                          
     """It get data from fhi calculation folders.
     Parameters
     ----------
@@ -354,12 +344,10 @@ def extract_fhi_ff(folders, output_file_name='aims.out',
     cheme_list = []
     chemf_list = []
     folders = np.array(folders.values)
-    print("Initializing data extraction:")
-    logging.info("Initializing data extraction:")
+    print("Initializing fromfolders_extract_fhi:")
     for index in range(len(folders)):
         folder = folders[index]
-        logging.info("    {}".format(folder))
-        gap, homo, lumo, mag, etot, positions, cheme, chemf = extract_fhi(
+        gap, homo, lumo, mag, etot, positions, cheme, chemf = extractor_fhi(
             folder + '/' + output_file_name)
         if index % 50 == 0:
             print("    concluded %3.1f%%" % (100*index/len(folders)))
@@ -375,14 +363,12 @@ def extract_fhi_ff(folders, output_file_name='aims.out',
         chemf_list.append(chemf)
     print("    concluded %3.1f%%" % (100))
     # Adding new features data and name to its lists
-    for new_feature_data in [gap_list, homo_list, lumo_list, mag_list,
-                             etot_list, positions_list, cheme_list,
-                             chemf_list]:
-        list_of_new_features_data.append(new_feature_data)
-    for new_feature_name in ['reg_gap', 'reg_homo', 'reg_lumo', 'reg_mag',
-                             'reg_etot', 'bag_positions',
-                             'bag_cheme', 'reg_chemf']:
-        list_of_new_features_name.append(new_feature_name)
+    list_of_new_features_data = [gap_list, homo_list, lumo_list, mag_list,
+                                 etot_list, positions_list, cheme_list,
+                                 chemf_list]
+    list_of_new_features_name = ['reg_gap', 'reg_homo', 'reg_lumo', 'reg_mag',
+                                 'reg_etot', 'bag_positions', 'bag_cheme', 
+                                 'reg_chemf']
 
     # Getting for each sample the quantity of each specie in the dataset
     jointedformulas = ''.join(chemf_list)
@@ -410,10 +396,10 @@ def extract_fhi_ff(folders, output_file_name='aims.out',
     for new_feature_name in list_features_qtn_atoms_name:
         list_of_new_features_name.append(new_feature_name)
 
-    return list_of_new_features_name, np.array(list_of_new_features_data)
+    return list_of_new_features_name, list_of_new_features_data
 
 
-def extract_vasp(outfile='OUTCAR'):
+def extractor_vasp(outfile='OUTCAR'):
     """This function open a VASP output file (outfile), read it, than and return the
     important informations.
     Parameters
@@ -567,7 +553,6 @@ def extract_vasp(outfile='OUTCAR'):
             new_pos = np.dot(cell, direct_new_pos.T).T
             positions = new_pos.tolist()
             clust = DBSCAN(eps=3, min_samples=1).fit(positions)
-            #ase.io.write('POSCAR_try', ase.Atoms('H'*len(positions), positions=positions, cell=cell) , format='vasp')
 
     # cheme
     potcars = []
@@ -602,8 +587,7 @@ def extract_vasp(outfile='OUTCAR'):
            magsd, magsf
 
 
-def extract_vasp_ff(folders, output_file_name='OUTCAR',
-                           csv_name=''):
+def fromfolders_extract_vasp(folders, output_file_name='OUTCAR'):
     """It get data from vasp calculation folders.
     Parameters
     ----------
@@ -611,17 +595,15 @@ def extract_vasp_ff(folders, output_file_name='OUTCAR',
              A numpy array with the names of the folders with calculations.
     output_file_name: str, (optional, default='OUTCAR')
                       The output file name.
+
     Return
     ------
-    newdata: np.array with coluns for each new feature.
+    list_of_new_features_name: list of str.
+                               New data name.
+
+    list_of_new_features_data: list of np.array.
+                               New data.
     """
-
-    # The lists list_of_new_features_data and list_of_new_features_name, colect
-    # All the information along the analysis
-    list_of_new_features_data = []
-    list_of_new_features_name = []
-
-    # getting properties from  extractor_fhi
 
     cbm_list = []
     vbm_list = []
@@ -643,12 +625,9 @@ def extract_vasp_ff(folders, output_file_name='OUTCAR',
     magsd_list = []
     magsf_list = []
     folders = np.array(folders.values)
-    print("Initializing data extraction:")
-    logging.info("Initializing data extraction:")
+    print("Initializing fromfolders_extract_vasp:")
     for index, folder in enumerate(folders):
-        #logging.info("    {}".format(folder))
-        #print(folder)
-        data = extract_vasp(folder + '/' + output_file_name)
+        data = extractor_vasp(folder + '/' + output_file_name)
         cbm, vbm, gap, mag, energy, positions, cell, cheme, chemf, chgss, \
             chgsp, chgsd, chgsf, chgst, magst, magss, magsp, magsd, magsf = data
         if index % 50 == 0:
@@ -673,16 +652,18 @@ def extract_vasp_ff(folders, output_file_name='OUTCAR',
         magsd_list.append(magsd)
         magsf_list.append(magsf)
     print("    concluded %3.1f%%" % (100))
-    # Adding new features data and name to its lists
-    for new_feature_data in [cbm_list, vbm_list, gap_list, mag_list,
-        energy_list, positions_list, cell_list, cheme_list, chemf_list,
-        chgss_list, chgsp_list, chgsd_list, chgsf_list, chgst_list, magst_list,
-        magss_list, magsp_list, magsd_list, magsf_list]:
-        list_of_new_features_data.append(new_feature_data)
-    for new_feature_name in ['reg_cbm', 'reg_vbm', 'reg_gap', 'reg_mag',
-        'reg_energy', 'bag_positions', 'bag_cell', 'bag_cheme', 'reg_chemf',
-        'bag_chgss', 'bag_chgsp', 'bag_chgsd', 'bag_chgsf', 'bag_chgst',
-        'bag_magst', 'bag_magss', 'bag_magsp', 'bag_magsd', 'bag_magsf']:
-        list_of_new_features_name.append(new_feature_name)
+
+    list_of_new_features_data = [cbm_list, vbm_list, gap_list, mag_list,
+                                 energy_list, positions_list, cell_list, 
+                                 cheme_list, chemf_list, chgss_list, 
+                                 chgsp_list, chgsd_list, chgsf_list, 
+                                 chgst_list, magst_list, magss_list, 
+                                 magsp_list, magsd_list, magsf_list]
+    list_of_new_features_name = ['reg_cbm', 'reg_vbm', 'reg_gap', 'reg_mag',
+                                 'reg_energy', 'bag_positions', 'bag_cell', 
+                                 'bag_cheme', 'reg_chemf', 'bag_chgss', 
+                                 'bag_chgsp', 'bag_chgsd', 'bag_chgsf', 
+                                 'bag_chgst', 'bag_magst', 'bag_magss', 
+                                 'bag_magsp', 'bag_magsd', 'bag_magsf']:
 
     return list_of_new_features_name, list_of_new_features_data

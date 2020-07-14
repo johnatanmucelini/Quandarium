@@ -1,24 +1,12 @@
 """This module present auxiliar function for cluster_analysis file"""
 
-import logging
 import sys
 import ase.io
 import numpy as np
 import pandas as pd
 from sklearn.cluster import DBSCAN
 
-logging.basicConfig(filename='/home/johnatan/quandarium_module.log',
-                    level=logging.INFO)
-logging.info('The logging level is INFO')
-
-class Log(object):
-    def write(self, msg):
-        logging.error("NUMPY floating-point error")
-Logging_function_np = Log()
-np.seterr(all='log')
-np.seterrcall(Logging_function_np)
-
-def to_nparray(data):
+def to_nparray(data): # unir a de baixo
     """This functions recive a data and return a numpy array"""
     if isinstance(data, list):
         return np.array(data)
@@ -28,6 +16,56 @@ def to_nparray(data):
         return np.array(data.values)
     if isinstance(data, np.ndarray):
         return data
+
+
+def tonparray(*data, dropnan=True):
+    """Converta data (pd series or non-flatten numpy array) to a flatten numpy
+    array. Droping nans by default..."""
+    if len(data) == 2:
+        data1 = data[0]
+        data2 = data[1]
+        if isinstance(data1, pd.core.series.Series):
+            data1 = data1.values.flatten()
+        elif isinstance(data1, np.ndarray):
+            data1 = data1.flatten()
+        elif isinstance(data1, list):
+            data1 = np.array(data1).flatten()
+        else:
+            print('ERROR: the type {} (for data1) is not suported in tonoparray.'.format(
+                type(data1)))
+        if isinstance(data2, pd.core.series.Series):
+            data2 = data2.values.flatten()
+        elif isinstance(data2, np.ndarray):
+            data2 = data2.flatten()
+        elif isinstance(data2, list):
+            data2 = np.array(data2).flatten()
+        else:
+            print('ERROR: the type {} (for data2) is not suported in tonoparray.'.format(
+                type(data2)))
+        if dropnan:
+            usefulldata = np.logical_and(np.isnan(data1) == False,
+                                         np.isnan(data2) == False)
+            return data1[usefulldata], data2[usefulldata]
+        else:
+            return data1, data2
+
+    if len(data) == 1:
+        data1 = data[0]
+        if isinstance(data1, pd.core.series.Series):
+            data1 = data1.values.flatten()
+        elif isinstance(data1, np.ndarray):
+            data1 = data1.flatten()
+        elif isinstance(data1, list):
+            data1 = np.array(data1).flatten()
+        else:
+            print('ERROR: the type {} is not suported in tonoparray.'.format(
+                type(data1)))
+        if dropnan:
+            usefulldata = np.isnan(data1) == False
+            return data1[usefulldata]
+        else:
+            return data1
+
 
 def to_list(data):
     """This functions recive a data and return a list"""
@@ -40,6 +78,7 @@ def to_list(data):
     if isinstance(data, np.ndarray):
         return data.tolist()
 
+
 def checkmissingkeys(keys, dictlist, massange):
     """It return the missing keys of a dictionary or list"""
     missingkeyslist = []
@@ -48,22 +87,8 @@ def checkmissingkeys(keys, dictlist, massange):
             missingkeyslist.append(key)
     if missingkeyslist:
         print("Error: " + massange + ': {}'.format(str(missingkeyslist)))
-        logging.error("Error: " + massange + ': {}'.format(str(
-            missingkeyslist)))
         sys.exit(1)
     return
-
-def logcolumns(lvl, massange, pd_df):
-    lvldict = {'critical': logging.CRITICAL,
-               'error': logging.ERROR,
-               'warning': logging.WARNING,
-               'info': logging.INFO,
-               'debug': logging.DEBUG,
-               'notset': logging.NOTSET}
-
-    logging.log(lvldict[lvl], '{}'.format(massange))
-    for index, column in enumerate(pd_df.columns.to_list()):
-        logging.log(lvldict[lvl], '{:>4d} : {}'.format(index, column))
 
 
 def translate_list(dictionary, list_to_be_translated):
@@ -207,16 +232,6 @@ def comp_rs(ori, dij, k, R, rcutp, w=[0.1,0.60,0.42]):
 
     total = ecn_cost + rd_cost + rR_cost
 
-    # print('{:2.2f}    {:2.2f}:      {:2.2f}        {:2.2f}      {:2.2f}    '
-    #       '   {:2.2f}       {:2.2f}'.format(np.average(ecn), total,
-    #                                         100*rdij_cost/total,
-    #                                         100*rR_cost/total,
-    #                                         100*rrcut_cost/total,
-    #                                         100*ecn_cost/total,
-    #                                         100*ecndump_cost/total))
-    # print('av_ecn,  total,   rdij_cost ,  rR_cost,  rrcut_cost,  ecn_cost, '
-    #       '  ecndump_cost    rcutori_cost')
-
     return total
 
 
@@ -224,7 +239,6 @@ def comp_roptl2(ori, dij, pij):
     """Compute the difference between ori + orj and the dij of the bonded
     atoms (pij) with a l2 norm."""
     ori_sum_orj = ori.reshape([1, -1]) + ori.reshape([-1, 1])
-    # return np.sum(((dij - ori_sum_orj)*pij)**2)
     return np.sum(((dij - ori_sum_orj)**2)*pij)
 
 
@@ -372,24 +386,20 @@ def fragstring(is_frag):
 
 
 def RegRDS_set(sampling_distance, N):
-    """Return a set of N R3 dots (almost) regular  distributed in the surface of
-    a sphere of radius 'sampling_distance'.
+    """Return a set of n dots in R3 (almost) regular distributed in the 
+    surface of a sphere of radius 'sampling_distance'.
     More deatiail of the implementation in the article "How to generate
     equidistributed points on the surface of a sphere" by Markus Deserno:
     https://www.cmu.edu/biolphys/deserno/pdf/sphere_equi.pdf
     samplind_distance: a float or a int grater than zero.
     N: intiger grater than zero."""
 
-    logging.debug("Initializing RegRDS_set function!")
-    logging.debug("sampling_distance: {}".format(str(sampling_distance)))
-    logging.debug("N: {}".format(str(N)))
-
     if not sampling_distance > 0:
-        logging.error("ERROR: sampling_distance must be higher than zero!")
+        print("ERROR: sampling_distance must be higher than zero!")
         sys.exit(1)
 
     if (not isinstance(N, int)) or (N <= 0):
-        logging.error("ERROR: N must be an intiger grater than zero!")
+        print("ERROR: N must be an intiger grater than zero!")
         sys.exit(1)
 
     cart_coordinates = []
@@ -400,11 +410,9 @@ def RegRDS_set(sampling_distance, N):
     Mtheta = int(round(np.pi/d))
     dtheta = np.pi / Mtheta
     dphi = a / dtheta
-    logging.debug("Mtheta: {}".format(str(Mtheta)))
     for m in range(0, Mtheta):
         theta = np.pi * (m + 0.5) / Mtheta
         Mphi = int(round(2*np.pi*np.sin(theta)/dphi))
-        logging.debug("Mphi: {}".format(str(Mphi)))
         for n in range(0, Mphi) :
             phi = 2 * np.pi * n / Mphi
             Ncount += 1
@@ -413,10 +421,7 @@ def RegRDS_set(sampling_distance, N):
             z = sampling_distance * np.cos(theta)
             cart_coordinates.append([x, y, z])
     cart_coordinates = np.array(cart_coordinates)
-    logging.debug("Final quanity of points in the radial grid: {}".format(
-        str(len(cart_coordinates))))
 
-    logging.debug("RegRDS_set function finished sucsessfuly!")
     return cart_coordinates
 
 
@@ -428,27 +433,20 @@ def write_points_xyz(file_name, positions):
     file_name: a string with the path of the xyz document which will be writed.
     positions: a list or numpy array with the atoms positions."""
 
-    logging.debug("Initializing writing_points_xyz function!")
-    logging.debug("file_name: {}".format(str(file_name)))
-    logging.debug("positions: {}".format(str(positions)))
-
     if not isinstance(file_name, str):
-        logging.error("file_name must be a string")
+        print("file_name must be a string")
         sys.exit(1)
 
     for index, element in enumerate(positions):
         if len(element) != 3:
-            logging.error("Element {} of positions does not present three "
+            print("Element {} of positions does not present three "
                           "elements.".format(str(index)))
     if not isinstance(positions, list):
         positions = np.array(positions)
 
-    logging.debug("Writing points in the xyz file...")
+    print("Writing points in the xyz file...")
     ase.io.write(file_name, ase.Atoms('H'+str(len(positions)),
                                       list(map(tuple, positions))))
-    logging.debug("Finished.")
-
-    logging.debug("writing_points_xyz function finished!")
 
 
 def writing_molecule_xyz(file_name, positions, chemical_symbols):
@@ -467,9 +465,6 @@ def writing_molecule_xyz(file_name, positions, chemical_symbols):
     Nothing
     """
 
-    # logging.debug("Initializing writing_points_xyz function!")
-    # logging.debug("file_name: " + str(file_name))
-    # logging.debug("positions: " + str(positions))
     if not isinstance(file_name, str):
         print("file_name must be a string")
         sys.exit(1)
@@ -480,36 +475,31 @@ def writing_molecule_xyz(file_name, positions, chemical_symbols):
     if not isinstance(positions, list):
         positions = np.array(positions)
 
-    # logging.debug("Writing points in the xyz file...")
     atoms = ase.Atoms(chemical_symbols, list(map(tuple, positions)))
     ase.io.write(file_name, atoms)
-    # logging.debug("Finished.")
-    # logging.debug("writing_points_xyz function finished!")
 
 
-def linspace_r3_vector ( vector_a , vector_b , Qtnsteps ) :
+def linspace_r3_vector(vector_a, vector_b, Qtnsteps):
     """Return a np.array with elements that starting in vector_a and go to
     vector_b. The total quantity of dots is Qtnsteps.
 
     vector_a and vector_b: different np.array with floats in R3.
     Qtnsteps: intiger grater than zero."""
 
-    logging.debug("Initializing linspace_r3_vector function!")
-
     if vector_a == vector_b :
-        logging.error("vector_a is equal to vector_b. Aborting...")
+        print("vector_a is equal to vector_b. Aborting...")
         sys.exit(1)
 
     if (type(vector_a) != np.ndarray) or (len(vector_a) != 3) :
-        logging.error("vector_a must be a np.array of len 3! Aborting..." )
+        print("vector_a must be a np.array of len 3! Aborting..." )
         sys.exit(1)
 
     if (type(vector_b) != np.ndarray) or (len(vector_b) != 3) :
-        logging.error("vector_b must be a np.array of len 3! Aborting..." )
+        print("vector_b must be a np.array of len 3! Aborting..." )
         sys.exit(1)
 
     if (type(N) != int) or (N <= 0) :
-        logging.error("N must be an intiger grater than zero! Aborting...")
+        print("N must be an intiger grater than zero! Aborting...")
         sys.exit(1)
 
     xvalues = np.linspace( vector_a[0] , vector_b[0] , Qtnsteps )
@@ -517,23 +507,17 @@ def linspace_r3_vector ( vector_a , vector_b , Qtnsteps ) :
     zvalues = np.linspace( vector_a[2] , vector_b[2] , Qtnsteps )
     final_array = np.array([xvalues, yvalues, zvalues]).T
 
-    logging.debug("linspace_r3_vector finished sucsessfuly!")
     return final_array
 
 
-def dot_in_atom( dot , atom_position , atom_radius ) :
+def dot_in_atom(dot, atom_position, atom_radius):
     """Verify if a dot in R3 is whitchin the atom of radius atom_radius located in
     atom_position.
     dot: np.array of 3 float elements.
     atom_position: np.array of 3 float elements.
     atom_radius: float grater than zero."""
 
-    logging.debug("Initializing dot_in_atom")
-
     result = np.linalg.norm( dot - atom_position ) < atom_radius
-    logging.debug("result: " + str(result))
-
-    logging.debug("dot_in_atom finished sucsessfuly!")
     return result
 
 
@@ -545,28 +529,24 @@ def large_surfaces_index(surface_dots_positions, eps):
     eps: minimun distance between different surfaces, should be a float grater
          than zero."""
 
-    logging.debug("Initializing remove_pseudo_surfaces function!")
-
     if (not isinstance(surface_dots_positions, np.ndarray)
             or (np.shape(surface_dots_positions)[1] != 3)
             or isinstance(surface_dots_positions[0][0], bool)):
-        logging.error("surface_dots_positions must be a (n,3) shaped np.array.\
-                  Aborting...")
-        sys.exit(0)
+        print("surface_dots_positions must be a (n,3) shaped np.array. Aborting...")
+        sys.exit(1)
 
     if not eps > 0:
-        logging.error("eps must be large than zero.")
+        print("eps must be large than zero.")
         sys.exit(1)
 
     db = DBSCAN(eps=eps, min_samples=1).fit_predict(surface_dots_positions)
     labels, quanity = np.unique(db, return_counts=True)
     if len(labels) > 1:
-        logging.warning(str(len(labels)) + ' surfaces were found, of sizes: '
-                        + str(quanity).replace('[', '').replace(']', '')
-                        + '. The bigger will be selected!')
+        print(str(len(labels)) + ' surfaces were found, of sizes: '
+              + str(quanity).replace('[', '').replace(']', '')
+              + '. The bigger will be selected!')
     result = db == labels[np.argmax(quanity)]
 
-    logging.debug("remove_pseudo_surfaces finished sucsessfuly!")
     return result
 
 def RandRDS_dot( sampling_distance ) :
@@ -574,27 +554,20 @@ def RandRDS_dot( sampling_distance ) :
     See more details in: http://mathworld.wolfram.com/SpherePointPicking.html
     samplind_distance: a float or a int grater than zero."""
 
-    logging.debug("Initializing the RandRDS_dot function.")
-    logging.debug("sampling_distance: " + str(sampling_distance))
-
     if not sampling_distance > 0 :
-        logging.error("sampling_distance must be higher than zero! Aborting...")
-        sys.exit(0)
+        print("Sampling_distance must be higher than zero! Aborting...")
+        sys.exit(1)
 
-    u , v = np.random.random(2)
-    logging.debug("u, v: " + str(u) + ", " + str(v))
+    u, v = np.random.random(2)
 
     theta = 2 * np.pi * v
     phi = np.arccos(2*u-1)
-    logging.debug("theta, phi: " + str(theta) + ", " + str(phi))
 
     x = sampling_distance * np.cos(theta) * np.sin(phi)
     y = sampling_distance * np.sin(theta) * np.sin(phi)
     z = sampling_distance * np.cos(phi)
     Dot = np.array([x,y,z])
-    logging.debug("Dot: " + str(Dot))
 
-    logging.debug("RandRDS_dot function finished sucsessfuly!")
     return Dot
 
 
@@ -605,16 +578,12 @@ def RandRDS_set( sampling_distance , N ) :
     samplind_distance: a float or a int grater than zero.
     N: intiger grater than zero."""
 
-    logging.debug("Initializing the RandRDS_set function.")
-    logging.debug("sampling_distance: " + str(sampling_distance) )
-    logging.debug("N: " + str(N))
-
     if not sampling_distance > 0 :
-        logging.error("sampling_distance must be higher than zero! Aborting...")
+        print("Sampling_distance must be higher than zero! Aborting...")
         sys.exit(1)
 
     if (type(N) != int) or (N <= 0) :
-        logging.error("N must be an intiger grater than zero! Aborting...")
+        print("N must be an intiger grater than zero! Aborting...")
         sys.exit(1)
 
     cart_coordinates=[]
@@ -622,5 +591,4 @@ def RandRDS_set( sampling_distance , N ) :
         cart_coordinates.append( RandRDS_dot(sampling_distance) )
     cart_coordinates = np.array(cart_coordinates)
 
-    logging.debug("RandRDS_set function finished sucsessfuly!")
     return cart_coordinates

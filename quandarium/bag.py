@@ -1,34 +1,29 @@
-"""This module present functions that extract data from Quantum Chemistry (QC)
+"""This module present tools to extract data from Quantum Chemistry (QC)
 Calculations, and related functions. The QC codes with extractors avaliable
 are:
 - FHI-aims
 - VESTA (not yet)
+- formats in ase.io
 """
 
 import multiprocessing as mp
 import time
-import logging
 import pandas as pd
 import numpy as np
 from scipy.optimize import linear_sum_assignment
-from quandarium.analy.aux import to_nparray
-from quandarium.analy.aux import bag2arr
-from quandarium.analy.aux import to_list
-from quandarium.analy.aux import arr2bag
-from quandarium.analy.aux import logcolumns
-from quandarium.analy.mols import ecndav
-from quandarium.analy.mols import ecndav_rsopt
-from quandarium.analy.mols import ecndav_ropt
-from quandarium.analy.mols import findsc
-from quandarium.analy.mols import connections
+from quandarium.aux import to_nparray
+from quandarium.aux import bag2arr
+from quandarium.aux import to_list
+from quandarium.aux import arr2bag
+from quandarium.aux import logcolumns
+from quandarium.mols import ecndav
+from quandarium.mols import ecndav_rsopt
+from quandarium.mols import ecndav_ropt
+from quandarium.mols import findsc
+from quandarium.mols import connections
 
 
-logging.basicConfig(filename='/home/johnatan/quandarium_module.log',
-                    level=logging.INFO)
-logging.info('The logging level is INFO')
-
-
-def rec_connections(pd_df, baseucheme, positionsfeature='bag_positions',
+def rec_connections(pd_df, baseucheme, positionsfeature='bag_positions',    # old
                     chemefeature='bag_cheme', pijfeature='bag_pij', stype='bl',
                     dictcheme='', print_analysis=False):   # Versao Velha
     """This analysis seach for conectivities in the atoms neighborhood based if
@@ -84,22 +79,11 @@ def rec_connections(pd_df, baseucheme, positionsfeature='bag_positions',
     """
 
     print("Initializing analysis: rec_connections")
-    logging.info('Initializing analysis: rec_connections')
-    logging.info('positionsfeature: {}'.format(positionsfeature))
-    logging.info('chemefeature: {}'.format(chemefeature))
-    logging.info('pijfeature: {}'.format(pijfeature))
-    logging.info('dictcheme: {}'.format(dictcheme))
-    logging.info('baseucheme: {}'.format(baseucheme))
-    logging.info('stype: {}'.format(stype))
-    logging.info('print_analysis: {}'.format(print_analysis))
-    # logging.info('print_convergence: {}'.format(print_convergence))
 
     list_bag_fdconnect = []
     list_bag_sdconnect = []
     list_bag_tdconnect = []
     for index in range(len(pd_df)):
-        logging.info('    Proceding analysis of structure index {:04d}'.format(
-            index))
         cheme = bag2arr(pd_df[chemefeature][index])
         positions = bag2arr(pd_df[positionsfeature][index])
         pij = bag2arr(pd_df[pijfeature][index])
@@ -127,17 +111,11 @@ def rec_connections(pd_df, baseucheme, positionsfeature='bag_positions',
                                  'bag_tdconnect']
 
     # Creating and combinating the pandas DataFrame
-    new_df = pd.DataFrame(np.array(list_of_new_features_data).T,
-                          columns=list_of_new_features_name)
-    combined_df = pd.concat([pd_df, new_df], axis=1, sort=False)
-
-    logcolumns('info', "New columns:", new_df)
-
-    return combined_df
+    return list_of_new_features_name, list_of_new_features_data
 
 
 def rec_ecndav_rsopt(kinfo, Rinfo, positions, cheme, print_convergence=False,
-                     roundpijtoecn=False, w=''):  # Versao Nova
+                     roundpijtoecn=False, w=''):  
     """Return the effective coordination number (ecn), the average bound
     distance (dav), the optimized radius (ropt), and the conective index matrix
     Pij for each structure in the input pandas dataframe. See function
@@ -176,20 +154,14 @@ def rec_ecndav_rsopt(kinfo, Rinfo, positions, cheme, print_convergence=False,
     """
 
     print("Initializing analysis: rec_ecndav_rsopt")
-    logging.info('Initializing analysis: rec_ecndav_rsopt')
-    logging.info('kinfo: {}'.format(kinfo))
-    logging.info('Rinfo: {}'.format(Rinfo))
 
     positions = to_nparray(positions)
     cheme = to_nparray(cheme)
-    # logging.info('print_convergence: {}'.format(print_convergence))
     list_bag_ecn = []
     list_bag_dav = []
     list_bag_ori = []
     list_bag_pij = []
     for index in range(len(positions)):
-        logging.info('    Proceding analysis of structure index {:04d}'.format(
-            index))
         cheme_i = cheme[index]
         positions_i = positions[index]
         if w:
@@ -212,7 +184,6 @@ def rec_ecndav_rsopt(kinfo, Rinfo, positions, cheme, print_convergence=False,
                                  'bag_ori_rsopt', 'bag_pij_rsopt']
 
     return list_of_new_features_name, list_of_new_features_data
-
 
 
 def rec_ecndav_ropt(positions, cheme, print_convergence=False,  # Versao Nova
@@ -247,8 +218,6 @@ def rec_ecndav_ropt(positions, cheme, print_convergence=False,  # Versao Nova
     list_bag_ori = []
     list_bag_pij = []
     for index in range(len(positions)):
-        logging.info('    Proceding analysis of structure index {:04d}'.format(
-            index))
         cheme_i = np.array(cheme[index])
         positions_i = np.array(positions[index])
         ecn, dav, ori, pij = ecndav_ropt(positions_i, cheme_i, plot_name='',
@@ -289,15 +258,12 @@ def rec_ecndav(positions, print_convergence=False):   # Versao nova / Não paral
     """
 
     print("Initializing analysis: rec_ecndav")
-    logging.info('Initializing analysis: rec_ecndav')
 
     positions = to_nparray(positions).tolist()
     list_bag_ecn = []
     list_bag_dav = []
     list_bag_pij = []
     for index in range(len(positions)):
-        logging.info('    Proceding analysis of structure index {:04d}'.format(
-            index))
         positions_i = np.array(positions[index])
         ecn, dav, pij = ecndav(positions_i, print_convergence=print_convergence)
         list_bag_ecn.append(to_list(ecn))
@@ -310,48 +276,6 @@ def rec_ecndav(positions, print_convergence=False):   # Versao nova / Não paral
     list_of_new_features_name = ['bag_ecn', 'bag_dav', 'bag_pij']
 
     return list_of_new_features_name, list_of_new_features_data
-
-
-def symatoms(pd_df, bags, chemefeature=''):  # Funcao nao estavel
-    """Takes an index of symetry based in bags information"""
-
-    qtnsamples = len(pd_df)
-    matrixsym = np.zeros([qtnsamples, qtnsamples])
-
-    # getting minmax to normalize the bags
-    bagmin = []
-    bagmaxmindiff = []
-    for bag in bags:
-        data = []
-        for sampind in range(qtnsamples):
-            data.append(bag2arr(pd_df[bag].values[sampind], dtype=float))
-        data = np.array([data])
-        bagmin.append(data.min())
-        if data.max() - data.min() == 0.:
-            bagmaxmindiff.append(1.)
-        else:
-            bagmaxmindiff.append(data.min() - data.max())
-
-
-    for samp1ind in range(qtnsamples):
-        for samp2ind in range(qtnsamples):
-            if samp1ind > samp2ind:
-                # getting information from bags
-                costmatrix = np.zeros([45,45])
-                for bagind, bag in enumerate(bags):
-                    bagsamp1data = bag2arr(pd_df[bag].values[samp1ind], dtype=float)
-                    bagsamp2data = bag2arr(pd_df[bag].values[samp2ind], dtype=float)
-                    bagsamp1data = (bagsamp1data - bagmin[bagind]) / bagmaxmindiff[bagind]
-                    bagsamp2data = (bagsamp2data - bagmin[bagind]) / bagmaxmindiff[bagind]
-                    samp1info = np.array([bagsamp1data])
-                    samp2info = np.array([bagsamp2data])
-                    costmatrix += (samp1info - samp2info.T)**2
-                rowind, colind = linear_sum_assignment(costmatrix)
-                cost = costmatrix[rowind, colind].sum()
-                matrixsym[samp1ind, samp2ind] = cost
-                matrixsym[samp2ind, samp1ind] = cost
-                print('concluded')
-    return matrixsym
 
 
 def findsc_wrap(inputs):  #It should be here
@@ -403,14 +327,11 @@ def rec_findsc(positions, davraddii, davradius='dav', adatom_radius=1.1,  # Vers
     """
 
     print("Initializing analysis: rec_findsc")
-    logging.info('    Initializing analysis: rec_findsc')
 
     inputs_list = []
     list_is_surface = []
     list_exposition = []
     for index, (poitionsi, davraddii) in enumerate(zip(positions, davraddii)):
-        logging.info('    Proceding analysis of structure index {:04d}'.format(
-            index))
         #print(type(poitionsi),poitionsi)
         positionsi = np.array(poitionsi)  # manter np.array e ativar bags
         if davradius == 'dav':
@@ -447,11 +368,6 @@ def data_from_opsbags(pd_df, new_bag_name, bags, opsbags, opsinterbags='', kind=
     """
 
     print("Initializing bag_from_opsbags.")
-    logging.info("Initializing bag_from_opsbags.")
-    logging.info("new_bag_name: {}".format(new_bag_name))
-    logging.info("bags: {}".format(bags))
-    logging.info("opsbags: {}".format(opsbags))
-    logging.info("opsinterbags: {}".format(opsinterbags))
 
     if opsinterbags == '':
         opsinterbags = [np.logical_and]*(len(bags) -1)
@@ -486,21 +402,12 @@ def data_from_opsdatas(pd_df, new_bag_name, new_kind, kinds, bags, opsbags,  # V
     """
 
     print("Initializing data_from_opsdatas.")
-    logging.info("Initializing data_from_opsdatas.")
-    logging.info("new_bag_name: {}".format(new_bag_name))
-    logging.info("new_kind: {}".format(new_kind))
-    logging.info("kinds: {}".format(kinds))
-    logging.info("bags: {}".format(bags))
-    logging.info("opsbags: {}".format(opsbags))
-    logging.info("opsinterbags: {}".format(opsinterbags))
 
     if opsinterbags == '':
         opsinterbags = [np.logical_and]*(len(bags) -1)
 
     new_bag_data = []
     for index in range(len(pd_df)):
-        logging.info('    Proceding analysis of structure index {:04d}'.format(
-            index))
         if kinds[0] == 'bag':
             data = bag2arr(pd_df[bags[0]][index])
         else:
@@ -604,7 +511,7 @@ def classes_from_dvalues(bags, classesbasen, classesvals, classesvalsn):  # Nova
             new_class_name = "bag_" + classbasen + valn
             # criando uma lista com o nome do feature para guardar os dados
             new_class_data = []
-            for index in range(len(pd_df)):
+            for index in range(len(bag)):
                 bagdata = np.array(bag[index])
                 classdata = bagdata == val
                 # print(classdata,bagdata,val)
@@ -642,20 +549,6 @@ def classes_mixing(classes1, classes2, classesn1='', classesn2=''):  # Versao No
 
     print('Initializing classes_mixing.')
 
-    # if classesn1 == '':
-    #    classesn1 = []
-    #    for class1 in classes1:
-    #        classesn1.append(class1.replace('bag_', ''))
-    #    logging.info('automaticaly generated classesn1: ' + str(classesn1))
-
-    # if classesn2 == '':
-    #    classesn2 = []
-    #    for class2 in classes2:
-    #        classesn2.append(class2.replace('bag_', ''))
-    #    logging.info('automaticaly generated classesn2: ' + str(classesn2))
-
-    # ao longo da funcao serao adicionado os novos dados e nomes deles nessas
-    # duas listas:
     list_of_new_features_name = []
     list_of_new_features_data = []
 

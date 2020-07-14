@@ -5,18 +5,13 @@ are:
 - VESTA (not yet)
 """
 
-import logging
 import sys
 import pandas as pd
 import numpy as np
-from quandarium.analy.aux import to_nparray
-from quandarium.analy.aux import logcolumns
-from quandarium.analy.aux import checkmissingkeys
-from quandarium.analy.mols import avradius
-
-logging.basicConfig(filename='/home/johnatan/quandarium_module.log',
-                    level=logging.INFO)
-logging.info('The logging level is INFO')
+from quandarium.aux import to_nparray
+from quandarium.aux import logcolumns
+from quandarium.aux import checkmissingkeys
+from quandarium.mols import avradius
 
 
 def relativise(mainfeature, groupbyfeature):  # Versao Nova
@@ -52,8 +47,6 @@ def relativise(mainfeature, groupbyfeature):  # Versao Nova
         grouped = pd_df.groupby(groupbyfeature)
         relativised = np.zeros(len(pd_df))
         for group in grouped.groups:
-            logging.info('    Proceding analysis of group: '
-                         '{}'.format(group))
             groupedby_df = grouped.get_group(group)
             indexes = groupedby_df.index.tolist()
             newdata = to_nparray(groupedby_df['mainfeature']) - to_nparray(groupedby_df['feature']).min()
@@ -65,16 +58,15 @@ def relativise(mainfeature, groupbyfeature):  # Versao Nova
 
 def rec_avradius(positions, useradius=False, davraddii=[], davradius='dav'):  # Versao Nova
     """It calculate the the average radius of some molecule for all molecules
-    in a pandas dataframe, and return in a new dataframe, concatenating the
-    average radius with the input dataframe.
+    based in the necleus positions, or including a radius.
 
     Parameters
     ----------
-    pd_df: pandas.DataFrame.
-           A padas dataframe with positions and radius parameters.
     positionsfeature: str (optional, default='bag_positions')
                       The name of the fuature (bag type) in pd_df with
                       cartezian positions of the atoms.
+    useradius: bool (optional, default=False)
+               If True, the radius will be consider to calculate the average radius.
     davraddii: str (optional, default='bag_dav')
                       The name of the fuature in pd_df with atomic radii or dav
                       information (bag of floats).
@@ -84,18 +76,15 @@ def rec_avradius(positions, useradius=False, davraddii=[], davradius='dav'):  # 
                feature davraddiifeature values.
     Return
     ------
-    combined_df: pandas.Datafram.
-                 The input dataframe concatenated with data obtained.
+    new_data: np.array.
+              The new data in a np.array.
     """
     print("Initializing analysis: rec_avradius")
-    logging.info('    Initializing analysis: rec_avradius')
 
     positions = to_nparray(positions).tolist()
     davraddii = to_nparray(davraddii).tolist()
     new_data = []
     for index in range(len(positions)):
-        logging.info('    Proceding analysis of structure index {:04d}'.format(
-            index))
         positions_i = np.array(positions[index])
         if davradius == 'dav':
             raddiiorhalfdav = np.array(davraddii[index])/2.
@@ -165,24 +154,10 @@ def mine_bags(classes, bags, classesn='', bagsn='', operators=[np.average],  # V
                 list_of_new_features_name.append(new_feature_name)
                 list_of_new_features_data.append(new_feature_data.copy())
 
-    # if sumclass:
-    #    logging.info('Suming quantity of classes per atom (see sumclass '
-    #                 'key)')
-    #    # contando as quantidades de atomos em cada classe
-    #    for classa, cname in zip(classes, classesn):
-    #        new_feature_name = "reg_qtn_" + cname
-    #        new_feature_data = []
-    #        for sampleind in range(len(pd_df)):
-    #            classdata = bag2arr(pd_df[classa][sampleind], dtype=bool)
-    #            new_feature_data.append(sum(classdata))
-    #        list_of_new_features_name.append(new_feature_name)
-    #        list_of_new_features_data.append(new_feature_data.copy())
-
-    # criando um pd.DataFrame que tem todos os dados e nome dos mesmos
-
     return list_of_new_features_name, list_of_new_features_data
 
-def classes_count(classes, classesn):  # Versao Nova
+
+def classes_count(classes, classesn):  # Versao Nova   # preciso verificar se as classes com 0 elementos tao contando ou se ta resultando 0
     """It mix classes (bags) with an logical "and" to extract more classes, for
     each possible pair of classes in two lists.
 
@@ -211,9 +186,7 @@ def classes_count(classes, classesn):  # Versao Nova
     list_of_new_features_data = []
 
     for clas, clasn in zip(classes, classesn):
-        # criando nome do novo feature
         new_feature_name = "reg_N_" + clasn
-        # criando uma lista com o nome do feature para guardar os dados
         new_feature_data = []
         for index in range(len(clas)):
             classdata = np.sum(clas[index])
