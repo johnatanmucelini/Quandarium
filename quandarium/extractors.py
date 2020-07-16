@@ -11,6 +11,7 @@ import pandas as pd
 import numpy as np
 import ase.io
 
+
 def extractor_aseengine(outfile):
     """This function open a generical file output (outfile), read it, and
     return some important information.
@@ -21,8 +22,7 @@ def extractor_aseengine(outfile):
     Return
     ------
     energy_tot: float.
-                The total energy. 
-
+                The total energy.
     positions: np.array of floats, (n,3) shaped.
                The cartezian positions of the atoms.
 
@@ -65,9 +65,9 @@ def fromfolders_extract_aseengine(folders, output_file_name='aims.out'):
                       The output file name.
     Return
     ------
-    list_of_new_features_name: list of str 
+    list_of_new_features_name: list of str
                                The new data name.
-    list_of_new_features_data: list of np.array 
+    list_of_new_features_data: list of np.array
                                The new data.
     """
 
@@ -133,7 +133,7 @@ def extractor_charges(folder, filename='', code='fhi', chargetype='hirs'):
             nucleous = np.array(nucleous, dtype=float)
             quantity_of_each_specie = np.array(poscar[6].split(), dtype=int)
             for ind, line in enumerate(quantity_of_each_specie):
-                for j in range(line):  # talvez tenha um problema aqui
+                for _ in range(line):  # ##BUG?
                     nuclearcharge.append(nucleous[ind])
             nuclearcharge = np.array(nuclearcharge, dtype=float)
 
@@ -193,7 +193,7 @@ def fromfolders_extract_charges(folders, code, chargetype):
     folders = np.array(folders.values)
     charges_list = []
     print("Initializing fromfolders_extract_charges:")
-    for index in range(len(folders)):
+    for index, _ in enumerate(folders):
         folder = folders[index]
         charges = extractor_charges(folder, code=code, chargetype=chargetype)
         charges_bag = charges.tolist()
@@ -236,22 +236,22 @@ def extractor_fhi(outfile='aims.out'):
 
     # Gap
     for line in reversed(data):
-        if re.findall('Overall HOMO-LUMO gap:\s+\d+\.\d+', line):
-            gap = float(re.search('Overall HOMO-LUMO gap:\s+\d+\.\d+',
+        if re.findall(r'Overall HOMO-LUMO gap:\s+\d+\.\d+', line):
+            gap = float(re.search(r'Overall HOMO-LUMO gap:\s+\d+\.\d+',
                                   line).string.split()[3])
             break
 
     # HOMO
     for line in reversed(data):
-        if re.findall('^(\s+\d+)(\s+1\.00000)(\s+(|\-)\d+\.\d+){2}', line):
+        if re.findall(r'^(\s+\d+)(\s+1\.00000)(\s+(|\-)\d+\.\d+){2}', line):
             homo = float(
-                re.search('^(\s+\d+)(\s+1\.00000)(\s+(|\-)\d+\.\d+){2}.*',
+                re.search(r'^(\s+\d+)(\s+1\.00000)(\s+(|\-)\d+\.\d+){2}.*',
                           line).string.split()[3])
             break
 
     # LUMO
     for index, line in enumerate(reversed(data)):
-        if re.findall('^(\s+\d+)(\s+1\.00000)(\s+(|\-)\d+\.\d+){2}$', line):
+        if re.findall(r'^(\s+\d+)(\s+1\.00000)(\s+(|\-)\d+\.\d+){2}$', line):
             lumo_line = -index
             lumo = float(data[lumo_line].split()[3])
             break
@@ -286,19 +286,19 @@ def extractor_fhi(outfile='aims.out'):
             if re.findall('Updated atomic structure:', line):
                 print('error')
         for index, line in enumerate(data):
-            if re.findall('^\s+atom(\s+(|-)\d\.\d+){3}\s+\w+', line):
+            if re.findall(r'^\s+atom(\s+(|-)\d\.\d+){3}\s+\w+', line):
                 first_atom_line = index
                 break
 
     positions = []
     chemical_elements = []
     for line in data[first_atom_line:first_atom_line+number_of_atoms]:
-        if re.findall('^\s+atom\s+((-|)\d+\.\d+).*', line):
+        if re.findall(r'^\s+atom\s+((-|)\d+\.\d+).*', line):
             chemical_elements.append(np.array(
-                re.search('^\s+atom\s+((-|)\d+\.\d+).*',
+                re.search(r'^\s+atom\s+((-|)\d+\.\d+).*',
                           line).string.split()[4], dtype=str))
             positions.append(np.array(
-                re.search('^\s+atom\s+((-|)\d+\.\d+).*',
+                re.search(r'^\s+atom\s+((-|)\d+\.\d+).*',
                           line).string.split()[1:4], dtype=float))
     positions = np.array(positions)
     chemical_elementsaux = np.array(chemical_elements)
@@ -316,7 +316,6 @@ def extractor_fhi(outfile='aims.out'):
 
 
 def fromfolders_extract_fhi(folders, output_file_name='aims.out'):
-                          
     """It get data from fhi calculation folders.
     Parameters
     ----------
@@ -345,7 +344,7 @@ def fromfolders_extract_fhi(folders, output_file_name='aims.out'):
     chemf_list = []
     folders = np.array(folders.values)
     print("Initializing fromfolders_extract_fhi:")
-    for index in range(len(folders)):
+    for index, _ in enumerate(folders):
         folder = folders[index]
         gap, homo, lumo, mag, etot, positions, cheme, chemf = extractor_fhi(
             folder + '/' + output_file_name)
@@ -367,12 +366,13 @@ def fromfolders_extract_fhi(folders, output_file_name='aims.out'):
                                  etot_list, positions_list, cheme_list,
                                  chemf_list]
     list_of_new_features_name = ['reg_gap', 'reg_homo', 'reg_lumo', 'reg_mag',
-                                 'reg_etot', 'bag_positions', 'bag_cheme', 
+                                 'reg_etot', 'bag_positions', 'bag_cheme',
                                  'reg_chemf']
 
     # Getting for each sample the quantity of each specie in the dataset
     jointedformulas = ''.join(chemf_list)
-    allspeciesrepeated = re.findall('[abcdefghiklmnopqrstuvxywzABCDEFGHIKLMNOPQRSTUVXYWZ]+',
+    allspeciesrepeated = re.findall('[abcdefghiklmnopqrstuvxywzABCDEFGHIKLM'
+                                    'NOPQRSTUVXYWZ]+',
                                     jointedformulas)
     allspecies_list = np.unique(allspeciesrepeated).tolist()
     list_features_qtn_atoms_data = []
@@ -382,9 +382,9 @@ def fromfolders_extract_fhi(folders, output_file_name='aims.out'):
         list_features_qtn_atoms_name.append('reg_qtn_' + specie)
         list_of_qnt = []
         for formula in chemf_list:
-            specieplusnumber = re.findall(specie+'\d+', formula)
+            specieplusnumber = re.findall(specie + r'\d+', formula)
             if specieplusnumber:
-                number = re.findall('\d+', specieplusnumber[0])[0]
+                number = re.findall(r'\d+', specieplusnumber[0])[0]
             else:
                 number = 0
             list_of_qnt.append(int(number))
@@ -400,8 +400,8 @@ def fromfolders_extract_fhi(folders, output_file_name='aims.out'):
 
 
 def extractor_vasp(outfile='OUTCAR'):
-    """This function open a VASP output file (outfile), read it, than and return the
-    important informations.
+    """This function open a VASP output file (outfile), read it, than and
+    return the important informations.
     Parameters
     ----------
     outfile: string (optional, default='OUTCAR')
@@ -429,11 +429,11 @@ def extractor_vasp(outfile='OUTCAR'):
     # eigenstates
     for line in data:
         if re.findall('number of bands    NBANDS', line):
-            nkp= int(line.split()[3])
-            nbands= int(line.split()[-1])
+            nkp = int(line.split()[3])
+            nbands = int(line.split()[-1])
             break
-    eigen = np.zeros([2,nkp,nbands])
-    occup = np.zeros([2,nkp,nbands])
+    eigen = np.zeros([2, nkp, nbands])
+    occup = np.zeros([2, nkp, nbands])
     for n, line in enumerate(reversed(data)):
         if re.findall('spin component 1', line):
             for line in data[-n-1:]:
@@ -443,9 +443,10 @@ def extractor_vasp(outfile='OUTCAR'):
                     kp = int(line.split()[1]) - 1
                 if re.findall(r'^\s+\d+', line):
                     band, energy, occ = line.split()
-                    eigen[spin,kp,int(band)-1] = energy
-                    occup[spin,kp,int(band)-1] = occ
-                if '------' in line: break
+                    eigen[spin, kp, int(band)-1] = energy
+                    occup[spin, kp, int(band)-1] = occ
+                if '------' in line:
+                    break
             break
     cbm = max(eigen[occup > 0.5])
     vbm = min(eigen[occup < 0.5])
@@ -460,7 +461,8 @@ def extractor_vasp(outfile='OUTCAR'):
             chgsd = []
             chgsf = []
             for i in range(-n+3, 0):
-                if '---' in data[i]: break
+                if '---' in data[i]:
+                    break
                 aux = data[i].split()
                 chgss.append(aux[1])  # for LORBIT  = 10
                 chgsp.append(aux[2])  # for LORBIT  = 10
@@ -483,7 +485,8 @@ def extractor_vasp(outfile='OUTCAR'):
             magsd = []
             magsf = []
             for i in range(-n+3, 0):
-                if '---' in data[i]: break
+                if '---' in data[i]:
+                    break
                 aux = data[i].split()
                 magss.append(aux[1])  # for LORBIT  = 10
                 magsp.append(aux[2])  # for LORBIT  = 10
@@ -498,7 +501,7 @@ def extractor_vasp(outfile='OUTCAR'):
     magsf = np.array(magsf, dtype=float).tolist()
 
     # cell
-    for n,line in enumerate(reversed(data)):
+    for n, line in enumerate(reversed(data)):
         if re.findall('direct lattice vectors', line):
             cell = np.array([data[-n].split()[0:3],
                              data[-n+1].split()[0:3],
@@ -514,14 +517,15 @@ def extractor_vasp(outfile='OUTCAR'):
 
     # mag
     for line in reversed(data):
-        if re.findall(r'^ number of electron\s+ \d+\.\d+\s+magnetization', line):
+        if re.findall(r'^ number of electron\s+ \d+\.\d+\s+magnetization',
+                      line):
             mag = float(line.split()[5])
             break
 
     # efermi
     for line in reversed(data):
         if re.findall('E-fermi', line):
-            efermi = float(line.split()[2])
+            efermi = float(line.split()[2])  # ##TODO
             break
 
     # positions
@@ -536,19 +540,22 @@ def extractor_vasp(outfile='OUTCAR'):
     positions = np.array(positions, dtype=float)
     # Comment the line bellow to tune the speed
     force_center = True
-    if force_center == True:
-        from sklearn.cluster import DBSCAN
+    if force_center:
+        from sklearn.cluster import DBSCAN  # pylint: disableW291
         clust = DBSCAN(eps=3, min_samples=1).fit(positions)  # 3 angstroms
         while max(clust.labels_) > 0:
-            aux = np.sum(np.array(cell)/2, axis=0) - np.average(positions[clust.labels_ == 0], axis=0)
+            aux = np.sum(np.array(cell)/2, axis=0) - np.average(
+                positions[clust.labels_ == 0], axis=0)
             cart_to_direct = np.linalg.inv(cell).T
             direct_poss = np.dot(cart_to_direct, positions.T).T
             aux_direct = np.dot(cart_to_direct, aux).T
             direct_new_pos = direct_poss + aux_direct
             aux2 = direct_new_pos.flatten()
             for i, val in enumerate(aux2):
-                if val < 0: aux2[i] = val + 1
-                if val > 1: aux2[i] = val - 1
+                if val < 0:
+                    aux2[i] = val + 1
+                if val > 1:
+                    aux2[i] = val - 1
             direct_new_pos = aux2.reshape(-1, 3)
             new_pos = np.dot(cell, direct_new_pos.T).T
             positions = new_pos.tolist()
@@ -562,7 +569,8 @@ def extractor_vasp(outfile='OUTCAR'):
             if '_' in name:
                 name = name.split('_')[0]
             potcars.append(name)
-        if re.findall('POSCAR:', line): break
+        if re.findall('POSCAR:', line):
+            break
     potcars = potcars[0:int(len(potcars)/2)]
     speciesquantities = []
     for n, line in enumerate(data):
@@ -583,8 +591,7 @@ def extractor_vasp(outfile='OUTCAR'):
 
     # returning data
     return cbm, vbm, gap, mag, energy, positions, cell, cheme, chemf, \
-           chgss, chgsp, chgsd, chgsf, chgst, magst, magss, magsp, \
-           magsd, magsf
+        chgss, chgsp, chgsd, chgsf, chgst, magst, magss, magsp, magsd, magsf
 
 
 def fromfolders_extract_vasp(folders, output_file_name='OUTCAR'):
@@ -629,7 +636,8 @@ def fromfolders_extract_vasp(folders, output_file_name='OUTCAR'):
     for index, folder in enumerate(folders):
         data = extractor_vasp(folder + '/' + output_file_name)
         cbm, vbm, gap, mag, energy, positions, cell, cheme, chemf, chgss, \
-            chgsp, chgsd, chgsf, chgst, magst, magss, magsp, magsd, magsf = data
+            chgsp, chgsd, chgsf, chgst, magst, magss, magsp, magsd, \
+            magsf = data
         if index % 50 == 0:
             print("    concluded %3.1f%%" % (100*index/len(folders)))
         cbm_list.append(cbm)
@@ -654,16 +662,16 @@ def fromfolders_extract_vasp(folders, output_file_name='OUTCAR'):
     print("    concluded %3.1f%%" % (100))
 
     list_of_new_features_data = [cbm_list, vbm_list, gap_list, mag_list,
-                                 energy_list, positions_list, cell_list, 
-                                 cheme_list, chemf_list, chgss_list, 
-                                 chgsp_list, chgsd_list, chgsf_list, 
-                                 chgst_list, magst_list, magss_list, 
+                                 energy_list, positions_list, cell_list,
+                                 cheme_list, chemf_list, chgss_list,
+                                 chgsp_list, chgsd_list, chgsf_list,
+                                 chgst_list, magst_list, magss_list,
                                  magsp_list, magsd_list, magsf_list]
     list_of_new_features_name = ['reg_cbm', 'reg_vbm', 'reg_gap', 'reg_mag',
-                                 'reg_energy', 'bag_positions', 'bag_cell', 
-                                 'bag_cheme', 'reg_chemf', 'bag_chgss', 
-                                 'bag_chgsp', 'bag_chgsd', 'bag_chgsf', 
-                                 'bag_chgst', 'bag_magst', 'bag_magss', 
-                                 'bag_magsp', 'bag_magsd', 'bag_magsf']:
+                                 'reg_energy', 'bag_positions', 'bag_cell',
+                                 'bag_cheme', 'reg_chemf', 'bag_chgss',
+                                 'bag_chgsp', 'bag_chgsd', 'bag_chgsf',
+                                 'bag_chgst', 'bag_magst', 'bag_magss',
+                                 'bag_magsp', 'bag_magsd', 'bag_magsf']
 
     return list_of_new_features_name, list_of_new_features_data

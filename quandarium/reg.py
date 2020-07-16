@@ -5,13 +5,10 @@ are:
 - VESTA (not yet)
 """
 
-import sys
 import pandas as pd
 import numpy as np
-from quandarium.aux import to_nparray
-from quandarium.aux import logcolumns
-from quandarium.aux import checkmissingkeys
-from quandarium.mols import avradius
+from aux import to_nparray
+from mols import avradius
 
 
 def relativise(mainfeature, groupbyfeature):  # Versao Nova
@@ -43,33 +40,33 @@ def relativise(mainfeature, groupbyfeature):  # Versao Nova
     pd_df['mainfeature'] = to_nparray(mainfeature)
     if groupbyfeature:
         pd_df['groupbyfeature'] = to_nparray(groupbyfeature)
-        #print(pd_df, feature, groupbyfeature, to_nparray(feature),to_nparray(groupbyfeature))
         grouped = pd_df.groupby(groupbyfeature)
         relativised = np.zeros(len(pd_df))
         for group in grouped.groups:
             groupedby_df = grouped.get_group(group)
             indexes = groupedby_df.index.tolist()
-            newdata = to_nparray(groupedby_df['mainfeature']) - to_nparray(groupedby_df['feature']).min()
+            newdata = to_nparray(groupedby_df['mainfeature']) - to_nparray(
+                groupedby_df['feature']).min()
             relativised[indexes] = np.array(newdata)
     else:
-        relativised = pd_df['mainfeature'].values - pd_df['mainfeature'].values.min()
+        relativised = pd_df['mainfeature'].values - pd_df['mainfeature'
+                                                          ].values.min()
     return np.array(relativised)
 
 
-def rec_avradius(positions, useradius=False, davraddii=[], davradius='dav'):  # Versao Nova
+def rec_avradius(positions, useradius=False, davraddii=None, davradius='dav'):
     """It calculate the the average radius of some molecule for all molecules
-    based in the necleus positions, or including a radius.
+    based in the necleus positions, or including a radius. # Versao Nova
 
     Parameters
     ----------
-    positionsfeature: str (optional, default='bag_positions')
-                      The name of the fuature (bag type) in pd_df with
-                      cartezian positions of the atoms.
+    positions: data in np.array, pd.Series, or list
+               The cartezian positions of the atoms.
     useradius: bool (optional, default=False)
-               If True, the radius will be consider to calculate the average radius.
-    davraddii: str (optional, default='bag_dav')
-                      The name of the fuature in pd_df with atomic radii or dav
-                      information (bag of floats).
+               If True, the radius will be consider to calculate the average
+               radius.
+    davraddii: data in np.array, pd.Series, or list (optional, default=None)
+               The atomic radii or dav information.
     davradius: str ['dav','radii'] (optional, default='dav')
                If radii, atomic radius will be the feature davraddiifeature
                values. If dav the values in atomic radius will be half of the
@@ -82,15 +79,20 @@ def rec_avradius(positions, useradius=False, davraddii=[], davradius='dav'):  # 
     print("Initializing analysis: rec_avradius")
 
     positions = to_nparray(positions).tolist()
-    davraddii = to_nparray(davraddii).tolist()
     new_data = []
-    for index in range(len(positions)):
+    for index, _ in enumerate(positions):
         positions_i = np.array(positions[index])
-        if davradius == 'dav':
-            raddiiorhalfdav = np.array(davraddii[index])/2.
-        if davradius == 'radius':
-            raddiiorhalfdav = np.array(davraddii[index])
-        result = avradius(positions_i, raddiiorhalfdav, useradius=useradius)
+        if useradius:
+            if davradius == 'dav':
+                davraddii = to_nparray(davraddii).tolist()
+                raddiiorhalfdav = np.array(davraddii[index])/2.
+            if davradius == 'radius':
+                davraddii = to_nparray(davraddii).tolist()
+                raddiiorhalfdav = np.array(davraddii[index])
+            result = avradius(positions_i, raddiiorhalfdav,
+                              useradius=useradius)
+        else:
+            result = avradius(positions_i)
         new_data.append(result)
         if index % 50 == 0:
             print("    concluded %3.1f%%" % (100*index/len(positions)))
@@ -99,15 +101,12 @@ def rec_avradius(positions, useradius=False, davraddii=[], davradius='dav'):  # 
     return np.array(new_data)
 
 
-def mine_bags(classes, bags, classesn='', bagsn='', operators=[np.average],  # Versao Nova
-              operatorsn=['av']):
-    """It mine regular features from atomic properties (bags) and atomic
-    classes (also bags).
+def mine_bags(classes, bags, classesn='', bagsn='', operators=[np.average],
+              operatorsn=['av']):  # Versao Nova
+    """It mine regular features from atomic properties (bags and classes).
 
-    The new regular features name are based in the
-    new regular features name: "reg_" + oname + "_" + bname + "_" + cname,
-    where oname, bname, and cname are elements of operatorsn, bagsn, and
-    classesn, respectively.
+    The new regular features name are based in the new regular features name:
+        "reg_" + operatorsn[i] + "_" + bagsn[j] + "_" + classesn[k].
 
     Parameter
     ---------
@@ -122,8 +121,10 @@ def mine_bags(classes, bags, classesn='', bagsn='', operators=[np.average],  # V
 
     Return
     ------
-    list_of_new_features_name, list_of_new_features_data
-    new_feature_name = "reg_" + operatorsn[i] + "_" + bagsn[j] + "_" + classesn[k]
+    list_of_new_features_name: list with several str.
+                               The name of the new data generated
+    list_of_new_features_data: list with several np.array.
+                               The new data generated
     """
 
     print("Initializing minebags.")
@@ -141,7 +142,7 @@ def mine_bags(classes, bags, classesn='', bagsn='', operators=[np.average],  # V
                 new_feature_name = "reg_" + oname + "_" + bname + "_" + cname
                 # criando uma lista com o nome do feature para guardar os dados
                 new_feature_data = []
-                for sampleind in range(len(bag)):
+                for sampleind, _ in enumerate(bag):
                     classdata = np.array(classa[sampleind], dtype=bool)
                     if sum(classdata) == 0:
                         # if no one atom belongs to the classa
@@ -157,7 +158,10 @@ def mine_bags(classes, bags, classesn='', bagsn='', operators=[np.average],  # V
     return list_of_new_features_name, list_of_new_features_data
 
 
-def classes_count(classes, classesn):  # Versao Nova   # preciso verificar se as classes com 0 elementos tao contando ou se ta resultando 0
+# Versao Nova ##TODO: preciso verificar se as classes com 0 elementos tao
+#                     contando ou se ta resultando 0
+
+def classes_count(classes, classesn):
     """It mix classes (bags) with an logical "and" to extract more classes, for
     each possible pair of classes in two lists.
 
@@ -188,12 +192,10 @@ def classes_count(classes, classesn):  # Versao Nova   # preciso verificar se as
     for clas, clasn in zip(classes, classesn):
         new_feature_name = "reg_N_" + clasn
         new_feature_data = []
-        for index in range(len(clas)):
+        for index, _ in enumerate(clas):
             classdata = np.sum(clas[index])
             new_feature_data.append(classdata)
         list_of_new_features_name.append(new_feature_name)
         list_of_new_features_data.append(new_feature_data.copy())
 
     return list_of_new_features_name, list_of_new_features_data
-
-

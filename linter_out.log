@@ -1,0 +1,3585 @@
+************* Module quandarium.quandarium
+quandarium/__init__.py:1:69: C0303: Trailing whitespace (trailing-whitespace)
+************* Module quandarium.quandarium.find_calculations
+quandarium/find_calculations.py:33:74: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/find_calculations.py:34:70: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/find_calculations.py:81:23: C0326: Exactly one space required before assignment
+        list_of_folders= [x for x in os.listdir(path_to_start_the_search + '/')
+                       ^ (bad-whitespace)
+quandarium/find_calculations.py:8:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/find_calculations.py:8:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/find_calculations.py:11:0: R0912: Too many branches (16/12) (too-many-branches)
+quandarium/find_calculations.py:4:0: W0611: Unused numpy imported as np (unused-import)
+quandarium/find_calculations.py:5:0: W0611: Unused pandas imported as pd (unused-import)
+quandarium/find_calculations.py:8:0: W0611: Unused logcolumns imported from quandarium.aux (unused-import)
+quandarium/find_calculations.py:6:0: C0411: standard import "import os.path" should be placed before "import numpy as np" (wrong-import-order)
+quandarium/find_calculations.py:7:0: C0411: standard import "from distutils.dir_util import copy_tree" should be placed before "import numpy as np" (wrong-import-order)
+************* Module quandarium.quandarium.bag
+quandarium/bag.py:118:48: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/bag.py:365:0: C0301: Line too long (103/100) (line-too-long)
+quandarium/bag.py:571:0: C0305: Trailing newlines (trailing-newlines)
+quandarium/bag.py:14:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/bag.py:14:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/bag.py:15:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/bag.py:15:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/bag.py:16:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/bag.py:16:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/bag.py:17:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/bag.py:17:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/bag.py:18:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/bag.py:18:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/bag.py:19:0: E0611: No name 'mols' in module 'quandarium' (no-name-in-module)
+quandarium/bag.py:19:0: E0401: Unable to import 'quandarium.mols' (import-error)
+quandarium/bag.py:20:0: E0611: No name 'mols' in module 'quandarium' (no-name-in-module)
+quandarium/bag.py:20:0: E0401: Unable to import 'quandarium.mols' (import-error)
+quandarium/bag.py:21:0: E0611: No name 'mols' in module 'quandarium' (no-name-in-module)
+quandarium/bag.py:21:0: E0401: Unable to import 'quandarium.mols' (import-error)
+quandarium/bag.py:22:0: E0611: No name 'mols' in module 'quandarium' (no-name-in-module)
+quandarium/bag.py:22:0: E0401: Unable to import 'quandarium.mols' (import-error)
+quandarium/bag.py:23:0: E0611: No name 'mols' in module 'quandarium' (no-name-in-module)
+quandarium/bag.py:23:0: E0401: Unable to import 'quandarium.mols' (import-error)
+quandarium/bag.py:26:0: R0913: Too many arguments (8/5) (too-many-arguments)
+quandarium/bag.py:26:0: R0914: Too many local variables (22/15) (too-many-locals)
+quandarium/bag.py:117:0: C0103: Argument name "Rinfo" doesn't conform to snake_case naming style (invalid-name)
+quandarium/bag.py:117:0: C0103: Argument name "w" doesn't conform to snake_case naming style (invalid-name)
+quandarium/bag.py:117:0: R0913: Too many arguments (7/5) (too-many-arguments)
+quandarium/bag.py:117:0: R0914: Too many local variables (20/15) (too-many-locals)
+quandarium/bag.py:164:4: C0200: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+quandarium/bag.py:117:53: W0613: Unused argument 'print_convergence' (unused-argument)
+quandarium/bag.py:189:0: R0914: Too many local variables (17/15) (too-many-locals)
+quandarium/bag.py:220:4: C0200: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+quandarium/bag.py:266:4: C0200: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+quandarium/bag.py:291:0: R0913: Too many arguments (9/5) (too-many-arguments)
+quandarium/bag.py:291:0: R0914: Too many local variables (25/15) (too-many-locals)
+quandarium/bag.py:334:27: R1704: Redefining argument with the local name 'davraddii' (redefined-argument-from-local)
+quandarium/bag.py:350:20: W0212: Access to a protected member _number_left of a client class (protected-access)
+quandarium/bag.py:345:4: W0612: Unused variable 's_time' (unused-variable)
+quandarium/bag.py:346:4: W0612: Unused variable 'size' (unused-variable)
+quandarium/bag.py:365:0: R0913: Too many arguments (6/5) (too-many-arguments)
+quandarium/bag.py:365:0: R0914: Too many local variables (17/15) (too-many-locals)
+quandarium/bag.py:398:0: R0913: Too many arguments (7/5) (too-many-arguments)
+quandarium/bag.py:398:0: R0914: Too many local variables (19/15) (too-many-locals)
+quandarium/bag.py:438:0: R0914: Too many local variables (16/15) (too-many-locals)
+quandarium/bag.py:456:12: C0200: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+quandarium/bag.py:458:16: C0103: Variable name "c1" doesn't conform to snake_case naming style (invalid-name)
+quandarium/bag.py:459:16: C0103: Variable name "c2" doesn't conform to snake_case naming style (invalid-name)
+quandarium/bag.py:467:0: R0914: Too many local variables (17/15) (too-many-locals)
+quandarium/bag.py:514:12: C0200: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+quandarium/bag.py:525:0: R0914: Too many local variables (16/15) (too-many-locals)
+quandarium/bag.py:13:0: W0611: Unused linear_sum_assignment imported from scipy.optimize (unused-import)
+************* Module quandarium.quandarium.reg
+quandarium/reg.py:52:0: C0301: Line too long (105/100) (line-too-long)
+quandarium/reg.py:160:0: C0301: Line too long (139/100) (line-too-long)
+quandarium/reg.py:199:0: C0305: Trailing newlines (trailing-newlines)
+quandarium/reg.py:11:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/reg.py:11:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/reg.py:12:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/reg.py:12:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/reg.py:13:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/reg.py:13:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/reg.py:14:0: E0611: No name 'mols' in module 'quandarium' (no-name-in-module)
+quandarium/reg.py:14:0: E0401: Unable to import 'quandarium.mols' (import-error)
+quandarium/reg.py:59:0: W0102: Dangerous default value [] as argument (dangerous-default-value)
+quandarium/reg.py:87:4: C0200: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+quandarium/reg.py:102:0: W0102: Dangerous default value [] as argument (dangerous-default-value)
+quandarium/reg.py:102:0: W0102: Dangerous default value [] as argument (dangerous-default-value)
+quandarium/reg.py:102:0: R0913: Too many arguments (6/5) (too-many-arguments)
+quandarium/reg.py:102:0: R0914: Too many local variables (20/15) (too-many-locals)
+quandarium/reg.py:144:16: C0200: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+quandarium/reg.py:191:8: C0200: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+quandarium/reg.py:8:0: W0611: Unused import sys (unused-import)
+quandarium/reg.py:12:0: W0611: Unused logcolumns imported from quandarium.aux (unused-import)
+quandarium/reg.py:13:0: W0611: Unused checkmissingkeys imported from quandarium.aux (unused-import)
+************* Module quandarium.quandarium.extractors
+quandarium/extractors.py:667:72: E0001: invalid syntax (<unknown>, line 667) (syntax-error)
+************* Module quandarium.quandarium.mols
+quandarium/mols.py:154:48: C0326: Exactly one space required after comma
+    bounds = np.array(list(map(list, bounds)))[:,0]
+                                                ^ (bad-whitespace)
+quandarium/mols.py:155:17: C0326: Exactly one space required around comparison
+    if np.any(ori==bounds):
+                 ^^ (bad-whitespace)
+quandarium/mols.py:156:21: C0326: Exactly one space required around comparison
+        print(ecn[ori==bounds])
+                     ^^ (bad-whitespace)
+quandarium/mols.py:157:21: C0326: Exactly one space required around comparison
+        print(ori[ori==bounds])
+                     ^^ (bad-whitespace)
+quandarium/mols.py:237:0: C0330: Wrong continued indentation (remove 8 spaces).
+                      '{:s}'.format(results.message))
+              |       ^ (bad-continuation)
+quandarium/mols.py:437:0: C0305: Trailing newlines (trailing-newlines)
+quandarium/mols.py:16:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/mols.py:16:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/mols.py:17:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/mols.py:17:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/mols.py:18:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/mols.py:18:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/mols.py:19:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/mols.py:19:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/mols.py:20:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/mols.py:20:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/mols.py:21:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/mols.py:21:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/mols.py:22:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/mols.py:22:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/mols.py:23:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/mols.py:23:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/mols.py:24:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/mols.py:24:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/mols.py:25:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/mols.py:25:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/mols.py:26:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/mols.py:26:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/mols.py:27:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/mols.py:27:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/mols.py:63:0: C0103: Argument name "Rinfo" doesn't conform to snake_case naming style (invalid-name)
+quandarium/mols.py:63:0: C0103: Argument name "w" doesn't conform to snake_case naming style (invalid-name)
+quandarium/mols.py:63:0: R0913: Too many arguments (7/5) (too-many-arguments)
+quandarium/mols.py:63:0: R0914: Too many local variables (22/15) (too-many-locals)
+quandarium/mols.py:109:8: C0103: Variable name "R" doesn't conform to snake_case naming style (invalid-name)
+quandarium/mols.py:111:8: C0103: Variable name "R" doesn't conform to snake_case naming style (invalid-name)
+quandarium/mols.py:124:13: C0103: Variable name "ce" doesn't conform to snake_case naming style (invalid-name)
+quandarium/mols.py:124:13: W0612: Unused variable 'ce' (unused-variable)
+quandarium/mols.py:162:0: R0914: Too many local variables (28/15) (too-many-locals)
+quandarium/mols.py:162:0: R0912: Too many branches (13/12) (too-many-branches)
+quandarium/mols.py:162:0: R0915: Too many statements (53/50) (too-many-statements)
+quandarium/mols.py:322:0: R0913: Too many arguments (9/5) (too-many-arguments)
+quandarium/mols.py:322:0: R0914: Too many local variables (37/15) (too-many-locals)
+quandarium/mols.py:322:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+quandarium/mols.py:322:0: R0915: Too many statements (51/50) (too-many-statements)
+quandarium/mols.py:4:0: W0611: Unused import itertools (unused-import)
+quandarium/mols.py:5:0: W0611: Unused import time (unused-import)
+quandarium/mols.py:6:0: W0611: Unused import ase.io (unused-import)
+quandarium/mols.py:8:0: W0611: Unused networkx imported as nx (unused-import)
+quandarium/mols.py:12:0: W0611: Unused legendre imported from scipy.special (unused-import)
+quandarium/mols.py:15:0: W0611: Unused DBSCAN imported from sklearn.cluster (unused-import)
+quandarium/mols.py:23:0: W0611: Unused comp_pij_classed imported from quandarium.aux (unused-import)
+quandarium/mols.py:27:0: W0611: Unused translate_list imported from quandarium.aux (unused-import)
+************* Module quandarium.quandarium.dataanalysis
+quandarium/dataanalysis.py:28:0: C0301: Line too long (102/100) (line-too-long)
+quandarium/dataanalysis.py:35:0: C0301: Line too long (102/100) (line-too-long)
+quandarium/dataanalysis.py:42:0: C0301: Line too long (102/100) (line-too-long)
+quandarium/dataanalysis.py:49:77: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:58:77: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:150:77: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:158:77: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:176:71: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:264:46: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:267:78: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:319:70: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:321:72: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:323:75: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:324:78: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:326:72: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:328:76: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:351:0: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:356:71: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:361:74: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:367:75: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:369:72: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:379:0: C0330: Wrong continued indentation (remove 1 space).
+            preamble=r'\usepackage[version=4]{mhchem} \usepackage{amsmath} \usepackage{amsfonts} \usepackage{mathtools} \usepackage[T1]{fontenc}')
+           |^ (bad-continuation)
+quandarium/dataanalysis.py:379:0: C0301: Line too long (146/100) (line-too-long)
+quandarium/dataanalysis.py:432:60: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:441:67: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:442:80: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:443:80: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:449:40: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:450:41: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:453:43: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:455:21: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:457:40: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:466:74: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:485:29: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:502:31: C0326: Exactly one space required around assignment
+                        degreee=1
+                               ^ (bad-whitespace)
+quandarium/dataanalysis.py:562:29: C0326: No space allowed around keyword argument assignment
+    plt.subplots_adjust(left = 0.125,
+                             ^ (bad-whitespace)
+quandarium/dataanalysis.py:563:30: C0326: No space allowed around keyword argument assignment
+                        right = 0.92,
+                              ^ (bad-whitespace)
+quandarium/dataanalysis.py:564:31: C0326: No space allowed around keyword argument assignment
+                        bottom = 0.1,
+                               ^ (bad-whitespace)
+quandarium/dataanalysis.py:565:28: C0326: No space allowed around keyword argument assignment
+                        top = 0.9,
+                            ^ (bad-whitespace)
+quandarium/dataanalysis.py:566:31: C0326: No space allowed around keyword argument assignment
+                        wspace = 0.0,
+                               ^ (bad-whitespace)
+quandarium/dataanalysis.py:567:31: C0326: No space allowed around keyword argument assignment
+                        hspace = 0.0)
+                               ^ (bad-whitespace)
+quandarium/dataanalysis.py:569:34: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:573:0: C0301: Line too long (101/100) (line-too-long)
+quandarium/dataanalysis.py:573:42: C0326: Exactly one space required after comma
+        binfo_plot = np.vectorize(lambda x,y: truefalse[x] + ',' + truefalse[y])(null_test, alt_test)
+                                          ^ (bad-whitespace)
+quandarium/dataanalysis.py:581:0: C0301: Line too long (126/100) (line-too-long)
+quandarium/dataanalysis.py:581:42: C0326: Exactly one space required after comma
+        binfo_plot = np.vectorize(lambda x,y: str(round(x, 2)) + ',' + str(round(y, 2)))(alt_test_confimax, alt_test_confimin)
+                                          ^ (bad-whitespace)
+quandarium/dataanalysis.py:605:0: C0330: Wrong hanging indentation (add 1 space).
+                                                     indf, colindex].transAxes,
+                                                     ^| (bad-continuation)
+quandarium/dataanalysis.py:615:0: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:618:20: C0326: Exactly one space required around assignment
+                text=''
+                    ^ (bad-whitespace)
+quandarium/dataanalysis.py:622:28: C0326: Exactly one space required around assignment
+                        text+=','
+                            ^^ (bad-whitespace)
+quandarium/dataanalysis.py:645:36: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:649:39: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:667:0: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:670:0: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:672:0: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:697:39: C0326: No space allowed around keyword argument assignment
+        g = sns.distplot(dataval, hist = False, kde = True,
+                                       ^ (bad-whitespace)
+quandarium/dataanalysis.py:697:52: C0326: No space allowed around keyword argument assignment
+        g = sns.distplot(dataval, hist = False, kde = True,
+                                                    ^ (bad-whitespace)
+quandarium/dataanalysis.py:698:33: C0326: No space allowed around keyword argument assignment
+                         kde_kws = {'shade': True, 'linewidth': 3},
+                                 ^ (bad-whitespace)
+quandarium/dataanalysis.py:699:31: C0326: No space allowed around keyword argument assignment
+                         label = val)
+                               ^ (bad-whitespace)
+quandarium/dataanalysis.py:701:0: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/dataanalysis.py:703:0: C0305: Trailing newlines (trailing-newlines)
+quandarium/dataanalysis.py:17:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/dataanalysis.py:17:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/dataanalysis.py:18:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/dataanalysis.py:18:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/dataanalysis.py:19:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/dataanalysis.py:19:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/dataanalysis.py:47:0: R0913: Too many arguments (6/5) (too-many-arguments)
+quandarium/dataanalysis.py:47:0: R0914: Too many local variables (21/15) (too-many-locals)
+quandarium/dataanalysis.py:90:4: C0103: Variable name "rs" doesn't conform to snake_case naming style (invalid-name)
+quandarium/dataanalysis.py:148:0: R0913: Too many arguments (6/5) (too-many-arguments)
+quandarium/dataanalysis.py:148:0: R0914: Too many local variables (19/15) (too-many-locals)
+quandarium/dataanalysis.py:192:4: C0103: Variable name "rs" doesn't conform to snake_case naming style (invalid-name)
+quandarium/dataanalysis.py:256:0: W0102: Dangerous default value {} as argument (dangerous-default-value)
+quandarium/dataanalysis.py:256:0: W0102: Dangerous default value {} as argument (dangerous-default-value)
+quandarium/dataanalysis.py:256:0: W0102: Dangerous default value {} as argument (dangerous-default-value)
+quandarium/dataanalysis.py:256:0: R0913: Too many arguments (16/5) (too-many-arguments)
+quandarium/dataanalysis.py:256:0: R0914: Too many local variables (74/15) (too-many-locals)
+quandarium/dataanalysis.py:448:8: R1705: Unnecessary "else" after "return" (no-else-return)
+quandarium/dataanalysis.py:575:8: C0103: Argument name "x" doesn't conform to snake_case naming style (invalid-name)
+quandarium/dataanalysis.py:575:8: C0103: Argument name "y" doesn't conform to snake_case naming style (invalid-name)
+quandarium/dataanalysis.py:576:28: C0321: More than one statement on a single line (multiple-statements)
+quandarium/dataanalysis.py:577:27: C0321: More than one statement on a single line (multiple-statements)
+quandarium/dataanalysis.py:642:4: R1705: Unnecessary "else" after "return" (no-else-return)
+quandarium/dataanalysis.py:256:0: R0912: Too many branches (50/12) (too-many-branches)
+quandarium/dataanalysis.py:256:0: R0915: Too many statements (140/50) (too-many-statements)
+quandarium/dataanalysis.py:697:8: C0103: Variable name "g" doesn't conform to snake_case naming style (invalid-name)
+quandarium/dataanalysis.py:3:0: W0611: Unused import os (unused-import)
+quandarium/dataanalysis.py:7:0: W0611: Unused pandas imported as pd (unused-import)
+quandarium/dataanalysis.py:9:0: W0611: Unused FormatStrFormatter imported from matplotlib.ticker (unused-import)
+quandarium/dataanalysis.py:15:0: W0611: Unused stats imported from scipy as scipystats (unused-import)
+************* Module quandarium.quandarium.aux
+quandarium/aux.py:212:41: C0326: Exactly one space required after comma
+def comp_rs(ori, dij, k, R, rcutp, w=[0.1,0.60,0.42]):
+                                         ^ (bad-whitespace)
+quandarium/aux.py:212:46: C0326: Exactly one space required after comma
+def comp_rs(ori, dij, k, R, rcutp, w=[0.1,0.60,0.42]):
+                                              ^ (bad-whitespace)
+quandarium/aux.py:290:13: C0326: Exactly one space required around assignment
+    addcommas=False  # if a array of strings were stored as a bag, each entry
+             ^ (bad-whitespace)
+quandarium/aux.py:296:0: C0330: Wrong continued indentation (add 28 spaces).
+                 nparray.tolist()).replace(' ', '') + '\"]'
+                 ^                           | (bad-continuation)
+quandarium/aux.py:299:0: C0330: Wrong continued indentation (add 22 spaces).
+                 nparray.tolist()).replace(' ', '') + ']'
+                 ^                     | (bad-continuation)
+quandarium/aux.py:389:71: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/aux.py:416:32: C0326: No space allowed before :
+        for n in range(0, Mphi) :
+                                ^ (bad-whitespace)
+quandarium/aux.py:443:0: C0330: Wrong continued indentation (remove 8 spaces).
+                          "elements.".format(str(index)))
+                  |       ^ (bad-continuation)
+quandarium/aux.py:489:28: C0326: No space allowed before :
+    if vector_a == vector_b :
+                            ^ (bad-whitespace)
+quandarium/aux.py:493:62: C0326: No space allowed before :
+    if (type(vector_a) != np.ndarray) or (len(vector_a) != 3) :
+                                                              ^ (bad-whitespace)
+quandarium/aux.py:494:66: C0326: No space allowed before bracket
+        print("vector_a must be a np.array of len 3! Aborting..." )
+                                                                  ^ (bad-whitespace)
+quandarium/aux.py:497:62: C0326: No space allowed before :
+    if (type(vector_b) != np.ndarray) or (len(vector_b) != 3) :
+                                                              ^ (bad-whitespace)
+quandarium/aux.py:498:66: C0326: No space allowed before bracket
+        print("vector_b must be a np.array of len 3! Aborting..." )
+                                                                  ^ (bad-whitespace)
+quandarium/aux.py:501:36: C0326: No space allowed before :
+    if (type(N) != int) or (N <= 0) :
+                                    ^ (bad-whitespace)
+quandarium/aux.py:505:25: C0326: No space allowed after bracket
+    xvalues = np.linspace( vector_a[0] , vector_b[0] , Qtnsteps )
+                         ^ (bad-whitespace)
+quandarium/aux.py:505:39: C0326: No space allowed before comma
+    xvalues = np.linspace( vector_a[0] , vector_b[0] , Qtnsteps )
+                                       ^ (bad-whitespace)
+quandarium/aux.py:505:53: C0326: No space allowed before comma
+    xvalues = np.linspace( vector_a[0] , vector_b[0] , Qtnsteps )
+                                                     ^ (bad-whitespace)
+quandarium/aux.py:505:64: C0326: No space allowed before bracket
+    xvalues = np.linspace( vector_a[0] , vector_b[0] , Qtnsteps )
+                                                                ^ (bad-whitespace)
+quandarium/aux.py:506:25: C0326: No space allowed after bracket
+    yvalues = np.linspace( vector_a[1] , vector_b[1] , Qtnsteps )
+                         ^ (bad-whitespace)
+quandarium/aux.py:506:39: C0326: No space allowed before comma
+    yvalues = np.linspace( vector_a[1] , vector_b[1] , Qtnsteps )
+                                       ^ (bad-whitespace)
+quandarium/aux.py:506:53: C0326: No space allowed before comma
+    yvalues = np.linspace( vector_a[1] , vector_b[1] , Qtnsteps )
+                                                     ^ (bad-whitespace)
+quandarium/aux.py:506:64: C0326: No space allowed before bracket
+    yvalues = np.linspace( vector_a[1] , vector_b[1] , Qtnsteps )
+                                                                ^ (bad-whitespace)
+quandarium/aux.py:507:25: C0326: No space allowed after bracket
+    zvalues = np.linspace( vector_a[2] , vector_b[2] , Qtnsteps )
+                         ^ (bad-whitespace)
+quandarium/aux.py:507:39: C0326: No space allowed before comma
+    zvalues = np.linspace( vector_a[2] , vector_b[2] , Qtnsteps )
+                                       ^ (bad-whitespace)
+quandarium/aux.py:507:53: C0326: No space allowed before comma
+    zvalues = np.linspace( vector_a[2] , vector_b[2] , Qtnsteps )
+                                                     ^ (bad-whitespace)
+quandarium/aux.py:507:64: C0326: No space allowed before bracket
+    zvalues = np.linspace( vector_a[2] , vector_b[2] , Qtnsteps )
+                                                                ^ (bad-whitespace)
+quandarium/aux.py:520:27: C0326: No space allowed after bracket
+    result = np.linalg.norm( dot - atom_position ) < atom_radius
+                           ^ (bad-whitespace)
+quandarium/aux.py:520:49: C0326: No space allowed before bracket
+    result = np.linalg.norm( dot - atom_position ) < atom_radius
+                                                 ^ (bad-whitespace)
+quandarium/aux.py:552:15: C0326: No space allowed after bracket
+def RandRDS_dot( sampling_distance ) :
+               ^ (bad-whitespace)
+quandarium/aux.py:552:35: C0326: No space allowed before bracket
+def RandRDS_dot( sampling_distance ) :
+                                   ^ (bad-whitespace)
+quandarium/aux.py:552:37: C0326: No space allowed before :
+def RandRDS_dot( sampling_distance ) :
+                                     ^ (bad-whitespace)
+quandarium/aux.py:557:33: C0326: No space allowed before :
+    if not sampling_distance > 0 :
+                                 ^ (bad-whitespace)
+quandarium/aux.py:569:21: C0326: Exactly one space required after comma
+    Dot = np.array([x,y,z])
+                     ^ (bad-whitespace)
+quandarium/aux.py:569:23: C0326: Exactly one space required after comma
+    Dot = np.array([x,y,z])
+                       ^ (bad-whitespace)
+quandarium/aux.py:574:15: C0326: No space allowed after bracket
+def RandRDS_set( sampling_distance , N ) :
+               ^ (bad-whitespace)
+quandarium/aux.py:574:35: C0326: No space allowed before comma
+def RandRDS_set( sampling_distance , N ) :
+                                   ^ (bad-whitespace)
+quandarium/aux.py:574:39: C0326: No space allowed before bracket
+def RandRDS_set( sampling_distance , N ) :
+                                       ^ (bad-whitespace)
+quandarium/aux.py:574:41: C0326: No space allowed before :
+def RandRDS_set( sampling_distance , N ) :
+                                         ^ (bad-whitespace)
+quandarium/aux.py:581:33: C0326: No space allowed before :
+    if not sampling_distance > 0 :
+                                 ^ (bad-whitespace)
+quandarium/aux.py:585:36: C0326: No space allowed before :
+    if (type(N) != int) or (N <= 0) :
+                                    ^ (bad-whitespace)
+quandarium/aux.py:589:20: C0326: Exactly one space required around assignment
+    cart_coordinates=[]
+                    ^ (bad-whitespace)
+quandarium/aux.py:591:31: C0326: No space allowed after bracket
+        cart_coordinates.append( RandRDS_dot(sampling_distance) )
+                               ^ (bad-whitespace)
+quandarium/aux.py:591:64: C0326: No space allowed before bracket
+        cart_coordinates.append( RandRDS_dot(sampling_distance) )
+                                                                ^ (bad-whitespace)
+quandarium/aux.py:9:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+quandarium/aux.py:45:8: R1705: Unnecessary "else" after "return" (no-else-return)
+quandarium/aux.py:46:41: C0121: Comparison to False should be 'not expr' (singleton-comparison)
+quandarium/aux.py:47:41: C0121: Comparison to False should be 'not expr' (singleton-comparison)
+quandarium/aux.py:63:8: R1705: Unnecessary "else" after "return" (no-else-return)
+quandarium/aux.py:64:26: C0121: Comparison to False should be 'not expr' (singleton-comparison)
+quandarium/aux.py:21:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+quandarium/aux.py:21:0: R0912: Too many branches (18/12) (too-many-branches)
+quandarium/aux.py:70:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+quandarium/aux.py:82:0: R1711: Useless return at end of function or method (useless-return)
+quandarium/aux.py:145:0: C0103: Argument name "x" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:145:0: C0103: Argument name "mu" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:207:0: C0103: Argument name "ri" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:207:0: C0116: Missing function or method docstring (missing-function-docstring)
+quandarium/aux.py:212:0: W0102: Dangerous default value [] as argument (dangerous-default-value)
+quandarium/aux.py:212:0: C0103: Argument name "R" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:212:0: C0103: Argument name "w" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:212:0: R0913: Too many arguments (6/5) (too-many-arguments)
+quandarium/aux.py:212:0: R0914: Too many local variables (19/15) (too-many-locals)
+quandarium/aux.py:216:4: C0103: Variable name "ew" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:217:4: C0103: Variable name "rRw" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:230:4: C0103: Variable name "Ri_sum_Rj" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:231:4: C0103: Variable name "rR_cost" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:290:4: W0612: Unused variable 'addcommas' (unused-variable)
+quandarium/aux.py:332:18: W0123: Use of eval (eval-used)
+quandarium/aux.py:334:18: W0123: Use of eval (eval-used)
+quandarium/aux.py:329:4: W0612: Unused variable 'nan' (unused-variable)
+quandarium/aux.py:388:0: C0103: Function name "RegRDS_set" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:388:0: C0103: Argument name "N" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:388:0: R0914: Too many local variables (18/15) (too-many-locals)
+quandarium/aux.py:406:4: C0103: Variable name "r" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:407:4: C0103: Variable name "Ncount" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:408:4: C0103: Variable name "a" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:409:4: C0103: Variable name "d" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:410:4: C0103: Variable name "Mtheta" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:413:8: C0103: Variable name "m" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:415:8: C0103: Variable name "Mphi" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:416:12: C0103: Variable name "n" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:418:12: C0103: Variable name "Ncount" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:419:12: C0103: Variable name "y" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:420:12: C0103: Variable name "x" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:421:12: C0103: Variable name "z" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:482:0: C0103: Argument name "Qtnsteps" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:493:8: C0123: Using type() instead of isinstance() for a typecheck. (unidiomatic-typecheck)
+quandarium/aux.py:497:8: C0123: Using type() instead of isinstance() for a typecheck. (unidiomatic-typecheck)
+quandarium/aux.py:501:8: C0123: Using type() instead of isinstance() for a typecheck. (unidiomatic-typecheck)
+quandarium/aux.py:501:13: E0602: Undefined variable 'N' (undefined-variable)
+quandarium/aux.py:501:28: E0602: Undefined variable 'N' (undefined-variable)
+quandarium/aux.py:542:4: C0103: Variable name "db" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:552:0: C0103: Function name "RandRDS_dot" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:561:4: C0103: Variable name "u" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:561:7: C0103: Variable name "v" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:561:11: E1101: Module 'numpy.random' has no 'random' member (no-member)
+quandarium/aux.py:566:4: C0103: Variable name "x" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:567:4: C0103: Variable name "y" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:568:4: C0103: Variable name "z" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:569:4: C0103: Variable name "Dot" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:574:0: C0103: Function name "RandRDS_set" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:574:0: C0103: Argument name "N" doesn't conform to snake_case naming style (invalid-name)
+quandarium/aux.py:585:8: C0123: Using type() instead of isinstance() for a typecheck. (unidiomatic-typecheck)
+quandarium/aux.py:590:8: W0612: Unused variable 'i' (unused-variable)
+************* Module quandarium.quandarium.quandarium.find_calculations
+quandarium/quandarium/find_calculations.py:33:74: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/find_calculations.py:34:70: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/find_calculations.py:81:23: C0326: Exactly one space required before assignment
+        list_of_folders= [x for x in os.listdir(path_to_start_the_search + '/')
+                       ^ (bad-whitespace)
+quandarium/quandarium/find_calculations.py:8:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/find_calculations.py:8:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/find_calculations.py:11:0: R0912: Too many branches (16/12) (too-many-branches)
+quandarium/quandarium/find_calculations.py:4:0: W0611: Unused numpy imported as np (unused-import)
+quandarium/quandarium/find_calculations.py:5:0: W0611: Unused pandas imported as pd (unused-import)
+quandarium/quandarium/find_calculations.py:8:0: W0611: Unused logcolumns imported from quandarium.aux (unused-import)
+quandarium/quandarium/find_calculations.py:6:0: C0411: standard import "import os.path" should be placed before "import numpy as np" (wrong-import-order)
+quandarium/quandarium/find_calculations.py:7:0: C0411: standard import "from distutils.dir_util import copy_tree" should be placed before "import numpy as np" (wrong-import-order)
+************* Module quandarium.quandarium.quandarium.bag
+quandarium/quandarium/bag.py:118:48: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/bag.py:365:0: C0301: Line too long (103/100) (line-too-long)
+quandarium/quandarium/bag.py:571:0: C0305: Trailing newlines (trailing-newlines)
+quandarium/quandarium/bag.py:14:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/bag.py:14:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/bag.py:15:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/bag.py:15:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/bag.py:16:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/bag.py:16:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/bag.py:17:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/bag.py:17:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/bag.py:18:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/bag.py:18:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/bag.py:19:0: E0611: No name 'mols' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/bag.py:19:0: E0401: Unable to import 'quandarium.mols' (import-error)
+quandarium/quandarium/bag.py:20:0: E0611: No name 'mols' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/bag.py:20:0: E0401: Unable to import 'quandarium.mols' (import-error)
+quandarium/quandarium/bag.py:21:0: E0611: No name 'mols' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/bag.py:21:0: E0401: Unable to import 'quandarium.mols' (import-error)
+quandarium/quandarium/bag.py:22:0: E0611: No name 'mols' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/bag.py:22:0: E0401: Unable to import 'quandarium.mols' (import-error)
+quandarium/quandarium/bag.py:23:0: E0611: No name 'mols' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/bag.py:23:0: E0401: Unable to import 'quandarium.mols' (import-error)
+quandarium/quandarium/bag.py:26:0: R0913: Too many arguments (8/5) (too-many-arguments)
+quandarium/quandarium/bag.py:26:0: R0914: Too many local variables (22/15) (too-many-locals)
+quandarium/quandarium/bag.py:117:0: C0103: Argument name "Rinfo" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/bag.py:117:0: C0103: Argument name "w" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/bag.py:117:0: R0913: Too many arguments (7/5) (too-many-arguments)
+quandarium/quandarium/bag.py:117:0: R0914: Too many local variables (20/15) (too-many-locals)
+quandarium/quandarium/bag.py:164:4: C0200: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+quandarium/quandarium/bag.py:117:53: W0613: Unused argument 'print_convergence' (unused-argument)
+quandarium/quandarium/bag.py:189:0: R0914: Too many local variables (17/15) (too-many-locals)
+quandarium/quandarium/bag.py:220:4: C0200: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+quandarium/quandarium/bag.py:266:4: C0200: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+quandarium/quandarium/bag.py:291:0: R0913: Too many arguments (9/5) (too-many-arguments)
+quandarium/quandarium/bag.py:291:0: R0914: Too many local variables (25/15) (too-many-locals)
+quandarium/quandarium/bag.py:334:27: R1704: Redefining argument with the local name 'davraddii' (redefined-argument-from-local)
+quandarium/quandarium/bag.py:350:20: W0212: Access to a protected member _number_left of a client class (protected-access)
+quandarium/quandarium/bag.py:345:4: W0612: Unused variable 's_time' (unused-variable)
+quandarium/quandarium/bag.py:346:4: W0612: Unused variable 'size' (unused-variable)
+quandarium/quandarium/bag.py:365:0: R0913: Too many arguments (6/5) (too-many-arguments)
+quandarium/quandarium/bag.py:365:0: R0914: Too many local variables (17/15) (too-many-locals)
+quandarium/quandarium/bag.py:398:0: R0913: Too many arguments (7/5) (too-many-arguments)
+quandarium/quandarium/bag.py:398:0: R0914: Too many local variables (19/15) (too-many-locals)
+quandarium/quandarium/bag.py:438:0: R0914: Too many local variables (16/15) (too-many-locals)
+quandarium/quandarium/bag.py:456:12: C0200: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+quandarium/quandarium/bag.py:458:16: C0103: Variable name "c1" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/bag.py:459:16: C0103: Variable name "c2" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/bag.py:467:0: R0914: Too many local variables (17/15) (too-many-locals)
+quandarium/quandarium/bag.py:514:12: C0200: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+quandarium/quandarium/bag.py:525:0: R0914: Too many local variables (16/15) (too-many-locals)
+quandarium/quandarium/bag.py:13:0: W0611: Unused linear_sum_assignment imported from scipy.optimize (unused-import)
+************* Module quandarium.quandarium.quandarium.reg
+quandarium/quandarium/reg.py:52:0: C0301: Line too long (105/100) (line-too-long)
+quandarium/quandarium/reg.py:160:0: C0301: Line too long (139/100) (line-too-long)
+quandarium/quandarium/reg.py:199:0: C0305: Trailing newlines (trailing-newlines)
+quandarium/quandarium/reg.py:11:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/reg.py:11:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/reg.py:12:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/reg.py:12:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/reg.py:13:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/reg.py:13:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/reg.py:14:0: E0611: No name 'mols' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/reg.py:14:0: E0401: Unable to import 'quandarium.mols' (import-error)
+quandarium/quandarium/reg.py:59:0: W0102: Dangerous default value [] as argument (dangerous-default-value)
+quandarium/quandarium/reg.py:87:4: C0200: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+quandarium/quandarium/reg.py:102:0: W0102: Dangerous default value [] as argument (dangerous-default-value)
+quandarium/quandarium/reg.py:102:0: W0102: Dangerous default value [] as argument (dangerous-default-value)
+quandarium/quandarium/reg.py:102:0: R0913: Too many arguments (6/5) (too-many-arguments)
+quandarium/quandarium/reg.py:102:0: R0914: Too many local variables (20/15) (too-many-locals)
+quandarium/quandarium/reg.py:144:16: C0200: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+quandarium/quandarium/reg.py:191:8: C0200: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+quandarium/quandarium/reg.py:8:0: W0611: Unused import sys (unused-import)
+quandarium/quandarium/reg.py:12:0: W0611: Unused logcolumns imported from quandarium.aux (unused-import)
+quandarium/quandarium/reg.py:13:0: W0611: Unused checkmissingkeys imported from quandarium.aux (unused-import)
+************* Module quandarium.quandarium.quandarium.extractors
+quandarium/quandarium/extractors.py:667:72: E0001: invalid syntax (<unknown>, line 667) (syntax-error)
+************* Module quandarium.quandarium.quandarium.__init__
+quandarium/quandarium/__init__.py:1:69: C0303: Trailing whitespace (trailing-whitespace)
+************* Module quandarium.quandarium.quandarium.mols
+quandarium/quandarium/mols.py:154:48: C0326: Exactly one space required after comma
+    bounds = np.array(list(map(list, bounds)))[:,0]
+                                                ^ (bad-whitespace)
+quandarium/quandarium/mols.py:155:17: C0326: Exactly one space required around comparison
+    if np.any(ori==bounds):
+                 ^^ (bad-whitespace)
+quandarium/quandarium/mols.py:156:21: C0326: Exactly one space required around comparison
+        print(ecn[ori==bounds])
+                     ^^ (bad-whitespace)
+quandarium/quandarium/mols.py:157:21: C0326: Exactly one space required around comparison
+        print(ori[ori==bounds])
+                     ^^ (bad-whitespace)
+quandarium/quandarium/mols.py:237:0: C0330: Wrong continued indentation (remove 8 spaces).
+                      '{:s}'.format(results.message))
+              |       ^ (bad-continuation)
+quandarium/quandarium/mols.py:437:0: C0305: Trailing newlines (trailing-newlines)
+quandarium/quandarium/mols.py:16:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/mols.py:16:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/mols.py:17:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/mols.py:17:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/mols.py:18:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/mols.py:18:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/mols.py:19:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/mols.py:19:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/mols.py:20:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/mols.py:20:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/mols.py:21:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/mols.py:21:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/mols.py:22:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/mols.py:22:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/mols.py:23:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/mols.py:23:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/mols.py:24:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/mols.py:24:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/mols.py:25:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/mols.py:25:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/mols.py:26:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/mols.py:26:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/mols.py:27:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/mols.py:27:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/mols.py:63:0: C0103: Argument name "Rinfo" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/mols.py:63:0: C0103: Argument name "w" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/mols.py:63:0: R0913: Too many arguments (7/5) (too-many-arguments)
+quandarium/quandarium/mols.py:63:0: R0914: Too many local variables (22/15) (too-many-locals)
+quandarium/quandarium/mols.py:109:8: C0103: Variable name "R" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/mols.py:111:8: C0103: Variable name "R" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/mols.py:124:13: C0103: Variable name "ce" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/mols.py:124:13: W0612: Unused variable 'ce' (unused-variable)
+quandarium/quandarium/mols.py:162:0: R0914: Too many local variables (28/15) (too-many-locals)
+quandarium/quandarium/mols.py:162:0: R0912: Too many branches (13/12) (too-many-branches)
+quandarium/quandarium/mols.py:162:0: R0915: Too many statements (53/50) (too-many-statements)
+quandarium/quandarium/mols.py:322:0: R0913: Too many arguments (9/5) (too-many-arguments)
+quandarium/quandarium/mols.py:322:0: R0914: Too many local variables (37/15) (too-many-locals)
+quandarium/quandarium/mols.py:322:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+quandarium/quandarium/mols.py:322:0: R0915: Too many statements (51/50) (too-many-statements)
+quandarium/quandarium/mols.py:4:0: W0611: Unused import itertools (unused-import)
+quandarium/quandarium/mols.py:5:0: W0611: Unused import time (unused-import)
+quandarium/quandarium/mols.py:6:0: W0611: Unused import ase.io (unused-import)
+quandarium/quandarium/mols.py:8:0: W0611: Unused networkx imported as nx (unused-import)
+quandarium/quandarium/mols.py:12:0: W0611: Unused legendre imported from scipy.special (unused-import)
+quandarium/quandarium/mols.py:15:0: W0611: Unused DBSCAN imported from sklearn.cluster (unused-import)
+quandarium/quandarium/mols.py:23:0: W0611: Unused comp_pij_classed imported from quandarium.aux (unused-import)
+quandarium/quandarium/mols.py:27:0: W0611: Unused translate_list imported from quandarium.aux (unused-import)
+************* Module quandarium.quandarium.quandarium.dataanalysis
+quandarium/quandarium/dataanalysis.py:28:0: C0301: Line too long (102/100) (line-too-long)
+quandarium/quandarium/dataanalysis.py:35:0: C0301: Line too long (102/100) (line-too-long)
+quandarium/quandarium/dataanalysis.py:42:0: C0301: Line too long (102/100) (line-too-long)
+quandarium/quandarium/dataanalysis.py:49:77: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:58:77: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:150:77: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:158:77: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:176:71: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:264:46: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:267:78: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:319:70: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:321:72: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:323:75: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:324:78: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:326:72: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:328:76: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:351:0: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:356:71: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:361:74: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:367:75: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:369:72: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:379:0: C0330: Wrong continued indentation (remove 1 space).
+            preamble=r'\usepackage[version=4]{mhchem} \usepackage{amsmath} \usepackage{amsfonts} \usepackage{mathtools} \usepackage[T1]{fontenc}')
+           |^ (bad-continuation)
+quandarium/quandarium/dataanalysis.py:379:0: C0301: Line too long (146/100) (line-too-long)
+quandarium/quandarium/dataanalysis.py:432:60: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:441:67: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:442:80: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:443:80: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:449:40: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:450:41: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:453:43: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:455:21: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:457:40: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:466:74: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:485:29: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:502:31: C0326: Exactly one space required around assignment
+                        degreee=1
+                               ^ (bad-whitespace)
+quandarium/quandarium/dataanalysis.py:562:29: C0326: No space allowed around keyword argument assignment
+    plt.subplots_adjust(left = 0.125,
+                             ^ (bad-whitespace)
+quandarium/quandarium/dataanalysis.py:563:30: C0326: No space allowed around keyword argument assignment
+                        right = 0.92,
+                              ^ (bad-whitespace)
+quandarium/quandarium/dataanalysis.py:564:31: C0326: No space allowed around keyword argument assignment
+                        bottom = 0.1,
+                               ^ (bad-whitespace)
+quandarium/quandarium/dataanalysis.py:565:28: C0326: No space allowed around keyword argument assignment
+                        top = 0.9,
+                            ^ (bad-whitespace)
+quandarium/quandarium/dataanalysis.py:566:31: C0326: No space allowed around keyword argument assignment
+                        wspace = 0.0,
+                               ^ (bad-whitespace)
+quandarium/quandarium/dataanalysis.py:567:31: C0326: No space allowed around keyword argument assignment
+                        hspace = 0.0)
+                               ^ (bad-whitespace)
+quandarium/quandarium/dataanalysis.py:569:34: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:573:0: C0301: Line too long (101/100) (line-too-long)
+quandarium/quandarium/dataanalysis.py:573:42: C0326: Exactly one space required after comma
+        binfo_plot = np.vectorize(lambda x,y: truefalse[x] + ',' + truefalse[y])(null_test, alt_test)
+                                          ^ (bad-whitespace)
+quandarium/quandarium/dataanalysis.py:581:0: C0301: Line too long (126/100) (line-too-long)
+quandarium/quandarium/dataanalysis.py:581:42: C0326: Exactly one space required after comma
+        binfo_plot = np.vectorize(lambda x,y: str(round(x, 2)) + ',' + str(round(y, 2)))(alt_test_confimax, alt_test_confimin)
+                                          ^ (bad-whitespace)
+quandarium/quandarium/dataanalysis.py:605:0: C0330: Wrong hanging indentation (add 1 space).
+                                                     indf, colindex].transAxes,
+                                                     ^| (bad-continuation)
+quandarium/quandarium/dataanalysis.py:615:0: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:618:20: C0326: Exactly one space required around assignment
+                text=''
+                    ^ (bad-whitespace)
+quandarium/quandarium/dataanalysis.py:622:28: C0326: Exactly one space required around assignment
+                        text+=','
+                            ^^ (bad-whitespace)
+quandarium/quandarium/dataanalysis.py:645:36: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:649:39: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:667:0: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:670:0: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:672:0: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:697:39: C0326: No space allowed around keyword argument assignment
+        g = sns.distplot(dataval, hist = False, kde = True,
+                                       ^ (bad-whitespace)
+quandarium/quandarium/dataanalysis.py:697:52: C0326: No space allowed around keyword argument assignment
+        g = sns.distplot(dataval, hist = False, kde = True,
+                                                    ^ (bad-whitespace)
+quandarium/quandarium/dataanalysis.py:698:33: C0326: No space allowed around keyword argument assignment
+                         kde_kws = {'shade': True, 'linewidth': 3},
+                                 ^ (bad-whitespace)
+quandarium/quandarium/dataanalysis.py:699:31: C0326: No space allowed around keyword argument assignment
+                         label = val)
+                               ^ (bad-whitespace)
+quandarium/quandarium/dataanalysis.py:701:0: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/dataanalysis.py:703:0: C0305: Trailing newlines (trailing-newlines)
+quandarium/quandarium/dataanalysis.py:17:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/dataanalysis.py:17:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/dataanalysis.py:18:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/dataanalysis.py:18:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/dataanalysis.py:19:0: E0611: No name 'aux' in module 'quandarium' (no-name-in-module)
+quandarium/quandarium/dataanalysis.py:19:0: E0401: Unable to import 'quandarium.aux' (import-error)
+quandarium/quandarium/dataanalysis.py:47:0: R0913: Too many arguments (6/5) (too-many-arguments)
+quandarium/quandarium/dataanalysis.py:47:0: R0914: Too many local variables (21/15) (too-many-locals)
+quandarium/quandarium/dataanalysis.py:90:4: C0103: Variable name "rs" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/dataanalysis.py:148:0: R0913: Too many arguments (6/5) (too-many-arguments)
+quandarium/quandarium/dataanalysis.py:148:0: R0914: Too many local variables (19/15) (too-many-locals)
+quandarium/quandarium/dataanalysis.py:192:4: C0103: Variable name "rs" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/dataanalysis.py:256:0: W0102: Dangerous default value {} as argument (dangerous-default-value)
+quandarium/quandarium/dataanalysis.py:256:0: W0102: Dangerous default value {} as argument (dangerous-default-value)
+quandarium/quandarium/dataanalysis.py:256:0: W0102: Dangerous default value {} as argument (dangerous-default-value)
+quandarium/quandarium/dataanalysis.py:256:0: R0913: Too many arguments (16/5) (too-many-arguments)
+quandarium/quandarium/dataanalysis.py:256:0: R0914: Too many local variables (74/15) (too-many-locals)
+quandarium/quandarium/dataanalysis.py:448:8: R1705: Unnecessary "else" after "return" (no-else-return)
+quandarium/quandarium/dataanalysis.py:575:8: C0103: Argument name "x" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/dataanalysis.py:575:8: C0103: Argument name "y" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/dataanalysis.py:576:28: C0321: More than one statement on a single line (multiple-statements)
+quandarium/quandarium/dataanalysis.py:577:27: C0321: More than one statement on a single line (multiple-statements)
+quandarium/quandarium/dataanalysis.py:642:4: R1705: Unnecessary "else" after "return" (no-else-return)
+quandarium/quandarium/dataanalysis.py:256:0: R0912: Too many branches (50/12) (too-many-branches)
+quandarium/quandarium/dataanalysis.py:256:0: R0915: Too many statements (140/50) (too-many-statements)
+quandarium/quandarium/dataanalysis.py:697:8: C0103: Variable name "g" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/dataanalysis.py:3:0: W0611: Unused import os (unused-import)
+quandarium/quandarium/dataanalysis.py:7:0: W0611: Unused pandas imported as pd (unused-import)
+quandarium/quandarium/dataanalysis.py:9:0: W0611: Unused FormatStrFormatter imported from matplotlib.ticker (unused-import)
+quandarium/quandarium/dataanalysis.py:15:0: W0611: Unused stats imported from scipy as scipystats (unused-import)
+************* Module quandarium.quandarium.quandarium.aux
+quandarium/quandarium/aux.py:212:41: C0326: Exactly one space required after comma
+def comp_rs(ori, dij, k, R, rcutp, w=[0.1,0.60,0.42]):
+                                         ^ (bad-whitespace)
+quandarium/quandarium/aux.py:212:46: C0326: Exactly one space required after comma
+def comp_rs(ori, dij, k, R, rcutp, w=[0.1,0.60,0.42]):
+                                              ^ (bad-whitespace)
+quandarium/quandarium/aux.py:290:13: C0326: Exactly one space required around assignment
+    addcommas=False  # if a array of strings were stored as a bag, each entry
+             ^ (bad-whitespace)
+quandarium/quandarium/aux.py:296:0: C0330: Wrong continued indentation (add 28 spaces).
+                 nparray.tolist()).replace(' ', '') + '\"]'
+                 ^                           | (bad-continuation)
+quandarium/quandarium/aux.py:299:0: C0330: Wrong continued indentation (add 22 spaces).
+                 nparray.tolist()).replace(' ', '') + ']'
+                 ^                     | (bad-continuation)
+quandarium/quandarium/aux.py:389:71: C0303: Trailing whitespace (trailing-whitespace)
+quandarium/quandarium/aux.py:416:32: C0326: No space allowed before :
+        for n in range(0, Mphi) :
+                                ^ (bad-whitespace)
+quandarium/quandarium/aux.py:443:0: C0330: Wrong continued indentation (remove 8 spaces).
+                          "elements.".format(str(index)))
+                  |       ^ (bad-continuation)
+quandarium/quandarium/aux.py:489:28: C0326: No space allowed before :
+    if vector_a == vector_b :
+                            ^ (bad-whitespace)
+quandarium/quandarium/aux.py:493:62: C0326: No space allowed before :
+    if (type(vector_a) != np.ndarray) or (len(vector_a) != 3) :
+                                                              ^ (bad-whitespace)
+quandarium/quandarium/aux.py:494:66: C0326: No space allowed before bracket
+        print("vector_a must be a np.array of len 3! Aborting..." )
+                                                                  ^ (bad-whitespace)
+quandarium/quandarium/aux.py:497:62: C0326: No space allowed before :
+    if (type(vector_b) != np.ndarray) or (len(vector_b) != 3) :
+                                                              ^ (bad-whitespace)
+quandarium/quandarium/aux.py:498:66: C0326: No space allowed before bracket
+        print("vector_b must be a np.array of len 3! Aborting..." )
+                                                                  ^ (bad-whitespace)
+quandarium/quandarium/aux.py:501:36: C0326: No space allowed before :
+    if (type(N) != int) or (N <= 0) :
+                                    ^ (bad-whitespace)
+quandarium/quandarium/aux.py:505:25: C0326: No space allowed after bracket
+    xvalues = np.linspace( vector_a[0] , vector_b[0] , Qtnsteps )
+                         ^ (bad-whitespace)
+quandarium/quandarium/aux.py:505:39: C0326: No space allowed before comma
+    xvalues = np.linspace( vector_a[0] , vector_b[0] , Qtnsteps )
+                                       ^ (bad-whitespace)
+quandarium/quandarium/aux.py:505:53: C0326: No space allowed before comma
+    xvalues = np.linspace( vector_a[0] , vector_b[0] , Qtnsteps )
+                                                     ^ (bad-whitespace)
+quandarium/quandarium/aux.py:505:64: C0326: No space allowed before bracket
+    xvalues = np.linspace( vector_a[0] , vector_b[0] , Qtnsteps )
+                                                                ^ (bad-whitespace)
+quandarium/quandarium/aux.py:506:25: C0326: No space allowed after bracket
+    yvalues = np.linspace( vector_a[1] , vector_b[1] , Qtnsteps )
+                         ^ (bad-whitespace)
+quandarium/quandarium/aux.py:506:39: C0326: No space allowed before comma
+    yvalues = np.linspace( vector_a[1] , vector_b[1] , Qtnsteps )
+                                       ^ (bad-whitespace)
+quandarium/quandarium/aux.py:506:53: C0326: No space allowed before comma
+    yvalues = np.linspace( vector_a[1] , vector_b[1] , Qtnsteps )
+                                                     ^ (bad-whitespace)
+quandarium/quandarium/aux.py:506:64: C0326: No space allowed before bracket
+    yvalues = np.linspace( vector_a[1] , vector_b[1] , Qtnsteps )
+                                                                ^ (bad-whitespace)
+quandarium/quandarium/aux.py:507:25: C0326: No space allowed after bracket
+    zvalues = np.linspace( vector_a[2] , vector_b[2] , Qtnsteps )
+                         ^ (bad-whitespace)
+quandarium/quandarium/aux.py:507:39: C0326: No space allowed before comma
+    zvalues = np.linspace( vector_a[2] , vector_b[2] , Qtnsteps )
+                                       ^ (bad-whitespace)
+quandarium/quandarium/aux.py:507:53: C0326: No space allowed before comma
+    zvalues = np.linspace( vector_a[2] , vector_b[2] , Qtnsteps )
+                                                     ^ (bad-whitespace)
+quandarium/quandarium/aux.py:507:64: C0326: No space allowed before bracket
+    zvalues = np.linspace( vector_a[2] , vector_b[2] , Qtnsteps )
+                                                                ^ (bad-whitespace)
+quandarium/quandarium/aux.py:520:27: C0326: No space allowed after bracket
+    result = np.linalg.norm( dot - atom_position ) < atom_radius
+                           ^ (bad-whitespace)
+quandarium/quandarium/aux.py:520:49: C0326: No space allowed before bracket
+    result = np.linalg.norm( dot - atom_position ) < atom_radius
+                                                 ^ (bad-whitespace)
+quandarium/quandarium/aux.py:552:15: C0326: No space allowed after bracket
+def RandRDS_dot( sampling_distance ) :
+               ^ (bad-whitespace)
+quandarium/quandarium/aux.py:552:35: C0326: No space allowed before bracket
+def RandRDS_dot( sampling_distance ) :
+                                   ^ (bad-whitespace)
+quandarium/quandarium/aux.py:552:37: C0326: No space allowed before :
+def RandRDS_dot( sampling_distance ) :
+                                     ^ (bad-whitespace)
+quandarium/quandarium/aux.py:557:33: C0326: No space allowed before :
+    if not sampling_distance > 0 :
+                                 ^ (bad-whitespace)
+quandarium/quandarium/aux.py:569:21: C0326: Exactly one space required after comma
+    Dot = np.array([x,y,z])
+                     ^ (bad-whitespace)
+quandarium/quandarium/aux.py:569:23: C0326: Exactly one space required after comma
+    Dot = np.array([x,y,z])
+                       ^ (bad-whitespace)
+quandarium/quandarium/aux.py:574:15: C0326: No space allowed after bracket
+def RandRDS_set( sampling_distance , N ) :
+               ^ (bad-whitespace)
+quandarium/quandarium/aux.py:574:35: C0326: No space allowed before comma
+def RandRDS_set( sampling_distance , N ) :
+                                   ^ (bad-whitespace)
+quandarium/quandarium/aux.py:574:39: C0326: No space allowed before bracket
+def RandRDS_set( sampling_distance , N ) :
+                                       ^ (bad-whitespace)
+quandarium/quandarium/aux.py:574:41: C0326: No space allowed before :
+def RandRDS_set( sampling_distance , N ) :
+                                         ^ (bad-whitespace)
+quandarium/quandarium/aux.py:581:33: C0326: No space allowed before :
+    if not sampling_distance > 0 :
+                                 ^ (bad-whitespace)
+quandarium/quandarium/aux.py:585:36: C0326: No space allowed before :
+    if (type(N) != int) or (N <= 0) :
+                                    ^ (bad-whitespace)
+quandarium/quandarium/aux.py:589:20: C0326: Exactly one space required around assignment
+    cart_coordinates=[]
+                    ^ (bad-whitespace)
+quandarium/quandarium/aux.py:591:31: C0326: No space allowed after bracket
+        cart_coordinates.append( RandRDS_dot(sampling_distance) )
+                               ^ (bad-whitespace)
+quandarium/quandarium/aux.py:591:64: C0326: No space allowed before bracket
+        cart_coordinates.append( RandRDS_dot(sampling_distance) )
+                                                                ^ (bad-whitespace)
+quandarium/quandarium/aux.py:9:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+quandarium/quandarium/aux.py:45:8: R1705: Unnecessary "else" after "return" (no-else-return)
+quandarium/quandarium/aux.py:46:41: C0121: Comparison to False should be 'not expr' (singleton-comparison)
+quandarium/quandarium/aux.py:47:41: C0121: Comparison to False should be 'not expr' (singleton-comparison)
+quandarium/quandarium/aux.py:63:8: R1705: Unnecessary "else" after "return" (no-else-return)
+quandarium/quandarium/aux.py:64:26: C0121: Comparison to False should be 'not expr' (singleton-comparison)
+quandarium/quandarium/aux.py:21:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+quandarium/quandarium/aux.py:21:0: R0912: Too many branches (18/12) (too-many-branches)
+quandarium/quandarium/aux.py:70:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+quandarium/quandarium/aux.py:82:0: R1711: Useless return at end of function or method (useless-return)
+quandarium/quandarium/aux.py:145:0: C0103: Argument name "x" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:145:0: C0103: Argument name "mu" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:207:0: C0103: Argument name "ri" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:207:0: C0116: Missing function or method docstring (missing-function-docstring)
+quandarium/quandarium/aux.py:212:0: W0102: Dangerous default value [] as argument (dangerous-default-value)
+quandarium/quandarium/aux.py:212:0: C0103: Argument name "R" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:212:0: C0103: Argument name "w" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:212:0: R0913: Too many arguments (6/5) (too-many-arguments)
+quandarium/quandarium/aux.py:212:0: R0914: Too many local variables (19/15) (too-many-locals)
+quandarium/quandarium/aux.py:216:4: C0103: Variable name "ew" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:217:4: C0103: Variable name "rRw" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:230:4: C0103: Variable name "Ri_sum_Rj" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:231:4: C0103: Variable name "rR_cost" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:290:4: W0612: Unused variable 'addcommas' (unused-variable)
+quandarium/quandarium/aux.py:332:18: W0123: Use of eval (eval-used)
+quandarium/quandarium/aux.py:334:18: W0123: Use of eval (eval-used)
+quandarium/quandarium/aux.py:329:4: W0612: Unused variable 'nan' (unused-variable)
+quandarium/quandarium/aux.py:388:0: C0103: Function name "RegRDS_set" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:388:0: C0103: Argument name "N" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:388:0: R0914: Too many local variables (18/15) (too-many-locals)
+quandarium/quandarium/aux.py:406:4: C0103: Variable name "r" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:407:4: C0103: Variable name "Ncount" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:408:4: C0103: Variable name "a" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:409:4: C0103: Variable name "d" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:410:4: C0103: Variable name "Mtheta" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:413:8: C0103: Variable name "m" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:415:8: C0103: Variable name "Mphi" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:416:12: C0103: Variable name "n" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:418:12: C0103: Variable name "Ncount" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:419:12: C0103: Variable name "y" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:420:12: C0103: Variable name "x" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:421:12: C0103: Variable name "z" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:482:0: C0103: Argument name "Qtnsteps" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:493:8: C0123: Using type() instead of isinstance() for a typecheck. (unidiomatic-typecheck)
+quandarium/quandarium/aux.py:497:8: C0123: Using type() instead of isinstance() for a typecheck. (unidiomatic-typecheck)
+quandarium/quandarium/aux.py:501:8: C0123: Using type() instead of isinstance() for a typecheck. (unidiomatic-typecheck)
+quandarium/quandarium/aux.py:501:13: E0602: Undefined variable 'N' (undefined-variable)
+quandarium/quandarium/aux.py:501:28: E0602: Undefined variable 'N' (undefined-variable)
+quandarium/quandarium/aux.py:542:4: C0103: Variable name "db" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:552:0: C0103: Function name "RandRDS_dot" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:561:4: C0103: Variable name "u" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:561:7: C0103: Variable name "v" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:561:11: E1101: Module 'numpy.random' has no 'random' member (no-member)
+quandarium/quandarium/aux.py:566:4: C0103: Variable name "x" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:567:4: C0103: Variable name "y" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:568:4: C0103: Variable name "z" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:569:4: C0103: Variable name "Dot" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:574:0: C0103: Function name "RandRDS_set" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:574:0: C0103: Argument name "N" doesn't conform to snake_case naming style (invalid-name)
+quandarium/quandarium/aux.py:585:8: C0123: Using type() instead of isinstance() for a typecheck. (unidiomatic-typecheck)
+quandarium/quandarium/aux.py:590:8: W0612: Unused variable 'i' (unused-variable)
+quandarium/quandarium/aux.py:1:0: R0801: Similar lines in 2 files
+==quandarium.quandarium.dataanalysis:2
+==quandarium.quandarium.quandarium.dataanalysis:2
+import os
+import sys
+import seaborn as sns
+import numpy as np
+import pandas as pd
+from matplotlib import rc                         # For laxtex in ploting
+from matplotlib.ticker import FormatStrFormatter  # For tick labels
+import matplotlib
+import matplotlib.pylab as plt
+from scipy.stats import spearmanr
+from scipy.stats import kendalltau
+from scipy.stats import pearsonr
+from scipy import stats as scipystats
+from sklearn.utils import resample
+from quandarium.aux import checkmissingkeys
+from quandarium.aux import to_list
+from quandarium.aux import tonparray
+rc('text', usetex=False)
+rc('text.latex',
+   preamble=r'\usepackage{mhchem} \usepackage{amsmath} \usepackage{amsfonts} \
+              \usepackage{mathtools} \usepackage[T1]{fontenc}')
+
+
+def comp_spearman(data_u, data_v):
+    """Compute the spearmanr correlation index.
+    Suggestion: use tonparray to converta data (pd.series, non-flatten numpy array) to a flatten numpy
+    array and drop nans."""
+    return spearmanr(data_u, data_v)[0]
+
+
+def comp_kendall(data_u, data_v):
+    """Compute the kendalltau correlation index.
+    Suggestion: use tonparray to converta data (pd.series, non-flatten numpy array) to a flatten numpy
+    array and drop nans."""
+    return kendalltau(data_u, data_v)[0]
+
+
+def comp_pearson(data_u, data_v):
+    """Compute the pearsonr correlation index.
+    Suggestion: use tonparray to converta data (pd.series, non-flatten numpy array) to a flatten numpy
+    array and drop nans."""
+    return pearsonr(data_u, data_v)[0]
+
+
+def bstaltrs(data_x, data_y, corr_method=comp_spearman, alpha=0.05, nresamp=2000, hist=''):
+    """This function bootstrap the Spearaman rank correlation.
+    The bootstraped sample configurations that present all elements equal are
+    not considered, because the correlations can\'t be calculated.
+
+
+    Parameters
+    ----------
+    data_x, datay : numpy arrays (n,) shaped.
+                    Paired data to analyse.
+    corr_method : a function (default = comp_spearman).
+                  A function that takes two sets of points (x,y in np arrays)
+                  and return its correlation.
+
+    alpha : float. (optional, default=0.05)
+            The confidence limit.
+    nresamp : intiger. (optional, default=2000)
+              The quantity of data resamples in the procedure.
+    hist : string (optional, default='').
+           If hist == 'plot' a figure with data result histogram will be
+           displayed on screem, otherwise the same figure will be saved to a
+           file named hist + '.png'.
+
+
+    Return
+    ------
+    reject_null : boolean.
+                  True if the null hypothese could be rejected withing the
+                  confidence level.
+
+    Example
+    ------
+    >>> data_y = np.array([0.29210368, 0.09100691, 0.03445345, 0.1953896 ,
+                           0.09828076, 0.06194474, 0.07301951, 0.05899114,
+                           0.05012644, 0.03095898, 0.10257979, 0.08892738,
+                           0.05457695, 0.02178669, 0.0326735 ])
+    >>> data_x = np.array([-4.38  , -3.9418, -4.0413, -4.1549, -4.2052,
+                           -3.915 , -4.1796, -4.1815, -3.972 , -4.0494,
+                           -4.2255, -4.2772, -3.9947, -3.9589, -3.8393])
+    >>> bootstraping_spearmancorr(data_x, data_y)
+    True
+    """
+
+    rs = corr_method(data_x, data_y)  # original data correlation
+    data = np.zeros(nresamp)  # the data will be stored in this variable
+
+    possible_data = np.array(range(0, len(data_x)))  # auxiliar variable
+    interation = 0  # auxiliar variable
+    while interation < nresamp:
+        # resampling pairs with replacement:
+        resampled_pairs = resample(possible_data)
+        resampled_data_x = data_x[resampled_pairs]
+        resampled_data_y = data_y[resampled_pairs]
+        # to guarantee that the elements are not all equal
+        if np.all(resampled_data_x == resampled_data_x[0]):
+            continue
+        if np.all(resampled_data_y == resampled_data_y[0]):
+            continue
+        # calculating correlation for the resampled data
+        boostrapted_corr = corr_method(resampled_data_x, resampled_data_y)
+        # storing the correlacao
+        data[interation] = boostrapted_corr
+        interation += 1
+    # Sorting data
+    data.sort()
+
+    index_lower_confidence = int(round(nresamp*alpha/2.))
+    index_upper_confidence = int(round(nresamp-nresamp*alpha/2.))
+    confidence_data = data[index_lower_confidence:index_upper_confidence]
+    confidence_interval = [confidence_data[0], confidence_data[-1]]
+    # H0 is rejected if 0 is within the confidence interval:
+    reject_null = np.all(np.sign(confidence_data) == np.sign(rs))
+
+    if hist != '':
+        plt.close('all')
+        plt.ylabel('Frequancy')
+        plt.xlabel('Spearman Correlation')
+        plt.xlim(-1.02, 1.02)
+        bins = 201
+        ranges = (-1., 1.)
+        plt.hist(confidence_data, bins=bins, range=ranges,
+                 label="Confidence Data")
+        plt.hist(data, bins=bins, histtype='step', range=ranges,
+                 label="All Data")
+        plt.plot([rs, rs],
+                 [0, np.histogram(data, bins=bins, range=ranges)[0].max()],
+                 label="Original Data")
+        plt.plot([0, 0],
+                 [0, np.histogram(data, bins=bins, range=ranges)[0].max()],
+                 label="0 Correlation")
+        plt.legend()
+
+        # ploting or saving to a file:
+        if hist == 'plot':
+            plt.show()
+        else:
+            plt.savefig(hist + ".png")
+
+    return reject_null, confidence_interval
+
+
+def bstnullrs(data_x, data_y, corr_method=comp_spearman, alpha=0.05, nresamp=2000, hist=''):
+    """This function bootstrap the data correlation under the null hypothesis.
+    The bootstraped sample configurations that present all elements equal are
+    not considered, because the correlations can\'t be calculated.
+
+    Parameters
+    ----------
+    data_x, datay : numpy arrays (n,) shaped.
+                    Paired data to analyse.
+    corr_method : a function (default = comp_spearman).
+                  A function that takes two sets of points (x,y in np arrays)
+                  and return its correlation.
+    alpha : float. (optional, default=0.05)
+            The confidence limit.
+    nresamp : intiger. (optional, default=2000)
+              The quantity of data resamples in the procedure.
+    hist : string (optional, default='').
+           If hist == 'plot' a figure with data result histogram will be
+           displayed on screem, otherwise the same figure will be saved to a
+           file named hist + '.png'.
+
+
+    Return
+    ------
+    reject_null : boolean.
+                  True if the null hypothese could be rejected withing the
+                  confidence level.
+    pval: flot.
+          The p-value. Keep in mind that to take accurate p-value the n
+          should be large.
+
+    Example
+    ------
+    >>> data_y = np.array([0.29210368, 0.09100691, 0.03445345, 0.1953896 ,
+                           0.09828076, 0.06194474, 0.07301951, 0.05899114,
+                           0.05012644, 0.03095898, 0.10257979, 0.08892738,
+                           0.05457695, 0.02178669, 0.0326735 ])
+    >>> data_x = np.array([-4.38  , -3.9418, -4.0413, -4.1549, -4.2052,
+                           -3.915 , -4.1796, -4.1815, -3.972 , -4.0494,
+                           -4.2255, -4.2772, -3.9947, -3.9589, -3.8393])
+    >>> bootstraping_nullspearmancorr(data_x, data_y, hist='')
+    True
+    """
+
+    rs = corr_method(data_x, data_y)  # original data correlation
+    data = np.zeros(nresamp)  # variable to store the resampled data analysis
+
+    interation = 0  # auxiliar variable
+    while interation < nresamp:
+        # resampling with replacement:
+        resampled_data_x = resample(data_x)
+        resampled_data_y = resample(data_y)
+        # to guarantee that the elements are not all equal
+        if np.all(resampled_data_x == resampled_data_x[0]):
+            continue
+        if np.all(resampled_data_y == resampled_data_y[0]):
+            continue
+        # computing the spearmanr to the resampled
+        bootstraped_corr = corr_method(resampled_data_x, resampled_data_y)
+        data[interation] = bootstraped_corr  # storing the correlation
+        interation += 1
+    # Sorting data
+    data.sort()
+
+    index_lower_confidence = int(round(nresamp*alpha/2.))
+    index_upper_confidence = int(round(nresamp-nresamp*alpha/2.))
+    confidence_data = data[index_lower_confidence:index_upper_confidence]
+
+    # H0 is accepted (True) if rs is within the confidence interval:
+    if rs >= 0:
+        null = np.any(confidence_data > rs)
+    else:
+        null = np.any(confidence_data < rs)
+
+    # p-value
+    pvalue = sum(abs(data) > abs(rs))/len(data)
+
+    # If requested a plot of the boostraped correlations will be created
+    if hist != '':
+        plt.close('all')
+        plt.ylabel('Frequancy')
+        plt.xlabel('Correlation')
+        plt.xlim(-1.02, 1.02)
+        bins = 201
+        ranges = (-1., 1.)
+        # Ploting the data within the confidence alpha:
+        plt.hist(confidence_data, bins=bins, range=ranges,
+                 label="Confidence Data")
+        # ploting all the data:
+        plt.hist(data, bins=bins, histtype='step', range=ranges,
+                 label="All Data")
+        plt.plot([rs, rs],
+                 [0, np.histogram(data, bins=bins, range=ranges)[0].max()],
+                 label="Original Data")
+        plt.plot([0, 0],
+                 [0, np.histogram(data, bins=bins, range=ranges)[0].max()],
+                 label="O Correlation")
+        plt.legend()
+
+        # saving or plotting the distribution
+        if hist == 'plot':
+            plt.show()
+        else:
+            plt.savefig(hist + ".png")
+
+    return null, pvalue
+
+
+def scatter_colorbar(pd_df, mainprop, features, colsplitfeature, cols,
+                     celsplitfeature, cels,
+                     show='',
+                     label={'x': '', 'y': '', 'title': ''},
+                     cbcomp=comp_spearman, cb_info={'min': -1., 'max': 1.,
+                                                    'label': ''},
+                     bootstrap_info={'n': 0, 'alpha': 0.25},
+                     supress_plot=False,
+                     figure_name='figure.png',
+                     uselatex=False,
+                     scalefont=1.):
+    """This function plot a scatterplot of correlations between properties and
+    a target property.
+
+    Parameters:
+    -----------
+    mainprop: str.
+              This feature will be the horizontal cell axes, shered
+              whichin each column.
+
+    features: dict.
+              Mapping the features names (keys) and its label (values). The
+              order of the features in the figure follows the same order of the
+              presented in this dict.
+
+    colsplitfeature: str.
+                     The scatternplot matrix will contain data splited per
+                     column according to this feature values.
+
+    cols: dict.
+          Mapping the colsplitfeature feature values (keys) and its label (dict
+          values and column labels). The columns in the figure follows the same
+          order of this dict.
+
+    celsplitfeature: str or None.
+                     The scatternplot matrix will contain data splited per
+                     cell according to this feature values. None wil desable
+                     multi plot per scattermatrix cell.
+
+    cels: dict or None.
+          If dict, it map the celsplitfeature feature value (keys) and its
+          labels (dict values and plot labels). The order of the plots in the
+          cells in the figure follows the same order of this dict.
+
+    labels: a dict ({'x': '', 'y': '', 'title': ''})
+            The x, y, and the title labels.
+
+    cbcomp: function,
+            function that compute the information (correlation/mutual info)
+            with the paired data.
+
+    cb_info: dict with three values ({'min'=-1.,'max'=1.,'label'=''}).
+             The max and min values for the colorbar values and its label.
+
+    bootstrap_info: a dict with three ({n=0,alpha=0.25,show:test,corrcut=0}).
+                    If 'n' value were larger then zero the bootstrap analysis
+                    will be performed with (under the null and alternative
+                    hypothesis) with number of bootstraped samples equal to 'n'
+                    value and a conconfidence level 'alpha'.
+                    Moreover, the it will make return pvalues and both
+                    hypothese test results.
+
+    show: str ['pval', 'test', 'testred', 'ang', 'confint'].
+          Define what information will be shown in the scatterplot, if
+          bootstrap were employed.
+          If 'test', the information whether the correlation pass in the
+              bootstrap hypothesis tests or not will be presented.
+          If 'testred', the following information will be printed: * if the
+              correlation passed in both tests, + if the correlaiton passed in
+              one test, and nothing if the correlation fail for both tests.
+          If 'pval', the p-value of the correlation bootstrap under null
+             hypothesis test will be shown.
+          If 'confint', the confidence interval for the correlations will be
+             show.
+          If 'ang', the angular value of the linear regression will be show.
+          If '', nothing will be show.
+
+    figure_name: str, (figure.png).
+                 The name of the figure.
+
+    uselatex: bollean, (False)
+              If True, the figure text will copiled with latex.
+
+    scalefont: float, (1.)
+               Scale the fontsize by this factor.
+
+    Return:
+    -------
+    A dictionary with the folloyings keys:
+        'corrs': np.array of floats with three dimentions.
+                 The correlations calculated with cbcomp function.
+
+        If the plot were calculated:
+        'fig': pyplot figure.
+               The figure.
+
+        'axis': pyplat axis.
+                The axis.
+
+        'angular_parameter': np.array of floats with three dimentions.
+                             The angular parameters of the linear model
+                             fitting the data.
+
+        If bootstrap were employed:
+        'alt_test', 'null_test': np.array of booleans with three dimentions.
+                                 The result of the hypothesis test, H1 and
+                                 H0, respectively.
+
+        'null_test_pval': np.array of floats with three dimentions.
+                          The p-values.
+
+        'alt_test_confimax', 'alt_test_confimin': np.array of booleans with
+                                                  three dimentions.
+                                                  Confidence maximum and
+                                                  minimun.
+    """
+
+    print("Initializing scatter plot")
+
+    # If were requested, latex will be employed to build the figure.
+    if uselatex:
+        rc('text', usetex=True)
+        rc('text.latex',
+            preamble=r'\usepackage[version=4]{mhchem} \usepackage{amsmath} \usepackage{amsfonts} \usepackage{mathtools} \usepackage[T1]{fontenc}')
+
+    # Features:
+    if not isinstance(features, dict):
+        print("Error: features should be a dictionary!")
+        sys.exit(1)
+    checkmissingkeys(list(features.keys()), pd_df.columns.to_list(), "the "
+                     "pandas.DataFrame does not present the following features")
+
+    # Cells:
+    # if there only one plot per cell, a fake dimension will be crated
+    if celsplitfeature is None:
+        celsplitfeature = 'fake_celsplitfeature'
+        pd_df[celsplitfeature] = np.ones(len(pd_df))
+        cels = {1: ''}
+    if colsplitfeature is None:
+        colsplitfeature = 'fake_colsplitfeature'
+        pd_df[colsplitfeature] = np.ones(len(pd_df))
+        cols = {1: ''}
+    grouped = pd_df.groupby([colsplitfeature, celsplitfeature])
+    depth = len(cels)
+    height = len(features)
+    width = len(cols)
+    print('depth:', depth, 'height:', height, 'width:', width)
+
+    # Calcalationg the property to be ploted in colors
+    corrs_plot = np.zeros([depth, height, width])
+    for findex, feature in enumerate(list(features.keys())):
+        for colindex, colvals in enumerate(list(cols.keys())):
+            for celindex, celvals in enumerate(list(cels.keys())):
+                group = grouped.get_group((colvals, celvals))
+                corrs_plot[celindex, findex, colindex] = cbcomp(
+                    group[feature], group[mainprop])
+    corrs_plot = np.nan_to_num(corrs_plot)
+
+    # Correlation Bootstrap
+    if bootstrap_info['n']:  # bootstraping the correlations
+        print('Bootstrap analysis')
+        null_test = np.zeros([depth, height, width], dtype=bool)
+        null_test_pval = np.zeros([depth, height, width], dtype=float)
+        alt_test = np.zeros([depth, height, width], dtype=bool)
+        alt_test_confimax = np.zeros([depth, height, width], dtype=float)
+        alt_test_confimin = np.zeros([depth, height, width], dtype=float)
+        test_apply = np.zeros([depth, height, width], dtype=bool)
+        for findex, feature in enumerate(list(features.keys())):
+            for colindex, colvals in enumerate(list(cols.keys())):
+                for celindex, celvals in enumerate(list(cels.keys())):
+
+                    group = grouped.get_group((colvals, celvals))
+                    datax, datay = tonparray(group[mainprop], group[feature])
+                    if (len(datax) > 1) and (not np.all(datax == datax[0])):
+                        test_apply[celindex, findex, colindex] = True
+                        # null hypothesisi
+                        test, pval = bstnullrs(datay, datax,
+                                               nresamp=bootstrap_info['n'],
+                                               alpha=bootstrap_info['alpha'])
+                        null_test[celindex, findex, colindex] = test
+                        null_test_pval[celindex, findex, colindex] = pval
+                        # alternative hypothesis
+                        test, confi = bstaltrs(datay, datax,
+                                               nresamp=bootstrap_info['n'],
+                                               alpha=bootstrap_info['alpha'])
+                        alt_test[celindex, findex, colindex] = test
+                        alt_test_confimax[celindex, findex, colindex] = confi[1]
+                        alt_test_confimin[celindex, findex, colindex] = confi[0]
+            print("completed: ", findex + 1, ' of ', len(features))
+
+    # If requested, the plot is supressed now
+    if supress_plot:
+        if bootstrap_info['n']:
+            return {'corrs': corrs_plot,
+                    'alt_test': alt_test,
+                    'alt_test_confimax': alt_test_confimax,
+                    'alt_test_confimin': alt_test_confimin,
+                    'null_test': null_test,
+                    'null_test_pval': null_test_pval
+                    }
+        else:
+            return {'corrs': corrs_plot}
+
+    # creating empth plot!
+    plt.close('all')
+    figwidth = int((width*1.)*2)
+    figheight = int((height*1.)*2)
+    fig, axis = plt.subplots(nrows=height, ncols=width, sharex='col',
+                             sharey='row', figsize=(figwidth, figheight))
+
+    # if width or height == 1 (means 1 column, or 1 row) axis has only one
+    # dimension, which make some problems, so it must be reshaped
+    if height == 1 or width == 1:
+        axis = axis.reshape(height, width)
+
+    # Creatin the colormap and mapping the correlation values in the colors
+    cmap = matplotlib.cm.get_cmap('coolwarm')
+    normalize = matplotlib.colors.Normalize(vmin=cb_info['min'],
+                                            vmax=cb_info['max'])
+    colors = [cmap(normalize(value)) for value in corrs_plot]
+    colors = np.array(colors)
+
+    # label sizes:
+    axis_title_font_size = 30*scalefont
+    axis_label_font_size = 25*scalefont
+    tick_label_font_size = 25*scalefont
+    anotation_font_size = 20
+    marker_size = 50
+
+    # Symbols/markers, lines,
+    slines = ['-', '--', ':', '-.']
+    scolors = ['y', 'g', 'm', 'c', 'b', 'r']
+    smarker = ['o', 's', 'D', '^', '*', 'o', 's', 'x', 'D', '+', '^', 'v', '>']
+
+    # Adding the scatterplos and linear models
+    angular_parameter = np.zeros([depth, height, width])
+    for indf, feature in enumerate(list(features.keys())):
+        for colindex, colvals in enumerate(list(cols.keys())):
+            for celindex, celvals in enumerate(list(cels.keys())):
+                group = grouped.get_group((colvals, celvals))
+                # if ((not all(group[feature] == 0.0))
+                #        and (not all(np.isnan(group[feature])))):
+                datax, datay = tonparray(group[mainprop], group[feature])
+                if datax.tolist():
+                    if (len(datax) > 1) and (not np.all(datax == datax[0])):
+                        # Linear Regresion
+                        degreee=1
+                        parameters = np.polyfit(datax, datay, degreee)
+                        fit_fn = np.poly1d(parameters)
+                        angular_parameter[celindex, indf, colindex] = parameters[0]
+                        # variavel auxiliar pra nao plotar o linha obtida na
+                        # regressao alem dos dados do set (isso pode acontecer
+                        # para as variaveisb2 onde nem todos os samples
+                        # apresentam dados)
+                        yfited_values = np.array(fit_fn(datax))
+                        argmin = np.argmin(datax)
+                        argmax = np.argmax(datax)
+                        trend_x = datax[[argmin, argmax]]
+                        trend_y = yfited_values[[argmin, argmax]]
+                        # plotando linha obtida com dados da regressao
+                        axis[indf, colindex].plot(trend_x, trend_y,
+                                                  marker=None,
+                                                  linestyle=slines[celindex],
+                                                  color='k')
+                        # plotando dados da celula
+                    axis[indf, colindex].scatter(datax, datay,
+                                                 marker=smarker[celindex],
+                                                 s=marker_size,
+                                                 linestyle='None',
+                                                 label=cels[celvals],
+                                                 color=colors[celindex, indf,
+                                                              colindex],
+                                                 alpha=0.8)
+                    if cels[celvals]:
+                        axis[indf, colindex].legend()
+
+                axis[indf, colindex].xaxis.set_tick_params(direction='in',
+                                                           length=5, width=0.9)
+                axis[indf, colindex].yaxis.set_tick_params(direction='in',
+                                                           length=5, width=0.9)
+
+            # Ajuste do alinhamento dos labels, quantidade de casa deciamais,
+            axis[0, colindex].xaxis.set_label_position("top")
+            axis[0, colindex].set_xlabel(cols[colvals], va='center',
+                                         ha='center', labelpad=40,
+                                         size=axis_label_font_size)
+            axis[indf, 0].set_ylabel(features[feature], va='center',
+                                     ha='center', labelpad=40,
+                                     size=axis_label_font_size,
+                                     rotation=60)
+            for tikslabel in axis[indf, 0].yaxis.get_ticklabels():
+                tikslabel.set_fontsize(tick_label_font_size)
+            for tikslabel in axis[-1, colindex].xaxis.get_ticklabels():
+                tikslabel.set_fontsize(tick_label_font_size)
+
+                tikslabel.set_rotation(60)
+
+    # Colorbar, pra aprensetar as corres das correlacoes
+    cax, _ = matplotlib.colorbar.make_axes(axis[0, 0], orientation='vertical',
+                                           shrink=80., ancor=(2., 2.),
+                                           pancor=False)
+    cbar = matplotlib.colorbar.ColorbarBase(cax, cmap=cmap, norm=normalize)
+    cax.set_position([0.93, 0.1, 0.04, 0.8])
+    cax.set_aspect(40) # boxY/boxX
+    cbar.ax.tick_params(labelsize=tick_label_font_size, labelrotation=90)
+
+    plt.subplots_adjust(left = 0.125,
+                        right = 0.92,
+                        bottom = 0.1,
+                        top = 0.9,
+                        wspace = 0.0,
+                        hspace = 0.0)
+
+    # Defining what will be ploted
+    if show == 'test':  # The result of the test
+        truefalse = {True: 'T',
+                     False: 'F'}
+        binfo_plot = np.vectorize(lambda x,y: truefalse[x] + ',' + truefalse[y])(null_test, alt_test)
+    if show == 'testred':
+        def auxfunc(x, y):
+            if not x and y: return 'x'
+            if x or not y: return 'o'
+            return '+'
+        binfo_plot = np.vectorize(auxfunc)(null_test, alt_test)
+    if show == 'confint':  # The confidence intervals
+        binfo_plot = np.vectorize(lambda x,y: str(round(x, 2)) + ',' + str(round(y, 2)))(alt_test_confimax, alt_test_confimin)
+    if show == 'pval':  # the p-value
+        binfo_plot = np.array(np.round(null_test_pval, 5), dtype=str)
+    if show == 'ang':  # the angle of the linear model
+        binfo_plot = np.array(np.round(angular_parameter, 2), dtype=str)
+
+    if bootstrap_info['n'] and show in ['pval', 'test', 'ang', 'confint']:
+        print(binfo_plot)
+        for findex, feature in enumerate(features):
+            for colindex, colvals in enumerate(list(cols.keys())):
+                for celindex, celvals in enumerate(list(cels.keys())):
+                    if not test_apply[celindex, findex, colindex]:
+                        binfo_plot[celindex, findex, colindex] = ''
+        print(binfo_plot)
+        for indf, feature in enumerate(features):
+            for colindex in range(width):
+                for celindex in range(depth):
+                    if not all(group[feature] == 0.0):
+                        bbox = dict(facecolor=scolors[celindex], alpha=0.1)
+                        ypos = 0.155 + (depth - celindex - 1)*0.2
+                        axis[indf, colindex].text(0.06, ypos,
+                                                  binfo_plot[celindex, indf, colindex],
+                                                  fontsize=anotation_font_size,
+                                                  transform=axis[
+                                                     indf, colindex].transAxes,
+                                                  bbox=bbox)
+
+    if bootstrap_info['n'] and show in ['testred']:
+        print(binfo_plot)
+        for findex, feature in enumerate(features):
+            for colindex, colvals in enumerate(list(cols.keys())):
+                for celindex, celvals in enumerate(list(cels.keys())):
+                    if not test_apply[celindex, findex, colindex]:
+                        binfo_plot[celindex, findex, colindex] = ' '
+
+        for indf, feature in enumerate(features):
+            for colindex in range(width):
+                text=''
+                for celindex in range(depth):
+                    text += binfo_plot[celindex, indf, colindex]
+                    if celindex < depth-1:
+                        text+=','
+                if not all(group[feature] == 0.0):
+                    bbox = dict(facecolor=scolors[0], alpha=0.01)
+                    ypos = 0.155 + (depth - celindex - 1)*0.2
+                    axis[indf, colindex].text(0.06, ypos, text,
+                                              fontsize=anotation_font_size,
+                                              transform=axis[
+                                                  indf, colindex].transAxes,
+                                              bbox=bbox)
+
+    # Adicionando os principais captions da figura.
+    fig.text(0.01, 0.524, label['y'], ha='center', rotation='vertical',
+             size=axis_title_font_size)
+    fig.text(0.5, 0.95, label['title'], ha='center', size=axis_title_font_size)
+    fig.text(0.5, 0.02, label['x'], ha='center', size=axis_title_font_size)
+    cbar.set_label(cb_info['label'], size=axis_title_font_size)
+
+    # Salvando a figura para um arquivo
+    plt.savefig(figure_name, dpi=300)
+
+    if bootstrap_info['n']:
+        return {'fig': fig,
+                'axis': axis,
+                'corrs': corrs_plot,
+                'alt_test': alt_test,
+                'alt_test_confimax': alt_test_confimax,
+                'alt_test_confimin': alt_test_confimin,
+                'null_test': null_test,
+                'null_test_pval': null_test_pval,
+                'angular_parameter': angular_parameter
+               }
+    else:
+        return {'fig': fig,
+                'axis': axis,
+                'corrs': corrs_plot,
+                'angular_parameter': angular_parameter
+               }
+
+
+def histbag(figname, bag, grupbybag):
+    """ It create a histogram of the values in a bag
+    Parameter:
+    ----------
+    figname: str.
+             The name of the figure.
+
+    bag: some structured data object.
+         The data of the bag.
+
+    grupbybag: the classes to groupby the values of the bag
+
+    Return:
+    -------
+    figure: seaborn figure object
+            The figure."""
+
+    print('Initializing histbag.')
+
+    bag = to_list(bag)
+    grupbybag = to_list(grupbybag)
+    data = []
+    for i, _ in enumerate(bag):
+        data += to_list(bag[i])
+    data = np.array(data)
+
+    splitfeaturedata = []
+    for i in range(len(bag)):
+        splitfeaturedata += to_list(grupbybag[i])
+    splitfeaturedata = np.array(splitfeaturedata)
+
+    split_vals = np.unique(splitfeaturedata)
+
+    plt.close('all')
+    for val in split_vals:
+        dataval = data[splitfeaturedata == val]
+        g = sns.distplot(dataval, hist = False, kde = True,
+                         kde_kws = {'shade': True, 'linewidth': 3},
+                         label = val)
+    g.get_figure().savefig(figname)
+
+    return g
+ (duplicate-code)
+quandarium/quandarium/aux.py:1:0: R0801: Similar lines in 2 files
+==quandarium.quandarium.aux:2
+==quandarium.quandarium.quandarium.aux:2
+import sys
+import ase.io
+import numpy as np
+import pandas as pd
+from sklearn.cluster import DBSCAN
+
+def to_nparray(data): # unir a de baixo
+    """This functions recive a data and return a numpy array"""
+    if isinstance(data, list):
+        return np.array(data)
+    if isinstance(data, pd.Series):
+        return np.array(data.values)
+    if isinstance(data, pd.DataFrame):
+        return np.array(data.values)
+    if isinstance(data, np.ndarray):
+        return data
+
+
+def tonparray(*data, dropnan=True):
+    """Converta data (pd series or non-flatten numpy array) to a flatten numpy
+    array. Droping nans by default..."""
+    if len(data) == 2:
+        data1 = data[0]
+        data2 = data[1]
+        if isinstance(data1, pd.core.series.Series):
+            data1 = data1.values.flatten()
+        elif isinstance(data1, np.ndarray):
+            data1 = data1.flatten()
+        elif isinstance(data1, list):
+            data1 = np.array(data1).flatten()
+        else:
+            print('ERROR: the type {} (for data1) is not suported in tonoparray.'.format(
+                type(data1)))
+        if isinstance(data2, pd.core.series.Series):
+            data2 = data2.values.flatten()
+        elif isinstance(data2, np.ndarray):
+            data2 = data2.flatten()
+        elif isinstance(data2, list):
+            data2 = np.array(data2).flatten()
+        else:
+            print('ERROR: the type {} (for data2) is not suported in tonoparray.'.format(
+                type(data2)))
+        if dropnan:
+            usefulldata = np.logical_and(np.isnan(data1) == False,
+                                         np.isnan(data2) == False)
+            return data1[usefulldata], data2[usefulldata]
+        else:
+            return data1, data2
+
+    if len(data) == 1:
+        data1 = data[0]
+        if isinstance(data1, pd.core.series.Series):
+            data1 = data1.values.flatten()
+        elif isinstance(data1, np.ndarray):
+            data1 = data1.flatten()
+        elif isinstance(data1, list):
+            data1 = np.array(data1).flatten()
+        else:
+            print('ERROR: the type {} is not suported in tonoparray.'.format(
+                type(data1)))
+        if dropnan:
+            usefulldata = np.isnan(data1) == False
+            return data1[usefulldata]
+        else:
+            return data1
+
+
+def to_list(data):
+    """This functions recive a data and return a list"""
+    if isinstance(data, list):
+        return data
+    if isinstance(data, pd.Series):
+        return np.array(data.values).tolist()
+    if isinstance(data, pd.DataFrame):
+        return np.array(data.values).tolist()
+    if isinstance(data, np.ndarray):
+        return data.tolist()
+
+
+def checkmissingkeys(keys, dictlist, massange):
+    """It return the missing keys of a dictionary or list"""
+    missingkeyslist = []
+    for key in keys:
+        if key not in dictlist:
+            missingkeyslist.append(key)
+    if missingkeyslist:
+        print("Error: " + massange + ': {}'.format(str(missingkeyslist)))
+        sys.exit(1)
+    return
+
+
+def translate_list(dictionary, list_to_be_translated):
+    """For a given list with entries and a dictionary, it return a new list
+    with the translated entries"""
+    translated = []
+    for i in list_to_be_translated:
+        translated.append(dictionary[i])
+    return translated
+
+
+def comp_minmaxbond(atom1, atom2):
+    """For the atoms 1 and 2, it return the max and min bond distances.
+    Parameters
+    ----------
+    atom1, atom2: string.
+                  A string with the atoms chemical elements symbol.
+    Return
+    ------
+    minmax: list with two values.
+            A list with the minimun and maximun distance bewteen two atoms to
+            to consider they bounded.
+    """
+
+    conections = np.array([['H', 'H', 0.70, 1.19],
+                           ['C', 'H', 0.90, 1.35],
+                           ['C', 'C', 1.17, 1.51],
+                           ['Fe', 'H', 1.2, 1.99],
+                           ['Fe', 'C', 1.2, 2.15],
+                           ['Fe', 'Fe', 2.17, 2.8],
+                           ['Ni', 'H', 1.2, 1.98],
+                           ['Ni', 'C', 1.2, 2.08],
+                           ['Co', 'H', 1.2, 1.91],
+                           ['Ni', 'Ni', 2.07, 2.66],
+                           ['Co', 'C', 1.2, 2.20],
+                           ['Co', 'Co', 2.05, 2.63],
+                           ['Cu', 'Cu', 1.5, 2.76],
+                           ['Cu', 'C', 1.2, 2.14],
+                           ['Cu', 'H', 1.2, 1.98],
+                           ['Zr', 'O', 1.1, 2.7],
+                           ['Ce', 'O', 1.1, 2.7],
+                           ['O', 'O', 1.1, 2.7],
+                           ['Ce', 'Ce', 1.1, 2.7],
+                           ['Zr', 'Zr', 1.1, 2.7],
+                           ['Zr', 'Ce', 1.1, 2.7]])
+    for info in conections:
+        if ((atom1 in info[0]) and (atom2 in info[1])) or ((atom1 in info[1])
+                                                           and
+                                                           (atom2 in info[0])):
+            result = info[2:]
+    return result
+
+
+def comp_gaussian(x, mu, sig):
+    """Returns the valeues of a normalized gaussian (sig=sigma, mean=mu)
+    over the values of x.
+    Parameters
+    ----------
+    mu, sig: floats.
+             Parameters of the gaussian function.
+    x: numpy array (n,) shaped.
+       Values to evaluate the normalized gaussian function.
+
+    Retunr
+    ------
+    gaussian_of_x: np.array of lengh = len(x).
+                   Values of the gaussian for the values in x.
+    """
+    return 1./(np.sqrt(2.*np.pi)*sig)*np.exp(-np.power((x - mu)/sig, 2.)/2)
+
+
+def comp_pij_classed(pij, is_surface, cutoff):
+    """It return the conectivity matrix considering only bounds between surface
+    atoms.
+    Parameters
+    ----------
+    pij: numpy array of floats, (n,n) shaped.
+         Matrix of conectivity between atoms.
+    is_surface: numpy array of boolean of len n.
+                Array with boolean indicating if the i-th atom is belongs to
+                the surface.
+    cutoff: float > 0.
+            Cutoff index to be considered as a bound.
+
+    Return
+    ------
+    matrix_surface_bond: numpy array of boolean, (n,n) shaped.
+                         Matrix indicating the surface atoms conecetivity.
+    """
+    ecn_bounded_ones = np.array(pij >= cutoff, dtype=int)
+    is_surface_ones = np.array(is_surface, dtype=int)
+    matrix_surface_bond = np.array((ecn_bounded_ones * is_surface_ones).T
+                                   * is_surface_ones, dtype=bool)
+    return matrix_surface_bond
+
+
+def comp_pij_maxdamped(dij, ori, pij_max):
+    """Compute all the conective index pij with a dumping"""
+    exp_arg = (1 - (dij/(ori.reshape(-1, 1) + ori.reshape(1, -1)))**6
+               - (dij/3.5)**4)
+    return np.exp(exp_arg)*pij_max
+
+
+def comp_aveabs(values):
+    """It meansure the average of the absolute values
+    Example
+    -------
+    >>> old = [1.21, 1.32, 1.23]
+    >>> new = [1.20, 1.33, 1.24]
+    >>> ave_abs(old-new)
+    0.01
+    """
+    return np.average(np.abs(values))
+
+
+def logistic(dij, ri, k):
+    ri_sum_rj = ri.reshape(1, -1) + ri.reshape(-1, 1)
+    return 1./(1. + np.exp(k*(dij - ri_sum_rj)))
+
+
+def comp_rs(ori, dij, k, R, rcutp, w=[0.1,0.60,0.42]):
+    """Cost function optimized in ecn_rsopt function."""
+    rcut = ori * rcutp
+
+    ew = w[0]
+    rRw = w[1]
+    rdw = w[2]
+
+    pij = logistic(dij, rcut, k)
+    pijsum = np.sum(pij)
+
+    # ecn costs
+    ecn = np.sum(pij, axis=1)
+    ecn_cost = ew * np.average(np.exp(-ecn))
+
+    # r costs
+    ori_sum_orj = ori.reshape([1, -1]) + ori.reshape([-1, 1])
+    rd_cost = rdw * np.sum(((dij - ori_sum_orj)**2)*pij)/pijsum
+    Ri_sum_Rj = R.reshape([1, -1]) + R.reshape([-1, 1])
+    rR_cost = rRw * np.sum(((ori_sum_orj - Ri_sum_Rj)**2)*pij)/pijsum
+
+    total = ecn_cost + rd_cost + rR_cost
+
+    return total
+
+
+def comp_roptl2(ori, dij, pij):
+    """Compute the difference between ori + orj and the dij of the bonded
+    atoms (pij) with a l2 norm."""
+    ori_sum_orj = ori.reshape([1, -1]) + ori.reshape([-1, 1])
+    return np.sum(((dij - ori_sum_orj)**2)*pij)
+
+
+def cost_l2(ori, dij, pij):
+    """L2 cost function for the difference between sum of two atoms radii and
+    they distance, for bonded atoms.
+    Parameters
+    ----------
+    ori: atoms radius, numpy.ndarray on lengh n.
+         Atomic radii for each atom.
+    dij, pij: numpy.ndarray (n,n) shaped.
+              Atoms distances and index of conection.
+    Result
+    ------
+    cost: float.
+          The value of the costfunction.
+    """
+
+    if not isinstance(pij, np.ndarray):
+        print("pij must be a (n,n) shaped np.array. Aborting...")
+        sys.exit(1)
+
+    if not isinstance(dij, np.ndarray):
+        print("dij must be a (n,n) shaped np.array. Aborting...")
+        sys.exit(1)
+
+    if not isinstance(ori, np.ndarray):
+        print("ori must be a (n,) shaped np.array. Aborting...")
+        sys.exit(1)
+
+    ri_sum_rj = ori.reshape([1, -1]) + ori.reshape([-1, 1])
+    l2cost = np.sum(((dij - ri_sum_rj) * pij)**2)
+    return l2cost
+
+
+def arr2bag(nparray):
+    """It convert a numpy array to a bag.
+    Parameters
+    ----------
+    nparray: np.array or a list.
+             It contains the values which will be converted in the string
+             format.
+
+    Return
+    ------
+    bagstring: str.
+               The string with the nparray info in the bagformat.
+    """
+    addcommas=False  # if a array of strings were stored as a bag, each entry
+                     # need to be protected between ""
+
+    if isinstance(nparray, np.ndarray):
+        if isinstance(nparray.flatten()[0], str):
+            bagstring = '[\"' + '\",\"'.join(str(row) for row in
+                 nparray.tolist()).replace(' ', '') + '\"]'
+        else:
+            bagstring = '[' + ','.join(str(row) for row in
+                 nparray.tolist()).replace(' ', '') + ']'
+        #bagstring = '[' + ','.join(str(row) for row in
+        #     nparray.tolist()).replace(' ', '') + ']'
+    elif isinstance(nparray, list):
+        if isinstance(np.array(nparray).flatten()[0], str):
+            bagstring = '[\"' + '\",\"'.join(str(row) for row in nparray).replace(' ', '') + '\"]'
+        else:
+            bagstring = '[' + ','.join(str(row) for row in nparray).replace(' ', '') + ']'
+    else:
+        print("ERRO: the argument should be a array or list."
+              "A {} was given.".format(type(nparray)))
+    return bagstring
+
+
+def bag2arr(bagstring, dtype=''):
+    """It convert a bagstring to numpy array.
+    Parameters
+    ----------
+    bagstring: str.
+               The string with the nparray info in the bagformat.
+    dtype: a type (optional, default='' is the numpy interpretation).
+           The type of information in numpy array.
+
+    Return
+    ------
+    nparray: np.array or a list.
+             It contains the values which will be converted in the string
+             format.
+    """
+    #
+    nan = np.nan
+
+    if dtype:
+        nparray = eval('np.array(' + bagstring + ', dtype=dtype)')
+    else:
+        nparray = eval('np.array(' + bagstring + ')')
+
+    return nparray
+
+
+
+def changesymb(chemical_symbols, changes, condition=None):
+    """It change the chemical symbols to new labels considering a condition.
+    Parameters
+    ----------
+    chemical_symbols: np.array of strings, lengh n.
+                      The chemical symbols for each atom.
+    changes: dictionary of string to string.
+             A dictionary of the old elements ralated with the new labels.
+    condition: None or a numpy array of boolean, (n,) shaped.
+               If None, the condition is allways true. If an array ware
+               provided, the condition for each atom is in its ith value.
+    Return
+    ------
+    new_labels: np.array of strings, lengh n.
+                The new labels.
+    """
+
+    if condition is None:
+        condition = np.ones(len(chemical_symbols), dtype=bool)
+    new_labels = chemical_symbols.copy()
+    symbols_to_change = list(changes.keys())
+    for index, symbol in enumerate(chemical_symbols):
+        if (symbol in symbols_to_change) and condition[index]:
+            new_labels[index] = changes[chemical_symbols[index]]
+
+    return new_labels
+
+
+def fragstring(is_frag):
+    """It return a string input for the get_charge script.
+
+    Parameters
+    ----------
+    is_frag: np.array of boolean and lengh n.
+             The array should present True for the atoms which belongs to the
+             fragments.
+    Return
+    ------
+    fragstring: a string with the fragment.
+    """
+
+    qtna = len(is_frag)
+    atom_indexes = np.arange(0, qtna)
+    is_frag_indexes = np.array(atom_indexes[is_frag], dtype=str)
+    fragstr = '\'frag' + ','.join(is_frag_indexes) + '\''
+    return fragstr
+
+
+def RegRDS_set(sampling_distance, N):
+    """Return a set of n dots in R3 (almost) regular distributed in the
+    surface of a sphere of radius 'sampling_distance'.
+    More deatiail of the implementation in the article "How to generate
+    equidistributed points on the surface of a sphere" by Markus Deserno:
+    https://www.cmu.edu/biolphys/deserno/pdf/sphere_equi.pdf
+    samplind_distance: a float or a int grater than zero.
+    N: intiger grater than zero."""
+
+    if not sampling_distance > 0:
+        print("ERROR: sampling_distance must be higher than zero!")
+        sys.exit(1)
+
+    if (not isinstance(N, int)) or (N <= 0):
+        print("ERROR: N must be an intiger grater than zero!")
+        sys.exit(1)
+
+    cart_coordinates = []
+    r = 1
+    Ncount = 0
+    a = 4. * np.pi * r**2 / N
+    d = np.sqrt(a)
+    Mtheta = int(round(np.pi/d))
+    dtheta = np.pi / Mtheta
+    dphi = a / dtheta
+    for m in range(0, Mtheta):
+        theta = np.pi * (m + 0.5) / Mtheta
+        Mphi = int(round(2*np.pi*np.sin(theta)/dphi))
+        for n in range(0, Mphi) :
+            phi = 2 * np.pi * n / Mphi
+            Ncount += 1
+            y = sampling_distance * np.sin(theta) * np.cos(phi)
+            x = sampling_distance * np.sin(theta) * np.sin(phi)
+            z = sampling_distance * np.cos(theta)
+            cart_coordinates.append([x, y, z])
+    cart_coordinates = np.array(cart_coordinates)
+
+    return cart_coordinates
+
+
+def write_points_xyz(file_name, positions):
+    """Write positions, a list or array of R3 points, in a xyz file file_named.
+    Several softwares open xyz files, such as Avogadro and VESTA
+    In the xyz file all the atoms are H.
+
+    file_name: a string with the path of the xyz document which will be writed.
+    positions: a list or numpy array with the atoms positions."""
+
+    if not isinstance(file_name, str):
+        print("file_name must be a string")
+        sys.exit(1)
+
+    for index, element in enumerate(positions):
+        if len(element) != 3:
+            print("Element {} of positions does not present three "
+                          "elements.".format(str(index)))
+    if not isinstance(positions, list):
+        positions = np.array(positions)
+
+    print("Writing points in the xyz file...")
+    ase.io.write(file_name, ase.Atoms('H'+str(len(positions)),
+                                      list(map(tuple, positions))))
+
+
+def writing_molecule_xyz(file_name, positions, chemical_symbols):
+    """Write xyz file from positions and chemical symbols in arrays.
+    Several softwares open xyz files, such as Avogadro and VESTA
+
+    Parameters
+    ----------
+    file_name: a string.
+               The path of the xyz document which will be writed.
+    positions: a list or numpy array (n,3) shaped.
+               The cartezian atoms positions.
+
+    Return
+    ------
+    Nothing
+    """
+
+    if not isinstance(file_name, str):
+        print("file_name must be a string")
+        sys.exit(1)
+    for index, element in enumerate(positions):
+        if len(element) != 3:
+            print("Element " + str(index) + " of positions does not"
+                  + "present three elements.")
+    if not isinstance(positions, list):
+        positions = np.array(positions)
+
+    atoms = ase.Atoms(chemical_symbols, list(map(tuple, positions)))
+    ase.io.write(file_name, atoms)
+
+
+def linspace_r3_vector(vector_a, vector_b, Qtnsteps):
+    """Return a np.array with elements that starting in vector_a and go to
+    vector_b. The total quantity of dots is Qtnsteps.
+
+    vector_a and vector_b: different np.array with floats in R3.
+    Qtnsteps: intiger grater than zero."""
+
+    if vector_a == vector_b :
+        print("vector_a is equal to vector_b. Aborting...")
+        sys.exit(1)
+
+    if (type(vector_a) != np.ndarray) or (len(vector_a) != 3) :
+        print("vector_a must be a np.array of len 3! Aborting..." )
+        sys.exit(1)
+
+    if (type(vector_b) != np.ndarray) or (len(vector_b) != 3) :
+        print("vector_b must be a np.array of len 3! Aborting..." )
+        sys.exit(1)
+
+    if (type(N) != int) or (N <= 0) :
+        print("N must be an intiger grater than zero! Aborting...")
+        sys.exit(1)
+
+    xvalues = np.linspace( vector_a[0] , vector_b[0] , Qtnsteps )
+    yvalues = np.linspace( vector_a[1] , vector_b[1] , Qtnsteps )
+    zvalues = np.linspace( vector_a[2] , vector_b[2] , Qtnsteps )
+    final_array = np.array([xvalues, yvalues, zvalues]).T
+
+    return final_array
+
+
+def dot_in_atom(dot, atom_position, atom_radius):
+    """Verify if a dot in R3 is whitchin the atom of radius atom_radius located in
+    atom_position.
+    dot: np.array of 3 float elements.
+    atom_position: np.array of 3 float elements.
+    atom_radius: float grater than zero."""
+
+    result = np.linalg.norm( dot - atom_position ) < atom_radius
+    return result
+
+
+def large_surfaces_index(surface_dots_positions, eps):
+    """Seach if there are more than one surfaces in surface_dots_positions, than
+    return a np.array of booleans with True for index of atoms for the surfaces
+    more points.
+    surface_dots_positions: np.array with R3 dots.
+    eps: minimun distance between different surfaces, should be a float grater
+         than zero."""
+
+    if (not isinstance(surface_dots_positions, np.ndarray)
+            or (np.shape(surface_dots_positions)[1] != 3)
+            or isinstance(surface_dots_positions[0][0], bool)):
+        print("surface_dots_positions must be a (n,3) shaped np.array. Aborting...")
+        sys.exit(1)
+
+    if not eps > 0:
+        print("eps must be large than zero.")
+        sys.exit(1)
+
+    db = DBSCAN(eps=eps, min_samples=1).fit_predict(surface_dots_positions)
+    labels, quanity = np.unique(db, return_counts=True)
+    if len(labels) > 1:
+        print(str(len(labels)) + ' surfaces were found, of sizes: '
+              + str(quanity).replace('[', '').replace(']', '')
+              + '. The bigger will be selected!')
+    result = db == labels[np.argmax(quanity)]
+
+    return result
+
+def RandRDS_dot( sampling_distance ) :
+    """Randon R3 dot in the surface of a sphere of radius sampling distance.
+    See more details in: http://mathworld.wolfram.com/SpherePointPicking.html
+    samplind_distance: a float or a int grater than zero."""
+
+    if not sampling_distance > 0 :
+        print("Sampling_distance must be higher than zero! Aborting...")
+        sys.exit(1)
+
+    u, v = np.random.random(2)
+
+    theta = 2 * np.pi * v
+    phi = np.arccos(2*u-1)
+
+    x = sampling_distance * np.cos(theta) * np.sin(phi)
+    y = sampling_distance * np.sin(theta) * np.sin(phi)
+    z = sampling_distance * np.cos(phi)
+    Dot = np.array([x,y,z])
+
+    return Dot
+
+
+def RandRDS_set( sampling_distance , N ) :
+    """Return a set of N randon R3 dots in the surface of a sphere of radius
+    sampling distance.
+    See more details in: http://mathworld.wolfram.com/SpherePointPicking.html
+    samplind_distance: a float or a int grater than zero.
+    N: intiger grater than zero."""
+
+    if not sampling_distance > 0 :
+        print("Sampling_distance must be higher than zero! Aborting...")
+        sys.exit(1)
+
+    if (type(N) != int) or (N <= 0) :
+        print("N must be an intiger grater than zero! Aborting...")
+        sys.exit(1)
+
+    cart_coordinates=[]
+    for i in range(0, N):
+        cart_coordinates.append( RandRDS_dot(sampling_distance) )
+    cart_coordinates = np.array(cart_coordinates)
+
+    return cart_coordinates (duplicate-code)
+quandarium/quandarium/aux.py:1:0: R0801: Similar lines in 2 files
+==quandarium.quandarium.bag:8
+==quandarium.quandarium.quandarium.bag:8
+import multiprocessing as mp
+import time
+import pandas as pd
+import numpy as np
+from scipy.optimize import linear_sum_assignment
+from quandarium.aux import to_nparray
+from quandarium.aux import bag2arr
+from quandarium.aux import to_list
+from quandarium.aux import arr2bag
+from quandarium.aux import logcolumns
+from quandarium.mols import ecndav
+from quandarium.mols import ecndav_rsopt
+from quandarium.mols import ecndav_ropt
+from quandarium.mols import findsc
+from quandarium.mols import connections
+
+
+def rec_connections(pd_df, baseucheme, positionsfeature='bag_positions',    # old
+                    chemefeature='bag_cheme', pijfeature='bag_pij', stype='bl',
+                    dictcheme='', print_analysis=False):   # Versao Velha
+    """This analysis seach for conectivities in the atoms neighborhood based if
+    the chemical element cheme (or other discrete feature) for each structure
+    in the input pandas dataframe. See function
+    quandarium.analy.mols.connections.
+
+    Parameters
+    ----------
+    pd_df: pandas.DataFrame.
+           A pandas dataframe with all the positions needed to the analysis
+    baseucheme: np.array of str.
+                The base chemical elements to look for connections.
+    positionsfeature: str (optional, default='bag_positions')
+                      The name of the fuature (bag type) in pd_df with
+                      cartezian positions of the atoms.
+    chemefeature: str (optional, default='bag_positions')
+                  The name of the fuature (bag type) in pd_df with chemical
+                  elements of each atoms.
+    pijfeature: str (optional, default='bag_pij')
+                The name of the fuature (bag type) in pd_df with the weight of
+                the conectivity between the atoms pairs.
+    bag_cheme: str (optional, default='bag_cheme')
+               The name of the fuature (bag type) in pd_df with chemical
+               elements of the atoms.
+    stype: str (optional, default='bl')
+           A string determining the type of conection to seach for. 'bb'
+           indicate back bonds, 'bc' indicate ciclic bonds, while bl indicate
+           line bonds.
+    print_analysis: boolean, (default=False)
+                    It True, information for each analysis will be printed.
+    Returns
+    -------
+    combined_df: pandas.DataFrame.
+                 The combination of the input dataframe plus a dataframe with
+                 a new features:
+                 fd_connect: np.array (n,m) shaped were m is the number of
+                             atoms types. The nearest (first degree) neighbors
+                             connections types. All in alphabatic order. For
+                             instance, in a molecule with atoms of types A an
+                             B: [-A, -B].
+                  sd_connect: np.array (n,m**2) shaped were m is the number of
+                              atoms types. The second degree neighbors
+                              connections. All in alphabatic order. For
+                              instance, in a molecule with atoms of types A an
+                              B: [-A-A, -A-B, -B-A, -B-B].
+                  td_connect: np.array (n,m**3) shaped were m is the number of
+                              atoms types. The third degree neighbors
+                              connections. All in alphabatic order. For
+                              instance, in a molecule with atoms of types A an
+                              B: [-A-A-A, -A-A-B, -A-B-A, -A-B-B, -B-A-A,
+                              -B-A-B, -B-B-A, -B-B-B].
+    """
+
+    print("Initializing analysis: rec_connections")
+
+    list_bag_fdconnect = []
+    list_bag_sdconnect = []
+    list_bag_tdconnect = []
+    for index in range(len(pd_df)):
+        cheme = bag2arr(pd_df[chemefeature][index])
+        positions = bag2arr(pd_df[positionsfeature][index])
+        pij = bag2arr(pd_df[pijfeature][index])
+        qtna = len(positions)
+        qtnuc = len(baseucheme)
+        fd_data = np.zeros([qtna, qtnuc])
+        sd_data = np.zeros([qtna, qtnuc**2])
+        td_data = np.zeros([qtna, qtnuc**3])
+        if qtna > 1:
+            fd_data, sd_data, td_data = connections(positions, cheme, pij,
+                                                    stype=stype,
+                                                    dictcheme=dictcheme,
+                                                    baseucheme=baseucheme,
+                                                    print_analysis=
+                                                    print_analysis)
+        list_bag_fdconnect.append(arr2bag(fd_data))
+        list_bag_sdconnect.append(arr2bag(sd_data))
+        list_bag_tdconnect.append(arr2bag(td_data))
+        if index % 50 == 0:
+            print("    concluded %3.1f%%" % (100*index/len(pd_df)))
+    print("    concluded %3.1f%%" % (100))
+    list_of_new_features_data = [list_bag_fdconnect, list_bag_sdconnect,
+                                 list_bag_tdconnect]
+    list_of_new_features_name = ['bag_fdconnect', 'bag_sdconnect',
+                                 'bag_tdconnect']
+
+    # Creating and combinating the pandas DataFrame
+    return list_of_new_features_name, list_of_new_features_data
+
+
+def rec_ecndav_rsopt(kinfo, Rinfo, positions, cheme, print_convergence=False,
+                     roundpijtoecn=False, w=''):
+    """Return the effective coordination number (ecn), the average bound
+    distance (dav), the optimized radius (ropt), and the conective index matrix
+    Pij for each structure in the input pandas dataframe. See function
+    quandarium.analy.mols.ecndav_rsopt.
+
+    Parameters
+    ----------
+    kinfo: float, np.array, or dictionary.
+           Coordination activation factor, a float will give the same factor k
+           for each possible coordination. A np.array (n,n) shaped, where n is
+           the quantity of atoms, will be consider the each entry as the k for
+           each pair of possible coordination. A dictionary will construct
+           each k factor as dict[cheme[i]] plus dict[cheme[j]].
+    Rinfo: np.array or a dict.
+           The atomic tabeled radius. If a dict, each element radius will be
+           consider as dict[cheme[i]].
+    positionsfeature: str (optional, default='bag_positions')
+                      The name of the fuature (bag type) in pd_df with
+                      cartezian positions of the atoms.
+    chemefeature: str (optional, default='bag_positions')
+                  The name of the fuature (bag type) in pd_df with chemical
+                  elements of each atoms.
+    print_convergence: boolean, (optional, default=False).
+                       It treu, the convergency will be printed.
+    Returns
+    -------
+    combined_df: pandas.DataFrame.
+                 The combination of the input dataframe plus a dataframe with
+                 more three features:
+                 bag_ecn, bag_dav: bag of floats, (n,) shaped.
+                                   They contain the calculated ecn and dav for
+                                   each atom.
+                 bag_of_bag_pij: bag of bag of floats, (n,n) shaped.
+                                 The index of connectivity between pairs of
+                                 atoms.
+    """
+
+    print("Initializing analysis: rec_ecndav_rsopt")
+
+    positions = to_nparray(positions)
+    cheme = to_nparray(cheme)
+    list_bag_ecn = []
+    list_bag_dav = []
+    list_bag_ori = []
+    list_bag_pij = []
+    for index in range(len(positions)):
+        cheme_i = cheme[index]
+        positions_i = positions[index]
+        if w:
+            ecn, dav, ori, pij = ecndav_rsopt(positions_i, cheme_i, kinfo, Rinfo,
+                                              roundpijtoecn=roundpijtoecn, w=w)
+        else:
+            ecn, dav, ori, pij = ecndav_rsopt(positions_i, cheme_i, kinfo, Rinfo,
+                                              roundpijtoecn=roundpijtoecn)
+        #                                 print_convergence=print_convergence,
+        list_bag_ecn.append(to_list(ecn))
+        list_bag_dav.append(to_list(dav))
+        list_bag_ori.append(to_list(ori))
+        list_bag_pij.append(to_list(pij))
+        if index % 50 == 0:
+            print("    concluded %3.1f%%" % (100*index/len(positions)))
+    print("    concluded %3.1f%%" % (100))
+    list_of_new_features_data = [list_bag_ecn, list_bag_dav, list_bag_ori,
+                                 list_bag_pij]
+    list_of_new_features_name = ['bag_ecn_rsopt', 'bag_dav_rsopt',
+                                 'bag_ori_rsopt', 'bag_pij_rsopt']
+
+    return list_of_new_features_name, list_of_new_features_data
+
+
+def rec_ecndav_ropt(positions, cheme, print_convergence=False,  # Versao Nova
+                    roundpijtoecn=False):
+    """Return the effective coordination number (ecn), the average bound
+    distance (dav), the optimized radius (ropt), and the conective index matrix
+    Pij for each structure in the inputs.
+    See also:
+    quandarium.analy.mols.ecndav_ropt
+
+    Parameters
+    ----------
+    positions: np.array, pandas.Series, or list
+               Several datas with the atoms positions in bags of bags =
+               [[x1,y1,z1], [x2,y2,z2], ...] .
+    cheme: np.array, pandas.Series, or list
+           Several datas of the chemical elements of each atoms.
+    print_convergence: boolean, (optional, default=False).
+                       It treu, the convergency will be printed.
+    Returns
+    -------
+    bag_ecn, bag_dav: bag of floats, with arrays.
+                      They contain the calculated ecn and dav for each atom.
+    bag_of_bag_pij: bag of bag of floats, with (n,n) shaped arrays.
+                    The index of connectivity between pairs of atoms.
+    """
+    positions = to_nparray(positions).tolist()
+    cheme = to_nparray(cheme).tolist()
+    print("Initializing analysis: rec_ecndav_ropt")
+    list_bag_ecn = []
+    list_bag_dav = []
+    list_bag_ori = []
+    list_bag_pij = []
+    for index in range(len(positions)):
+        cheme_i = np.array(cheme[index])
+        positions_i = np.array(positions[index])
+        ecn, dav, ori, pij = ecndav_ropt(positions_i, cheme_i, plot_name='',
+                                         print_convergence=print_convergence,
+                                         roundpijtoecn=roundpijtoecn)
+        list_bag_ecn.append(arr2bag(ecn))
+        list_bag_dav.append(arr2bag(dav))
+        list_bag_ori.append(arr2bag(ori))
+        list_bag_pij.append(arr2bag(pij))
+        if index % 50 == 0:
+            print("    concluded %3.1f%%" % (100*index/len(positions)))
+    print("    concluded %3.1f%%" % (100))
+    list_of_new_features_data = [list_bag_ecn, list_bag_dav, list_bag_ori,
+                                 list_bag_pij]
+    list_of_new_features_name = ['bag_ecn_ropt', 'bag_dav_ropt',
+                                 'bag_ori_ropt', 'bag_pij_ropt']
+    return list_of_new_features_name, list_of_new_features_data
+
+
+def rec_ecndav(positions, print_convergence=False):   # Versao nova / Não paralelizado
+    """Return the effective coordination number (ecn) and the average bound
+    distance and the conective index matrix Pij for each structure in the input
+    pandas dataframe. See function quandarium.analy.mols.ecndav.
+
+    Parameters
+    ----------
+    positions: np.array, pandas.Series, or list
+               Several datas with the atoms positions in bags of bags =
+               [[x1,y1,z1], [x2,y2,z2], ...] .
+    print_convergence: boolean, (optional, default=False).
+                       It treu, the convergency will be printed.
+    Returns
+    -------
+    list_of_new_features_name: list.
+                               ['bag_ecn', 'bag_dav', 'bag_pij']
+    list_of_new_features_data: list.
+                               lists with the ecn, dav, pij data for each atom.
+    """
+
+    print("Initializing analysis: rec_ecndav")
+
+    positions = to_nparray(positions).tolist()
+    list_bag_ecn = []
+    list_bag_dav = []
+    list_bag_pij = []
+    for index in range(len(positions)):
+        positions_i = np.array(positions[index])
+        ecn, dav, pij = ecndav(positions_i, print_convergence=print_convergence)
+        list_bag_ecn.append(to_list(ecn))
+        list_bag_dav.append(to_list(dav))
+        list_bag_pij.append(to_list(pij))
+        if index % 50 == 0:
+            print("    concluded %3.1f%%" % (100*index/len(positions)))
+    print("    concluded %3.1f%%" % (100))
+    list_of_new_features_data = [list_bag_ecn, list_bag_dav, list_bag_pij]
+    list_of_new_features_name = ['bag_ecn', 'bag_dav', 'bag_pij']
+
+    return list_of_new_features_name, list_of_new_features_data
+
+
+def findsc_wrap(inputs):  #It should be here
+    """Wraper to multiprocessing findsc"""
+    result = findsc(positions=inputs[0], atomic_radii=inputs[1],
+                    adatom_radius=inputs[2], remove_is=inputs[3],
+                    ssamples=inputs[4], writw_sp=inputs[5],
+                    return_expositions=inputs[6],
+                    print_surf_properties=inputs[7], sp_file=inputs[8])
+    return result
+
+
+def rec_findsc(positions, davraddii, davradius='dav', adatom_radius=1.1,  # Versao Nova/ Paralelo
+               ssamples=1000, return_expositions=True,
+               print_surf_properties=False, remove_is=True, procs=1):
+    """It return the atom site surface(True)/core(Flase) for each atoms in
+    for each structure pandas dataframe. See more in the function
+    quandarium.analy.mols.findsurfatons.
+
+    Parameters
+    ----------
+    adatom_radius: float (optional, default=1.1).
+                   Radius of the dummy adatom, in angstroms.
+    positions: Pandas.Series (optional, default='bag_positions')
+               The name of the fuature (bag type) in pd_df with
+               cartezian positions of the atoms.
+    davraddii: str (optional, default='bag_dav')
+               The name of the fuature in pd_df with atomic radii or dav
+               information (bag of floats).
+    davradius: str ['dav','radii'] (optional, default='dav')
+               If radii, atomic radius will be the feature davraddiifeature
+               values. If dav the values in atomic radius will be half of the
+               feature davraddiifeature values.
+    ssampling: intiger (optional, default=1000).
+               Quantity of samplings over the touched sphere surface of each
+               atom.
+
+    Return
+    ------
+    list_of_new_features_name: list with strings.
+                               ['bag_issurface', 'bag_surfaceexposition']
+    list_of_new_features_data: list with data.
+                               issurface: bag of intiger
+                                          The number indicate 1 to surface
+                                          atoms, 0 to core atoms.
+                               surfaceexposition: bag of floats.
+                                                  The percentual of surface
+                                                  exposition of each atom.
+    """
+
+    print("Initializing analysis: rec_findsc")
+
+    inputs_list = []
+    list_is_surface = []
+    list_exposition = []
+    for index, (poitionsi, davraddii) in enumerate(zip(positions, davraddii)):
+        #print(type(poitionsi),poitionsi)
+        positionsi = np.array(poitionsi)  # manter np.array e ativar bags
+        if davradius == 'dav':
+            atomic_radii = np.array(davraddii)/2  # manter np.array e ativar bags
+        if davradius == 'radii':
+            atomic_radii = bag2arr(davraddii)
+        inputs_list.append([positionsi, atomic_radii, adatom_radius,
+                            remove_is, ssamples, False, return_expositions,
+                            print_surf_properties, "surface_points.xyz"])
+    pool = mp.Pool(procs)
+    s_time = time.time()
+    size = len(inputs_list)
+    result = pool.map_async(findsc_wrap, inputs_list, chunksize=1)
+
+    while not result.ready():
+        remaining = result._number_left
+        print('Remaining: ', remaining)
+        time.sleep(5.0)
+    print('Finished')
+
+    outputs = result.get()
+    for index, _ in enumerate(outputs):
+        list_is_surface.append(arr2bag(outputs[index][0]))
+        list_exposition.append(arr2bag(outputs[index][1]))
+    list_of_new_features_data = [list_is_surface, list_exposition]
+    list_of_new_features_name = ['bag_issurf', 'bag_exposition']
+
+    return list_of_new_features_name, list_of_new_features_data
+
+
+def data_from_opsbags(pd_df, new_bag_name, bags, opsbags, opsinterbags='', kind='reg'):  # Versao Velha
+    """It take a bag for operte over other bags.
+    logicalop : np.logical_or, np.logical_and
+    """
+
+    print("Initializing bag_from_opsbags.")
+
+    if opsinterbags == '':
+        opsinterbags = [np.logical_and]*(len(bags) -1)
+
+    new_bag_data = []
+    for index in range(len(pd_df)):
+        data = bag2arr(pd_df[bags[0]][index], dtype=str)
+        operatedata = opsbags[0](data)
+        for bag, bagop, interbagop in zip(bags[1:], opsbags[1:], opsinterbags):
+            nextdata = bag2arr(pd_df[bag][index])
+            operatednextdata = bagop(nextdata)
+            operatedata = interbagop(operatedata, operatednextdata)
+        if kind == 'bag':
+            operatedata = arr2bag(operatedata)
+        new_bag_data.append(operatedata)
+
+    # criando um pd.DataFrame que tem todos os dados e nome dos mesmos
+    new_df = pd.DataFrame(np.array([new_bag_data]).T,
+                          columns=[new_bag_name])
+
+    combined_df = pd.concat([pd_df, new_df], axis=1, sort=False)
+
+    logcolumns('info', "New columns: ", new_df)
+
+    return combined_df
+
+
+def data_from_opsdatas(pd_df, new_bag_name, new_kind, kinds, bags, opsbags,  # Versao Velha
+                       opsinterbags=''):
+    """It take a bag for operte over other bags.
+    logicalop : np.logical_or, np.logical_and
+    """
+
+    print("Initializing data_from_opsdatas.")
+
+    if opsinterbags == '':
+        opsinterbags = [np.logical_and]*(len(bags) -1)
+
+    new_bag_data = []
+    for index in range(len(pd_df)):
+        if kinds[0] == 'bag':
+            data = bag2arr(pd_df[bags[0]][index])
+        else:
+            data = pd_df[bags[0]][index]
+        operatedata = opsbags[0](data)
+        for bag, kind, bagop, interbagop in zip(bags[1:], kinds[1:], opsbags[1:], opsinterbags):
+            if kind == 'bag':
+                nextdata = bag2arr(pd_df[bag][index])
+            else:
+                nextdata = pd_df[bag][index]
+            operatednextdata = bagop(nextdata)
+            operatedata = interbagop(operatedata, operatednextdata)
+        if new_kind == 'bag':
+            operatedata = arr2bag(operatedata)
+        new_bag_data.append(operatedata)
+
+    # criando um pd.DataFrame que tem todos os dados e nome dos mesmos
+    new_df = pd.DataFrame(np.array([new_bag_data]).T,
+                          columns=[new_bag_name])
+
+    combined_df = pd.concat([pd_df, new_df], axis=1, sort=False)
+
+    logcolumns('info', "New columns: ", new_df)
+
+    return combined_df
+
+
+def class_from_bins(list_of_bags, list_of_binsvals, list_of_new_classes_names):  # Versao nova
+    """It take a class for bins of atomic properties for a bags.
+    list_of_bags: list of bags datas
+
+    list_of_binsvals: list with list of bins
+
+    list_of_new_classes_names: list with list of new classes
+    """
+
+    print("Initializing class_from_bins.")
+
+    list_of_new_classes_data = []
+    list_of_new_classes_name = []
+    for bag, binsvals, new_class_names in zip(list_of_bags, list_of_binsvals,
+                                              list_of_new_classes_names):
+        for bindex, name in enumerate(new_class_names):
+            list_of_new_classes_name.append(name)
+            new_class_data = []
+            for index in range(len(bag)):
+                bagdata = np.array(bag[index])
+                c1 = bagdata >= binsvals[bindex]
+                c2 = bagdata < binsvals[bindex + 1]
+                result = np.logical_and(c1, c2)
+                new_class_data.append(result.tolist())
+            list_of_new_classes_data.append(new_class_data)
+
+    return list_of_new_classes_name, list_of_new_classes_data
+
+
+def classes_from_dvalues(bags, classesbasen, classesvals, classesvalsn):  # Nova
+    """It take classes from discrete values of other features (bags):
+
+    new_class_name(i,j): "bag_" + classesbasen[i] + classesvalsn[i][j]
+    new_class_data(i,j): bags[i] == classesvals[i][j]
+
+    wherer, i run over the bags indexes, j rum over the classes discrete values
+    indexes, and s run over the samples indexes.
+
+    Parameters
+    ----------
+    bags: list of pandas.Series.
+          Bags features names which will be analysed to extrac classes from its
+          values.
+    classesbasen: list of str.
+                  If it is a list with str, aech element is the base name of
+                  the new class, with will be extract from the respective bag.
+    classesvals: list of list of values.
+                 Each list inside it present a list the discrete values of the
+                 bags cosidered for each new class.
+    classesvalsn: list of lists with str.
+                  Each list inside it present part of the names of the new
+                  class which will be obtained from the respective bag in bags.
+
+    Return
+    ------
+    list_of_new_classes_name: list of str.
+                              The combination of the names inputs:
+                              "bag_" + classesbasen[i] + classesvalsn[i][j]
+    list_of_new_classes_data: list of data
+                              The new data obtained
+    """
+
+    print("Initializing classes_from_dvalues.")
+
+    # Ao longo da funcao serao adicionado os novos dados e nomes deles nessas
+    # duas listas:
+    list_of_new_classes_name = []
+    list_of_new_classes_data = []
+
+    for bag, classbasen, vals, valsn in zip(bags, classesbasen, classesvals,
+                                            classesvalsn):
+        for val, valn in zip(vals, valsn):
+            # criando nome do novo feature
+            new_class_name = "bag_" + classbasen + valn
+            # criando uma lista com o nome do feature para guardar os dados
+            new_class_data = []
+            for index in range(len(bag)):
+                bagdata = np.array(bag[index])
+                classdata = bagdata == val
+                # print(classdata,bagdata,val)
+                new_class_data.append(classdata.tolist())
+            list_of_new_classes_name.append(new_class_name)
+            list_of_new_classes_data.append(new_class_data.copy())
+
+    return list_of_new_classes_name, list_of_new_classes_data
+
+
+def classes_mixing(classes1, classes2, classesn1='', classesn2=''):  # Versao Nova
+    """It mix classes (bags) with an logical "and" to extract more classes, for
+    each possible pair of classes in two lists.
+
+    Parameters
+    ----------
+    classes1, classes2: lists of pandas.Series.
+                        List with the features (bag, class) which will be
+                        mixtured to obtain more classes.
+                        new class: classes1[i] == classes2[j]
+
+    classesn1, classesn2: lists of str.
+                          Each str in this list is part of the name in the
+                          final name: 'bag_' + classesn1[i] + classesn2[j]
+
+    Return
+    ------
+    comblist_of_new_features_name: list of str
+                                   The new classes names:
+                                   'bag_' + classesn1[i] + classesn2[j]
+
+    list_of_new_features_data: list with new data
+                               The new classes.
+    """
+
+    print('Initializing classes_mixing.')
+
+    list_of_new_features_name = []
+    list_of_new_features_data = []
+
+    for class1, classn1 in zip(classes1, classesn1):
+        for class2, classn2 in zip(classes2, classesn2):
+            # criando nome do novo feature
+            new_feature_name = "bag_" + classn1 + classn2
+            # criando uma lista com o nome do feature para guardar os dados
+            new_feature_data = []
+            for index in range(len(classes1[0])):
+                class1data = np.array(class1[index], dtype=bool)
+                class2data = np.array(class2[index], dtype=bool)
+                finalclassdata = np.logical_and(class1data, class2data)
+                new_feature_data.append(finalclassdata.tolist())
+            list_of_new_features_name.append(new_feature_name)
+            list_of_new_features_data.append(new_feature_data.copy())
+
+    return list_of_new_features_name, list_of_new_features_data
+
+ (duplicate-code)
+quandarium/quandarium/aux.py:1:0: R0801: Similar lines in 2 files
+==quandarium.quandarium.mols:2
+==quandarium.quandarium.quandarium.mols:2
+import sys
+import itertools
+import time
+import ase.io
+import numpy as np
+import networkx as nx
+import matplotlib.pyplot as plt
+from scipy import optimize
+from scipy.stats import describe
+from scipy.special import legendre
+from scipy.spatial.distance import cdist
+from scipy.signal import find_peaks
+from sklearn.cluster import DBSCAN
+from quandarium.aux import RegRDS_set
+from quandarium.aux import large_surfaces_index
+from quandarium.aux import write_points_xyz
+from quandarium.aux import comp_aveabs
+from quandarium.aux import comp_roptl2
+from quandarium.aux import comp_gaussian
+from quandarium.aux import comp_pij_maxdamped
+from quandarium.aux import comp_pij_classed
+from quandarium.aux import comp_minmaxbond
+from quandarium.aux import comp_rs
+from quandarium.aux import logistic
+from quandarium.aux import translate_list
+
+
+def avradius(positions, raddii, useradius=True):
+    """Return the average radius of some molecule.
+    Parameters
+    ----------
+    positions: numpy array of floats (n,3) shaped.
+               Cartezian positions of the atoms, in angstroms.
+    atomic_radii: numpy array of floats (n,) shaped.
+                  Radius of the atoms, in the same order which they appear in
+                  positions, in angstroms.
+
+    Returns
+    -------
+    average_radius: numpy float
+    """
+
+    if len(positions) > 1:
+        positions = positions - np.average(positions, axis=0)
+        dists = cdist(positions, positions)
+        distargmax = np.unravel_index(np.argmax(dists), dists.shape)
+        part1 = dists[distargmax[0], distargmax[1]]
+        if useradius:
+            part1 += raddii[distargmax[0]] + raddii[distargmax[1]]
+            distcenter = np.linalg.norm(positions, axis=0) + raddii
+            part2 = max(distcenter)
+        else:
+            distcenter = np.linalg.norm(positions, axis=0)
+            part2 = max(distcenter)
+        average_radius = part1/2. + part2/2.
+    else:
+        average_radius = np.nan
+    return average_radius
+
+
+def ecndav_rsopt(positions, cheme, kinfo, Rinfo, roundpijtoecn=False,
+                 rcutp=1.15, w=''):
+    """Return an effective coordination number (ecn), the optimized atomic
+    radius (ori), the bond distance average (dav), and the conective index
+    matrix pij. The radius are optimized...
+
+    Parameters
+    ----------
+    positions: numpy.array, (3,n) shaped.
+               The cartezian positions of the atoms.
+    cheme : numpy.array, (n,) shaped.
+            the chemical symbols of each element.
+    kinfo : float, np.array, or dictionary.
+            Coordination activation factor, a float will give the same factor k
+            for each possible coordination. A np.array (n,n) shaped, where n is
+            the quantity of atoms, will be consider the each entry as the k for
+            each pair of possible coordination. A dictionary will construct
+            each k factor as dict[cheme[i]] plus dict[cheme[j]].
+    Rinfo : np.array or a dict.
+            The atomic tabeled radius. If a dict, each element radius will be
+            consider as dict[cheme[i]].
+    rcutp: float bigger than one.
+           The rcut is the radius ori scaled by this parameter.
+    roundpijtoecn: If true the pij is rounded to calculate the ecn.
+
+    Returns
+    -------
+    ecn, dav, ori: numpy.array, (n,) shaped.
+                   They contain the calculated ecn, optimized radius, and dav
+                   for each atom.
+    pij: numpy.array, (n,n) shaped.
+         The index of connectivity between pairs of atoms.
+    """
+
+    qtna = len(positions)
+    positions = positions - np.average(positions, axis=0)
+    dij = cdist(positions, positions) + 100 * np.eye(qtna)
+
+    if isinstance(kinfo, float):
+        k = np.ones([qtna, qtna]) * kinfo
+    elif isinstance(kinfo, dict):
+        k = np.array([[kinfo[e1] + kinfo[e2] for e1 in cheme] for e2 in cheme])
+    else:
+        k = kinfo
+
+    if isinstance(Rinfo, dict):
+        R = np.array([Rinfo[e1] for e1 in cheme])
+    else:
+        R = Rinfo
+
+    if len(positions) == 1:
+        ecn = np.array([0.])
+        dav = np.array([0.])
+        ori = np.array([R[0]])
+        pij = np.array([[0.]])
+        return ecn, dav, ori, pij
+
+    ori = R *1.
+    rcut = ori * rcutp
+    bounds = []
+
+    for ind, ce in enumerate(cheme):
+        bounds.append((R[ind]*0.6, R[ind]*1.4))
+    bounds = tuple(map(tuple, bounds))
+
+    if w:
+        rs_opt = optimize.minimize(comp_rs, ori, args=(dij, k, R, rcutp, w),
+                                   bounds=bounds,
+                                   method="L-BFGS-B", tol=1.E-6,
+                                   options={"maxiter": 250, "disp": False})
+    else:
+        rs_opt = optimize.minimize(comp_rs, ori, args=(dij, k, R, rcutp),
+                                   bounds=bounds,
+                                   method="L-BFGS-B", tol=1.E-6,
+                                   options={"maxiter": 250, "disp": False})
+
+    if not rs_opt.success:
+        print('Otimization has not converged.')
+
+    ori = rs_opt.x
+    rcut = ori * rcutp
+    pij = logistic(dij, rcut, k)
+    ecn = np.sum(pij, axis=1)
+    # calcuating dav avoiding division by 0
+    ecn_aux = ecn < 1.
+    ecn_aux2 = ecn * 1.
+    ecn_aux2[ecn_aux] = 1.
+    dav = np.sum(dij*pij, axis=1) / ecn_aux2
+    if roundpijtoecn:
+        ecn = np.sum(np.round(pij), axis=1)
+
+    bounds = np.array(list(map(list, bounds)))[:,0]
+    if np.any(ori==bounds):
+        print(ecn[ori==bounds])
+        print(ori[ori==bounds])
+
+    return ecn, dav, ori, pij
+
+
+def ecndav_ropt(positions, chemical_symbols, plot_name='',
+                print_convergence=True, roundpijtoecn=False):
+    """Return the effective coordination number (ecn), the optimized atomic
+    radius (ori), the bond distance average (dav), and the conective index
+    matrix pij. The radius are optimized...
+
+    Parameters
+    ----------
+    positions: numpy.array, (3,n) shaped.
+               The cartezian positions of the atoms.
+    chemical_symbols : numpy.array, (n,) shaped.
+                       the chemical symbols of each atom.
+    criteria: float greater than zero.
+              Creteria for connectivity.
+    print_convergence: boolean, (optional, default=True).
+                       It treu, the convergency will be printed.
+    plot_name: string (optional, defauld='').
+               It a string were provided, a plot of the dij as function of ori
+               + orj will be saved in for each atom i, with name
+               plot_name_i.png.
+    roundpijtoecn: If true the pij is rounded to calculate the ecn.
+
+    Returns
+    -------
+    ecn, ori, dav: numpy.array, (n,) shaped.
+                   They contain the calculated ecn, optimized radius, and dav
+                   for each atom.
+    Pij: numpy.array, (n,n) shaped.
+         The index of connectivity between pairs of atoms.
+    """
+
+
+    if print_convergence:
+        print("Initializing ECN-Ropt analysis!")
+
+    if not isinstance(positions, np.ndarray) or (np.shape(positions)[1] != 3):
+        print("positions must be a (n,3) shaped numpy.ndarray! Aborting...")
+        sys.exit(1)
+
+    if not isinstance(chemical_symbols, np.ndarray):
+        print("chemical_symbols must be a numpy.ndarray of strings.")
+        sys.exit(1)
+
+    qtna = len(positions)
+    dij = cdist(positions, positions) + 100 * np.eye(len(positions))
+    dav = np.max(cdist(positions, positions), axis=0)
+    ori = dav / 2.
+    ori_pre = np.zeros_like(ori)
+    ecn_pre = np.zeros_like(dij)
+    ecn = np.zeros_like(dij)
+
+    dij_max = np.array([[comp_minmaxbond(a1, a2)[1] for a1 in chemical_symbols]
+                        for a2 in chemical_symbols], dtype=float)
+    pij_max = dij < dij_max
+    step = 0
+    if print_convergence:
+        print("     Delta sum_i(abs(r_i))/N     Delta sum_i(abs(ECN_i))/N")
+    while (np.sum(np.abs(ori_pre - ori)) / len(ori) > 10E-8) or (step < 2):
+        if step > 0:
+            ori_pre = ori * 1.
+            ecn_pre = ecn * 1.
+        pij = comp_pij_maxdamped(dij, ori, pij_max)
+        results = optimize.minimize(comp_roptl2, ori, args=(dij, pij),
+                                    bounds=((0.5, 1.9),)*len(chemical_symbols),
+                                    method="L-BFGS-B", tol=1.E-7,
+                                    options={"maxiter": 50, "disp": False})
+        ori = results.x
+        ecn = np.sum(pij, axis=1)
+        parameter1 = comp_aveabs(ori_pre - ori)
+        parameter2 = comp_aveabs(ecn - ecn_pre)
+        if print_convergence:
+            print('   ', parameter1, parameter2)
+        step += 1
+    if not results.success:
+        print('    Final r optimiation failed! see the massange: '
+                      '{:s}'.format(results.message))
+
+    if roundpijtoecn:
+        ecn = np.sum(np.round(pij), axis=1)
+
+    ori_sum_orj = ori.reshape([1, -1]) + ori.reshape([-1, 1])
+    dav = np.sum((ori_sum_orj)*pij, axis=1) / np.sum(pij, axis=1)
+
+    if plot_name:
+        bins = 400
+        sig = 0.05
+        xvalues = np.linspace(0.5, 2, bins)
+        rd_per_atom = np.zeros([len(chemical_symbols), bins])
+        for i in range(qtna):
+            plt.close("all")
+            for j in range(qtna):
+                rd_per_atom[i] += comp_gaussian(xvalues,
+                                                dij[i, j]/(ori[i] + ori[j]),
+                                                sig)
+            peaks, _ = find_peaks((rd_per_atom[i]+1)**-1, height=0)
+            plt.plot(rd_per_atom[i])
+            plt.plot(peaks, rd_per_atom[i][peaks], "x")
+            plt.plot(np.zeros_like(rd_per_atom[i]), "--", color="gray")
+            plt.savefig(plot_name + '_' + str(i) + '.png')
+
+    if print_convergence:
+        print('    Analysis concluded!')
+
+    return ecn, dav, ori, pij
+
+
+def ecndav(positions, print_convergence=True):
+    """Return the effective coordination number (ecn) and the average bound
+    distance and the conective index matrix Pij.
+
+    Parameters
+    ----------
+    positions: numpy.array, (3,n) shaped.
+               The cartezian positions of the atoms.
+    print_convergence: boolean, (optional, default=True).
+                       It treu, the convergency will be printed.
+    Returns
+    -------
+    ecn, dav: numpy.array, (n,) shaped.
+              They contain the calculated ecn and dav for each atom.
+    pij: numpy.array, (n,n) shaped.
+         The index of connectivity between pairs of atoms.
+    """
+
+    if (not isinstance(positions, np.ndarray)) or np.shape(positions)[1] != 3:
+        print("positions must be a (n,3) shaped numpy.ndarray! Aborting...")
+        sys.exit(1)
+
+    if print_convergence:
+        print("ECN analysis:")
+
+    qtna = len(positions)
+    dij = cdist(positions, positions) + 100*np.eye(len(positions))
+    dav = np.max(cdist(positions, positions), axis=0)
+    dav_pre = np.zeros_like(dav)
+    ecn_pre = np.zeros_like(dij)
+    ecn = np.zeros_like(dij)
+
+    step = 0
+    if print_convergence:
+        print("     Delta sum_i(abs(dav_i))/N     Delta sum_i(abs(ECN_i))/N")
+    while (np.sum(np.abs(dav_pre - dav))/len(dav) > 10E-8) or (step < 2):
+        if step > 0:
+            dav_pre = dav * 1.
+            ecn_pre = ecn * 1.
+        pij = np.exp(1 - (2*dij/(dav.reshape(-1, 1) + dav.reshape(1, -1)))**6)
+        ecn = np.sum(pij, axis=1)
+        dav = np.sum(pij * dij, axis=1) / np.sum(pij, axis=1)
+        ecn = np.sum(pij, axis=1)
+        if print_convergence:
+            print('   ' + str(np.sum(np.abs(dav_pre - dav)) / qtna)
+                  + '  ' + str(np.sum(np.abs(ecn - ecn_pre)) / qtna))
+        step += 1
+
+    if print_convergence:
+        print("Converged")
+
+    return ecn, dav, pij
+
+
+def findsc(positions, atomic_radii, adatom_radius, remove_is=True,
+           ssamples=1000, writw_sp=True, return_expositions=True,
+           print_surf_properties=False, sp_file="surface_points.xyz"):
+    """This algorithm classify atoms in surface and core atoms employing the
+    concept of atoms as ridge spheres. Then the surface atoms are the ones that
+    could be touched by an fictitious adatom that approach the cluster, while
+    the core atoms are the remaining atoms.
+    See more of my algorithms im GitHub page Johnatan.mucelini.
+    Articles which employed thi analysis: Mendes P. XXX
+    .
+
+    Parameters
+    ----------
+    positions: numpy array of floats (n,3) shaped.
+               Cartezian positions of the atoms, in angstroms.
+    atomic_radii: numpy array of floats (n,) shaped.
+                  Radius of the atoms, in the same order which they appear in
+                  positions, in angstroms.
+    adatom_radius: float (optional, default=1.1).
+                   Radius of the dummy adatom, in angstroms.
+    ssampling: intiger (optional, default=1000).
+               Quantity of samplings over the touched sphere surface of each
+               atom.
+    write_sp: boolean (optional, default=True).
+              Define if the xyz positions of the surface points will
+              be writed in a xyz file (surface_points.xyz).
+    sp_file : string (optional, default='surface_points.xyz').
+              The name of the xyz file to write the surface points positions,
+              in angstroms, if write_sp == True.
+
+    Return
+    ------
+    surface_exposition: numpy array of floats (n,).
+                        The percentual of surface exposition of each atom.
+
+    Example
+    ------
+    >>> ...
+    """
+
+    # Centralizing atoms positions:
+    positions = positions - np.average(positions, axis=0)
+    touch_radii = atomic_radii + adatom_radius
+    qtna = len(positions)
+
+    dots_try = RegRDS_set(adatom_radius, ssamples)
+    rssamples = len(dots_try)
+    max_dots = rssamples * qtna
+    if print_surf_properties:
+        print('Quantity of dots per atom: ' + str(len(dots_try)))
+        print('Quantity of investigated dots: ' + str(max_dots))
+
+    dots = positions[0] + RegRDS_set(touch_radii[0] + 0.001, ssamples)
+    dot_origin = [[0] * len(dots_try)]
+    for atom_id in range(1, qtna):
+        dots = np.append(dots, positions[atom_id] + RegRDS_set(
+            touch_radii[atom_id] + 0.001, ssamples), axis=0)
+        dot_origin.append([atom_id] * len(dots_try))
+    dot_origin = np.array(dot_origin).flatten()
+
+    # removing dots inside other touch sphere
+    dots_atoms_distance = cdist(positions, dots)
+    atomos_radii_projected = np.array(
+        [touch_radii]*len(dots)
+        ).reshape(len(dots), qtna).T
+    surface_dots = np.sum(
+        dots_atoms_distance < atomos_radii_projected,
+        axis=0
+        ) == 0
+    dots_surface = dots[surface_dots]
+
+    # removing internal surfaces
+    if remove_is:
+        if print_surf_properties:
+            print("removing_internal_surface")
+        dots_for_find_eps = RegRDS_set(max(touch_radii), ssamples)
+        dotdot_distances = cdist(dots_for_find_eps, dots_for_find_eps)
+        min_dotdot_dist = np.min(dotdot_distances + np.eye(rssamples) * 10,
+                                 axis=0)
+        eps = 2.1 * np.max(min_dotdot_dist)
+        external_surface_dots = large_surfaces_index(dots_surface, eps)
+        dots_surface = dots_surface[external_surface_dots]
+        surface_dot_origin = dot_origin[surface_dots][external_surface_dots]
+    else:
+        surface_dot_origin = dot_origin[surface_dots]
+    surface_atoms, dots_per_atom = np.unique(surface_dot_origin,
+                                             return_counts=True)
+
+    # Getting exposition
+    atoms_area_per_dot = (4 * np.pi * atomic_radii**2)/(1.*rssamples)
+    exposition = np.zeros(qtna)
+    is_surface = np.zeros(qtna, dtype=bool)
+    incidence = np.zeros(qtna)
+    # dots_per_atom = np.zeros(qtna)
+    for atom_id, atom_incidence in zip(surface_atoms, dots_per_atom):
+        if print_surf_properties:
+            print(' found surface atom: ' + str(atom_id))
+        is_surface[atom_id] = True
+        incidence[atom_id] = atom_incidence
+        exposition[atom_id] = atom_incidence * atoms_area_per_dot[atom_id]
+
+    if writw_sp:
+        write_points_xyz(sp_file, dots_surface)
+
+    if print_surf_properties:
+        centered_dots_surface = dots_surface - np.average(dots_surface, axis=0)
+        origin = np.array([[0., 0., 0.]])
+        dots_origin_dist = cdist(origin, centered_dots_surface).flatten()
+        print("Surface points description: " + str(describe(dots_origin_dist)))
+        print("reg_surface area: " + str(sum(exposition)))
+
+    if not return_expositions:
+        return is_surface
+    if return_expositions:
+        return is_surface, exposition
+ (duplicate-code)
+quandarium/quandarium/aux.py:1:0: R0801: Similar lines in 2 files
+==quandarium.quandarium.quandarium.reg:7
+==quandarium.quandarium.reg:7
+import sys
+import pandas as pd
+import numpy as np
+from quandarium.aux import to_nparray
+from quandarium.aux import logcolumns
+from quandarium.aux import checkmissingkeys
+from quandarium.mols import avradius
+
+
+def relativise(mainfeature, groupbyfeature):  # Versao Nova
+    """It calculate the relative value of a feature for each value of
+    groupbyfeature. In other words, the complete dataset will be divided in n
+    smaller dataset where the samples divide the same value of groupbyfeature,
+    then the relative feature values will be calculated as the value of the
+    featuretorelativize minus the smallest value of this feature in the group
+    that it belongs to.
+
+    Parameters
+    ----------
+    mainfeature: np.array, pandas.Series, or list
+                 The data of feature which will be compute the relative
+                 features.
+    groupbyfeature: np.array, pandas.Series, list of None
+                    The relativised data will be calculated per group of
+                    samples with unique unique values of the groupbyfeature.
+                    If None, the relativeised feature will employ the min of
+                    the whole data.
+    Return
+    ------
+    relativesed: np.array
+                 The reletivised feature values in a np.ndarray.
+    """
+
+    print("Initializing analysis: relativising")
+    pd_df = pd.DataFrame()
+    pd_df['mainfeature'] = to_nparray(mainfeature)
+    if groupbyfeature:
+        pd_df['groupbyfeature'] = to_nparray(groupbyfeature)
+        #print(pd_df, feature, groupbyfeature, to_nparray(feature),to_nparray(groupbyfeature))
+        grouped = pd_df.groupby(groupbyfeature)
+        relativised = np.zeros(len(pd_df))
+        for group in grouped.groups:
+            groupedby_df = grouped.get_group(group)
+            indexes = groupedby_df.index.tolist()
+            newdata = to_nparray(groupedby_df['mainfeature']) - to_nparray(groupedby_df['feature']).min()
+            relativised[indexes] = np.array(newdata)
+    else:
+        relativised = pd_df['mainfeature'].values - pd_df['mainfeature'].values.min()
+    return np.array(relativised)
+
+
+def rec_avradius(positions, useradius=False, davraddii=[], davradius='dav'):  # Versao Nova
+    """It calculate the the average radius of some molecule for all molecules
+    based in the necleus positions, or including a radius.
+
+    Parameters
+    ----------
+    positionsfeature: str (optional, default='bag_positions')
+                      The name of the fuature (bag type) in pd_df with
+                      cartezian positions of the atoms.
+    useradius: bool (optional, default=False)
+               If True, the radius will be consider to calculate the average radius.
+    davraddii: str (optional, default='bag_dav')
+                      The name of the fuature in pd_df with atomic radii or dav
+                      information (bag of floats).
+    davradius: str ['dav','radii'] (optional, default='dav')
+               If radii, atomic radius will be the feature davraddiifeature
+               values. If dav the values in atomic radius will be half of the
+               feature davraddiifeature values.
+    Return
+    ------
+    new_data: np.array.
+              The new data in a np.array.
+    """
+    print("Initializing analysis: rec_avradius")
+
+    positions = to_nparray(positions).tolist()
+    davraddii = to_nparray(davraddii).tolist()
+    new_data = []
+    for index in range(len(positions)):
+        positions_i = np.array(positions[index])
+        if davradius == 'dav':
+            raddiiorhalfdav = np.array(davraddii[index])/2.
+        if davradius == 'radius':
+            raddiiorhalfdav = np.array(davraddii[index])
+        result = avradius(positions_i, raddiiorhalfdav, useradius=useradius)
+        new_data.append(result)
+        if index % 50 == 0:
+            print("    concluded %3.1f%%" % (100*index/len(positions)))
+    print("    concluded %3.1f%%" % (100))
+
+    return np.array(new_data)
+
+
+def mine_bags(classes, bags, classesn='', bagsn='', operators=[np.average],  # Versao Nova
+              operatorsn=['av']):
+    """It mine regular features from atomic properties (bags) and atomic
+    classes (also bags).
+
+    The new regular features name are based in the
+    new regular features name: "reg_" + oname + "_" + bname + "_" + cname,
+    where oname, bname, and cname are elements of operatorsn, bagsn, and
+    classesn, respectively.
+
+    Parameter
+    ---------
+    bags: list with the bags to be examinated
+    bagsn: list with the names of bags to be examinated
+    classes: list of tuples with name and list of classes to be examinated
+    classesn: class_name in the final feature
+    operators: operation over the bag[class] array, (only applied if the class
+               is not empth)
+    operatorsn: operator name in the final feature
+    sumclass: soma a quantidade de elementos para cada classe.
+
+    Return
+    ------
+    list_of_new_features_name, list_of_new_features_data
+    new_feature_name = "reg_" + operatorsn[i] + "_" + bagsn[j] + "_" + classesn[k]
+    """
+
+    print("Initializing minebags.")
+
+    # ao longo da funcao serao adicionado os novos dados e nomes deles nessas
+    # duas listas:
+    list_of_new_features_name = []
+    list_of_new_features_data = []
+
+    # criando os novos features
+    for operation, oname in zip(operators, operatorsn):
+        for bag, bname in zip(bags, bagsn):
+            for classa, cname in zip(classes, classesn):
+                # criando nome do novo feature
+                new_feature_name = "reg_" + oname + "_" + bname + "_" + cname
+                # criando uma lista com o nome do feature para guardar os dados
+                new_feature_data = []
+                for sampleind in range(len(bag)):
+                    classdata = np.array(classa[sampleind], dtype=bool)
+                    if sum(classdata) == 0:
+                        # if no one atom belongs to the classa
+                        new_feature_data.append(np.nan)
+                    else:
+                        # if there are one atom which belongs to the classa
+                        data = np.array(bag[sampleind], dtype=float)
+                        reg_data_to_sampel = operation(data[classdata])
+                        new_feature_data.append(reg_data_to_sampel)
+                list_of_new_features_name.append(new_feature_name)
+                list_of_new_features_data.append(new_feature_data.copy())
+
+    return list_of_new_features_name, list_of_new_features_data
+
+
+def classes_count(classes, classesn):  # Versao Nova   # preciso verificar se as classes com 0 elementos tao contando ou se ta resultando 0
+    """It mix classes (bags) with an logical "and" to extract more classes, for
+    each possible pair of classes in two lists.
+
+    Parameters
+    ----------
+    classes: lists of pandas.Series.
+             List with the class which will be counted.
+
+    classesn: lists of str.
+              Each str in this list is part of the name of the new reg data
+              final name: 'reg_N_' + classesn
+
+    Return
+    ------
+    comblist_of_new_features_name: list of str
+                                   The new classes names:
+                                   'bag_N_' + classesn
+
+    list_of_new_features_data: list with new data
+                               The new classes.
+    """
+
+    print('Initializing classes_count.')
+
+    list_of_new_features_name = []
+    list_of_new_features_data = []
+
+    for clas, clasn in zip(classes, classesn):
+        new_feature_name = "reg_N_" + clasn
+        new_feature_data = []
+        for index in range(len(clas)):
+            classdata = np.sum(clas[index])
+            new_feature_data.append(classdata)
+        list_of_new_features_name.append(new_feature_name)
+        list_of_new_features_data.append(new_feature_data.copy())
+
+    return list_of_new_features_name, list_of_new_features_data
+
+ (duplicate-code)
+quandarium/quandarium/aux.py:1:0: R0801: Similar lines in 2 files
+==quandarium.quandarium.find_calculations:2
+==quandarium.quandarium.quandarium.find_calculations:2
+import sys
+import numpy as np
+import pandas as pd
+import os.path
+from distutils.dir_util import copy_tree
+from quandarium.aux import logcolumns
+
+
+def find(code_or_file, path_to_start_the_search='.', recursivity=True):
+    """This function find the path of all folders with calculations.
+    In fact, if code_or_file is a code it select folder with the code output
+    file, if code_or_file is not a code (so it is a filename), it select
+    folders with a file named equal to code_or_file.
+
+    Parameters
+    ----------
+    code_or_file: str.
+                  The code name (VASP of fhi) or a file name to search to
+                  consider that the folder with the filename is a calculation
+                  folder.
+    path_to_start_the_search: str, optional.
+                              path_to_start_the_search is the path to start the
+                              seaching for folders with calculations.
+    recursivity: boolean
+                 If True, the search is completely recursive. If False, the
+                 search run over the forder within the folder in the variable
+                 path_to_start_the_search.
+
+    Returns
+    -------
+    list_with_all_calculations_folder: list of size equal to the number of
+                                       The path to the folder with the
+                                       calculations.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from quandarium.calculations import find
+    >>>
+    >>> dataframe = pd.DataFrame()
+    >>> dataframe['calcfolder'] = find('VASP', '.')
+    """
+
+    # Variables unit tests
+    if not isinstance(code_or_file, str):
+        print("code_or_file must be a string! Aborting...")
+        sys.exit(1)
+
+    if not isinstance(path_to_start_the_search, str):
+        print("path_to_start_the_search must be a string! Aborting...")
+        sys.exit(1)
+
+    if not isinstance(recursivity, bool):
+        print("recursivity must be an bool! Aborting...")
+        sys.exit(1)
+
+    # Other verification tests
+    if not os.path.isdir(path_to_start_the_search):
+        print("The path_to_start_the_search is not a directory! Aborting...")
+        sys.exit(1)
+
+    # Geting the output_file_name from the code input var
+    if code_or_file == 'VASP':
+        output_file_name = 'OUTCAR'
+    if code_or_file == 'fhi':
+        output_file_name = 'aims.out'
+    if code_or_file not in ['VASP', 'fhi']:
+        print('{} variable is not an avaliable code.'.format(code_or_file))
+        print('code_or_file will be considered as the output file name.')
+        output_file_name = code_or_file
+    print('The output_file_name variable were selected to {}.'.format(
+        output_file_name))
+
+    # Find the list with paths
+    if recursivity:
+        list_of_folders = [x[0] for x in os.walk(path_to_start_the_search
+                                                 + '/')]
+    if not recursivity:
+        list_of_folders= [x for x in os.listdir(path_to_start_the_search + '/')
+                          if os.path.isdir(path_to_start_the_search + '/' + x)]
+    print('list_of_folders were find, it present len of {}.'.format(
+        len(list_of_folders)))
+
+    # Test
+    if len(list_of_folders) == 0:
+        print('No one folder were found! Aborting...')
+        sys.exit(1)
+
+    # Finding the folders with calculations
+    list_with_all_calculations_folder = []
+    for folder in list_of_folders:
+        if os.path.isfile(folder + '/' + output_file_name):
+            list_with_all_calculations_folder.append(folder)
+
+    # Test
+    if len(list_with_all_calculations_folder) == 0:
+        print('No one folder were found with calculations!')
+    else:
+        # Printing folders with calculations
+        print('The following folders present calculation:')
+        for folder in list_with_all_calculations_folder:
+            print('    {}'.format(folder))
+
+    print('Folders founded:')
+    for i in list_with_all_calculations_folder:
+        print('    {}'.format(i))
+
+    list_with_all_calculations_folder.sort()
+
+    return list_with_all_calculations_folder
+
+
+def cp_folders(list_with_all_calculations_folder, final_folder):
+    """This function copy the each folder in the
+    list_with_all_calculations_folder to the final_folder.
+
+    Arguments:
+    list_with_all_calculations_folder: list of stings with the path to the
+                                       folders.
+    final_folder: path to the final folder. If it does not exist, it will be
+                  created
+
+    Example:
+    >>> cp_folders(list_of_calculations_folders, './all_calculations')
+    """
+
+    print('Initializing cp_folders function!')
+
+    # Need to verify the input variables!
+
+    for calculation_folder in list_with_all_calculations_folder:
+        copy_tree(calculation_folder, final_folder)
+
+    print('All the folders were copied') (duplicate-code)
+
+------------------------------------------------------------------
+Your code has been rated at 4.73/10 (previous run: 4.76/10, -0.03)
+

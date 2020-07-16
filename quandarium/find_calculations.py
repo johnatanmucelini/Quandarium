@@ -1,11 +1,8 @@
 """Several tools to deal with QC calculations."""
 
 import sys
-import numpy as np
-import pandas as pd
 import os.path
 from distutils.dir_util import copy_tree
-from quandarium.aux import logcolumns
 
 
 def find(code_or_file, path_to_start_the_search='.', recursivity=True):
@@ -30,8 +27,8 @@ def find(code_or_file, path_to_start_the_search='.', recursivity=True):
 
     Returns
     -------
-    list_with_all_calculations_folder: list of size equal to the number of 
-                                       The path to the folder with the 
+    list_with_all_calculations_folder: list of size equal to the number of
+                                       The path to the folder with the
                                        calculations.
 
     Examples
@@ -78,8 +75,10 @@ def find(code_or_file, path_to_start_the_search='.', recursivity=True):
         list_of_folders = [x[0] for x in os.walk(path_to_start_the_search
                                                  + '/')]
     if not recursivity:
-        list_of_folders= [x for x in os.listdir(path_to_start_the_search + '/')
-                          if os.path.isdir(path_to_start_the_search + '/' + x)]
+        list_of_folders = [x for x in os.listdir(path_to_start_the_search +
+                                                 '/')
+                           if os.path.isdir(path_to_start_the_search + '/' +
+                                            x)]
     print('list_of_folders were find, it present len of {}.'.format(
         len(list_of_folders)))
 

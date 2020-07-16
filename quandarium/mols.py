@@ -1,41 +1,37 @@
 """ An algorithm to analyse the structure and geometry of cluster of atoms."""
 
 import sys
-import itertools
-import time
-import ase.io
 import numpy as np
-import networkx as nx
 import matplotlib.pyplot as plt
 from scipy import optimize
 from scipy.stats import describe
-from scipy.special import legendre
 from scipy.spatial.distance import cdist
 from scipy.signal import find_peaks
-from sklearn.cluster import DBSCAN
-from quandarium.aux import RegRDS_set
-from quandarium.aux import large_surfaces_index
-from quandarium.aux import write_points_xyz
-from quandarium.aux import comp_aveabs
-from quandarium.aux import comp_roptl2
-from quandarium.aux import comp_gaussian
-from quandarium.aux import comp_pij_maxdamped
-from quandarium.aux import comp_pij_classed
-from quandarium.aux import comp_minmaxbond
-from quandarium.aux import comp_rs
-from quandarium.aux import logistic
-from quandarium.aux import translate_list
+from aux import RegRDS_set
+from aux import large_surfaces_index
+from aux import write_points_xyz
+from aux import comp_aveabs
+from aux import comp_roptl2
+from aux import comp_gaussian
+from aux import comp_pij_maxdamped
+from aux import comp_minmaxbond
+from aux import comp_rs
+from aux import logistic
 
 
-def avradius(positions, raddii, useradius=True):
-    """Return the average radius of some molecule.
+def avradius(positions, raddii=None, useradius=False):
+    """Return the average radius for the molecule.
+    
     Parameters
     ----------
     positions: numpy array of floats (n,3) shaped.
                Cartezian positions of the atoms, in angstroms.
-    atomic_radii: numpy array of floats (n,) shaped.
+    atomic_radii: numpy array of floats (optional, default=None).
                   Radius of the atoms, in the same order which they appear in
                   positions, in angstroms.
+    useradius: bool, (optional, default=False)
+               If true the atomic raddii will be employed to calculate the 
+               molecular radius
 
     Returns
     -------
@@ -117,11 +113,11 @@ def ecndav_rsopt(positions, cheme, kinfo, Rinfo, roundpijtoecn=False,
         pij = np.array([[0.]])
         return ecn, dav, ori, pij
 
-    ori = R *1.
+    ori = R * 1.
     rcut = ori * rcutp
     bounds = []
 
-    for ind, ce in enumerate(cheme):
+    for ind, _ in enumerate(cheme):
         bounds.append((R[ind]*0.6, R[ind]*1.4))
     bounds = tuple(map(tuple, bounds))
 
@@ -151,10 +147,10 @@ def ecndav_rsopt(positions, cheme, kinfo, Rinfo, roundpijtoecn=False,
     if roundpijtoecn:
         ecn = np.sum(np.round(pij), axis=1)
 
-    bounds = np.array(list(map(list, bounds)))[:,0]
-    if np.any(ori==bounds):
-        print(ecn[ori==bounds])
-        print(ori[ori==bounds])
+    bounds = np.array(list(map(list, bounds)))[:, 0]
+    if np.any(ori == bounds):
+        print(ecn[ori == bounds])
+        print(ori[ori == bounds])
 
     return ecn, dav, ori, pij
 
@@ -189,7 +185,6 @@ def ecndav_ropt(positions, chemical_symbols, plot_name='',
     Pij: numpy.array, (n,n) shaped.
          The index of connectivity between pairs of atoms.
     """
-
 
     if print_convergence:
         print("Initializing ECN-Ropt analysis!")
@@ -234,7 +229,7 @@ def ecndav_ropt(positions, chemical_symbols, plot_name='',
         step += 1
     if not results.success:
         print('    Final r optimiation failed! see the massange: '
-                      '{:s}'.format(results.message))
+              '{:s}'.format(results.message))
 
     if roundpijtoecn:
         ecn = np.sum(np.round(pij), axis=1)
@@ -432,6 +427,4 @@ def findsc(positions, atomic_radii, adatom_radius, remove_is=True,
 
     if not return_expositions:
         return is_surface
-    if return_expositions:
-        return is_surface, exposition
-
+    return is_surface, exposition

@@ -1,121 +1,19 @@
-"""This module present tools to extract data from Quantum Chemistry (QC)
-Calculations, and related functions. The QC codes with extractors avaliable
-are:
-- FHI-aims
-- VESTA (not yet)
-- formats in ase.io
-"""
-
-import multiprocessing as mp
+import sys
 import time
-import pandas as pd
+import multiprocessing as mp
 import numpy as np
-from scipy.optimize import linear_sum_assignment
-from quandarium.aux import to_nparray
-from quandarium.aux import bag2arr
-from quandarium.aux import to_list
-from quandarium.aux import arr2bag
-from quandarium.aux import logcolumns
-from quandarium.mols import ecndav
-from quandarium.mols import ecndav_rsopt
-from quandarium.mols import ecndav_ropt
-from quandarium.mols import findsc
-from quandarium.mols import connections
 
-
-def rec_connections(pd_df, baseucheme, positionsfeature='bag_positions',    # old
-                    chemefeature='bag_cheme', pijfeature='bag_pij', stype='bl',
-                    dictcheme='', print_analysis=False):   # Versao Velha
-    """This analysis seach for conectivities in the atoms neighborhood based if
-    the chemical element cheme (or other discrete feature) for each structure
-    in the input pandas dataframe. See function
-    quandarium.analy.mols.connections.
-
-    Parameters
-    ----------
-    pd_df: pandas.DataFrame.
-           A pandas dataframe with all the positions needed to the analysis
-    baseucheme: np.array of str.
-                The base chemical elements to look for connections.
-    positionsfeature: str (optional, default='bag_positions')
-                      The name of the fuature (bag type) in pd_df with
-                      cartezian positions of the atoms.
-    chemefeature: str (optional, default='bag_positions')
-                  The name of the fuature (bag type) in pd_df with chemical
-                  elements of each atoms.
-    pijfeature: str (optional, default='bag_pij')
-                The name of the fuature (bag type) in pd_df with the weight of
-                the conectivity between the atoms pairs.
-    bag_cheme: str (optional, default='bag_cheme')
-               The name of the fuature (bag type) in pd_df with chemical
-               elements of the atoms.
-    stype: str (optional, default='bl')
-           A string determining the type of conection to seach for. 'bb'
-           indicate back bonds, 'bc' indicate ciclic bonds, while bl indicate
-           line bonds.
-    print_analysis: boolean, (default=False)
-                    It True, information for each analysis will be printed.
-    Returns
-    -------
-    combined_df: pandas.DataFrame.
-                 The combination of the input dataframe plus a dataframe with
-                 a new features:
-                 fd_connect: np.array (n,m) shaped were m is the number of
-                             atoms types. The nearest (first degree) neighbors
-                             connections types. All in alphabatic order. For
-                             instance, in a molecule with atoms of types A an
-                             B: [-A, -B].
-                  sd_connect: np.array (n,m**2) shaped were m is the number of
-                              atoms types. The second degree neighbors
-                              connections. All in alphabatic order. For
-                              instance, in a molecule with atoms of types A an
-                              B: [-A-A, -A-B, -B-A, -B-B].
-                  td_connect: np.array (n,m**3) shaped were m is the number of
-                              atoms types. The third degree neighbors
-                              connections. All in alphabatic order. For
-                              instance, in a molecule with atoms of types A an
-                              B: [-A-A-A, -A-A-B, -A-B-A, -A-B-B, -B-A-A,
-                              -B-A-B, -B-B-A, -B-B-B].
-    """
-
-    print("Initializing analysis: rec_connections")
-
-    list_bag_fdconnect = []
-    list_bag_sdconnect = []
-    list_bag_tdconnect = []
-    for index in range(len(pd_df)):
-        cheme = bag2arr(pd_df[chemefeature][index])
-        positions = bag2arr(pd_df[positionsfeature][index])
-        pij = bag2arr(pd_df[pijfeature][index])
-        qtna = len(positions)
-        qtnuc = len(baseucheme)
-        fd_data = np.zeros([qtna, qtnuc])
-        sd_data = np.zeros([qtna, qtnuc**2])
-        td_data = np.zeros([qtna, qtnuc**3])
-        if qtna > 1:
-            fd_data, sd_data, td_data = connections(positions, cheme, pij,
-                                                    stype=stype,
-                                                    dictcheme=dictcheme,
-                                                    baseucheme=baseucheme,
-                                                    print_analysis=
-                                                    print_analysis)
-        list_bag_fdconnect.append(arr2bag(fd_data))
-        list_bag_sdconnect.append(arr2bag(sd_data))
-        list_bag_tdconnect.append(arr2bag(td_data))
-        if index % 50 == 0:
-            print("    concluded %3.1f%%" % (100*index/len(pd_df)))
-    print("    concluded %3.1f%%" % (100))
-    list_of_new_features_data = [list_bag_fdconnect, list_bag_sdconnect,
-                                 list_bag_tdconnect]
-    list_of_new_features_name = ['bag_fdconnect', 'bag_sdconnect',
-                                 'bag_tdconnect']
-
-    # Creating and combinating the pandas DataFrame
-    return list_of_new_features_name, list_of_new_features_data
+sys.path.append('/home/johnatan/quandarium/quandarium/')
+from aux import to_nparray
+from aux import to_list
+from mols import ecndav
+from mols import ecndav_rsopt
+from mols import ecndav_ropt
+from mols import findsc
 
 
 def rec_ecndav_rsopt(kinfo, Rinfo, positions, cheme, print_convergence=False,
-                     roundpijtoecn=False, w=''):  
+                     roundpijtoecn=False, w=''):
     """Return the effective coordination number (ecn), the average bound
     distance (dav), the optimized radius (ropt), and the conective index matrix
     Pij for each structure in the input pandas dataframe. See function
@@ -175,9 +73,10 @@ def rec_ecndav_rsopt(kinfo, Rinfo, positions, cheme, print_convergence=False,
         list_bag_dav.append(to_list(dav))
         list_bag_ori.append(to_list(ori))
         list_bag_pij.append(to_list(pij))
-        if index % 50 == 0:
+        if index % 50 == 0 and print_convergence:
             print("    concluded %3.1f%%" % (100*index/len(positions)))
-    print("    concluded %3.1f%%" % (100))
+    if print_convergence:
+        print("    concluded %3.1f%%" % (100))
     list_of_new_features_data = [list_bag_ecn, list_bag_dav, list_bag_ori,
                                  list_bag_pij]
     list_of_new_features_name = ['bag_ecn_rsopt', 'bag_dav_rsopt',
@@ -223,10 +122,10 @@ def rec_ecndav_ropt(positions, cheme, print_convergence=False,  # Versao Nova
         ecn, dav, ori, pij = ecndav_ropt(positions_i, cheme_i, plot_name='',
                                          print_convergence=print_convergence,
                                          roundpijtoecn=roundpijtoecn)
-        list_bag_ecn.append(arr2bag(ecn))
-        list_bag_dav.append(arr2bag(dav))
-        list_bag_ori.append(arr2bag(ori))
-        list_bag_pij.append(arr2bag(pij))
+        list_bag_ecn.append(ecn)
+        list_bag_dav.append(dav)
+        list_bag_ori.append(ori)
+        list_bag_pij.append(pij)
         if index % 50 == 0:
             print("    concluded %3.1f%%" % (100*index/len(positions)))
     print("    concluded %3.1f%%" % (100))
@@ -288,7 +187,9 @@ def findsc_wrap(inputs):  #It should be here
     return result
 
 
-def rec_findsc(positions, davraddii, davradius='dav', adatom_radius=1.1,  # Versao Nova/ Paralelo
+# New version, paralelised
+
+def rec_findsc(positions, davraddi, davradius='dav', adatom_radius=1.1,  
                ssamples=1000, return_expositions=True,
                print_surf_properties=False, remove_is=True, procs=1):
     """It return the atom site surface(True)/core(Flase) for each atoms in
@@ -297,18 +198,18 @@ def rec_findsc(positions, davraddii, davradius='dav', adatom_radius=1.1,  # Vers
 
     Parameters
     ----------
-    adatom_radius: float (optional, default=1.1).
-                   Radius of the dummy adatom, in angstroms.
-    positions: Pandas.Series (optional, default='bag_positions')
+    positions: Pandas.Series 
                The name of the fuature (bag type) in pd_df with
                cartezian positions of the atoms.
-    davraddii: str (optional, default='bag_dav')
+    davraddi:  Pandas.Series
                The name of the fuature in pd_df with atomic radii or dav
                information (bag of floats).
     davradius: str ['dav','radii'] (optional, default='dav')
                If radii, atomic radius will be the feature davraddiifeature
                values. If dav the values in atomic radius will be half of the
                feature davraddiifeature values.
+    adatom_radius: float (optional, default=1.1).
+                   Radius of the dummy adatom, in angstroms.               
     ssampling: intiger (optional, default=1000).
                Quantity of samplings over the touched sphere surface of each
                atom.
@@ -331,108 +232,33 @@ def rec_findsc(positions, davraddii, davradius='dav', adatom_radius=1.1,  # Vers
     inputs_list = []
     list_is_surface = []
     list_exposition = []
-    for index, (poitionsi, davraddii) in enumerate(zip(positions, davraddii)):
+    for index, (poitionsi, davraddii) in enumerate(zip(positions, davraddi)):
         #print(type(poitionsi),poitionsi)
         positionsi = np.array(poitionsi)  # manter np.array e ativar bags
         if davradius == 'dav':
             atomic_radii = np.array(davraddii)/2  # manter np.array e ativar bags
         if davradius == 'radii':
-            atomic_radii = bag2arr(davraddii)
+            atomic_radii = np.array(davraddii)
         inputs_list.append([positionsi, atomic_radii, adatom_radius,
                             remove_is, ssamples, False, return_expositions,
                             print_surf_properties, "surface_points.xyz"])
     pool = mp.Pool(procs)
-    s_time = time.time()
-    size = len(inputs_list)
     result = pool.map_async(findsc_wrap, inputs_list, chunksize=1)
 
     while not result.ready():
-        remaining = result._number_left
+        remaining = result._number_left  # pylint: disable=W0212
         print('Remaining: ', remaining)
         time.sleep(5.0)
     print('Finished')
 
     outputs = result.get()
     for index, _ in enumerate(outputs):
-        list_is_surface.append(arr2bag(outputs[index][0]))
-        list_exposition.append(arr2bag(outputs[index][1]))
+        list_is_surface.append(outputs[index][0])
+        list_exposition.append(outputs[index][1])
     list_of_new_features_data = [list_is_surface, list_exposition]
     list_of_new_features_name = ['bag_issurf', 'bag_exposition']
 
     return list_of_new_features_name, list_of_new_features_data
-
-
-def data_from_opsbags(pd_df, new_bag_name, bags, opsbags, opsinterbags='', kind='reg'):  # Versao Velha
-    """It take a bag for operte over other bags.
-    logicalop : np.logical_or, np.logical_and
-    """
-
-    print("Initializing bag_from_opsbags.")
-
-    if opsinterbags == '':
-        opsinterbags = [np.logical_and]*(len(bags) -1)
-
-    new_bag_data = []
-    for index in range(len(pd_df)):
-        data = bag2arr(pd_df[bags[0]][index], dtype=str)
-        operatedata = opsbags[0](data)
-        for bag, bagop, interbagop in zip(bags[1:], opsbags[1:], opsinterbags):
-            nextdata = bag2arr(pd_df[bag][index])
-            operatednextdata = bagop(nextdata)
-            operatedata = interbagop(operatedata, operatednextdata)
-        if kind == 'bag':
-            operatedata = arr2bag(operatedata)
-        new_bag_data.append(operatedata)
-
-    # criando um pd.DataFrame que tem todos os dados e nome dos mesmos
-    new_df = pd.DataFrame(np.array([new_bag_data]).T,
-                          columns=[new_bag_name])
-
-    combined_df = pd.concat([pd_df, new_df], axis=1, sort=False)
-
-    logcolumns('info', "New columns: ", new_df)
-
-    return combined_df
-
-
-def data_from_opsdatas(pd_df, new_bag_name, new_kind, kinds, bags, opsbags,  # Versao Velha
-                       opsinterbags=''):
-    """It take a bag for operte over other bags.
-    logicalop : np.logical_or, np.logical_and
-    """
-
-    print("Initializing data_from_opsdatas.")
-
-    if opsinterbags == '':
-        opsinterbags = [np.logical_and]*(len(bags) -1)
-
-    new_bag_data = []
-    for index in range(len(pd_df)):
-        if kinds[0] == 'bag':
-            data = bag2arr(pd_df[bags[0]][index])
-        else:
-            data = pd_df[bags[0]][index]
-        operatedata = opsbags[0](data)
-        for bag, kind, bagop, interbagop in zip(bags[1:], kinds[1:], opsbags[1:], opsinterbags):
-            if kind == 'bag':
-                nextdata = bag2arr(pd_df[bag][index])
-            else:
-                nextdata = pd_df[bag][index]
-            operatednextdata = bagop(nextdata)
-            operatedata = interbagop(operatedata, operatednextdata)
-        if new_kind == 'bag':
-            operatedata = arr2bag(operatedata)
-        new_bag_data.append(operatedata)
-
-    # criando um pd.DataFrame que tem todos os dados e nome dos mesmos
-    new_df = pd.DataFrame(np.array([new_bag_data]).T,
-                          columns=[new_bag_name])
-
-    combined_df = pd.concat([pd_df, new_df], axis=1, sort=False)
-
-    logcolumns('info', "New columns: ", new_df)
-
-    return combined_df
 
 
 def class_from_bins(list_of_bags, list_of_binsvals, list_of_new_classes_names):  # Versao nova
@@ -567,5 +393,3 @@ def classes_mixing(classes1, classes2, classesn1='', classesn2=''):  # Versao No
             list_of_new_features_data.append(new_feature_data.copy())
 
     return list_of_new_features_name, list_of_new_features_data
-
-

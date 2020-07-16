@@ -1,22 +1,21 @@
 """This module present several functions to plot data."""
 
-import os
 import sys
 import seaborn as sns
 import numpy as np
-import pandas as pd
+
 from matplotlib import rc                         # For laxtex in ploting
-from matplotlib.ticker import FormatStrFormatter  # For tick labels
+# from matplotlib.ticker import FormatStrFormatter  # For tick labels
 import matplotlib
 import matplotlib.pylab as plt
 from scipy.stats import spearmanr
 from scipy.stats import kendalltau
 from scipy.stats import pearsonr
-from scipy import stats as scipystats
 from sklearn.utils import resample
-from quandarium.aux import checkmissingkeys
-from quandarium.aux import to_list
-from quandarium.aux import tonparray
+from aux import checkmissingkeys
+from aux import to_list
+from aux import tonparray
+
 rc('text', usetex=False)
 rc('text.latex',
    preamble=r'\usepackage{mhchem} \usepackage{amsmath} \usepackage{amsfonts} \
@@ -25,37 +24,37 @@ rc('text.latex',
 
 def comp_spearman(data_u, data_v):
     """Compute the spearmanr correlation index.
-    Suggestion: use tonparray to converta data (pd.series, non-flatten numpy array) to a flatten numpy
-    array and drop nans."""
+    Suggestion: use tonparray to converta data (pd.series, non-flatten
+    numpy.array) to a flatten numpy.array and drop nans."""
     return spearmanr(data_u, data_v)[0]
 
 
 def comp_kendall(data_u, data_v):
     """Compute the kendalltau correlation index.
-    Suggestion: use tonparray to converta data (pd.series, non-flatten numpy array) to a flatten numpy
-    array and drop nans."""
+    Suggestion: use tonparray to converta data (pd.series, non-flatten
+    numpy.array) to a flatten numpy.array and drop nans."""
     return kendalltau(data_u, data_v)[0]
 
 
 def comp_pearson(data_u, data_v):
     """Compute the pearsonr correlation index.
-    Suggestion: use tonparray to converta data (pd.series, non-flatten numpy array) to a flatten numpy
-    array and drop nans."""
+    Suggestion: use tonparray to converta data (pd.series, non-flatten
+    numpy.array) to a flatten numpy.array and drop nans."""
     return pearsonr(data_u, data_v)[0]
 
 
-def bstaltrs(data_x, data_y, corr_method=comp_spearman, alpha=0.05, nresamp=2000, hist=''):
+def bstaltrs(data_x, data_y, corr_method=comp_spearman, alpha=0.05,
+             nresamp=2000, hist=''):
     """This function bootstrap the Spearaman rank correlation.
-    The bootstraped sample configurations that present all elements equal are 
+    The bootstraped sample configurations that present all elements equal are
     not considered, because the correlations can\'t be calculated.
-
 
     Parameters
     ----------
     data_x, datay : numpy arrays (n,) shaped.
                     Paired data to analyse.
     corr_method : a function (default = comp_spearman).
-                  A function that takes two sets of points (x,y in np arrays) 
+                  A function that takes two sets of points (x,y in np arrays)
                   and return its correlation.
 
     alpha : float. (optional, default=0.05)
@@ -147,7 +146,7 @@ def bstaltrs(data_x, data_y, corr_method=comp_spearman, alpha=0.05, nresamp=2000
 
 def bstnullrs(data_x, data_y, corr_method=comp_spearman, alpha=0.05, nresamp=2000, hist=''):
     """This function bootstrap the data correlation under the null hypothesis.
-    The bootstraped sample configurations that present all elements equal are 
+    The bootstraped sample configurations that present all elements equal are
     not considered, because the correlations can\'t be calculated.
 
     Parameters
@@ -155,7 +154,7 @@ def bstnullrs(data_x, data_y, corr_method=comp_spearman, alpha=0.05, nresamp=200
     data_x, datay : numpy arrays (n,) shaped.
                     Paired data to analyse.
     corr_method : a function (default = comp_spearman).
-                  A function that takes two sets of points (x,y in np arrays) 
+                  A function that takes two sets of points (x,y in np arrays)
                   and return its correlation.
     alpha : float. (optional, default=0.05)
             The confidence limit.
@@ -173,7 +172,7 @@ def bstnullrs(data_x, data_y, corr_method=comp_spearman, alpha=0.05, nresamp=200
                   True if the null hypothese could be rejected withing the
                   confidence level.
     pval: flot.
-          The p-value. Keep in mind that to take accurate p-value the n 
+          The p-value. Keep in mind that to take accurate p-value the n
           should be large.
 
     Example
@@ -261,10 +260,10 @@ def scatter_colorbar(pd_df, mainprop, features, colsplitfeature, cols,
                                                     'label': ''},
                      bootstrap_info={'n': 0, 'alpha': 0.25},
                      supress_plot=False,
-                     figure_name='figure.png', 
+                     figure_name='figure.png',
                      uselatex=False,
                      scalefont=1.):
-    """This function plot a scatterplot of correlations between properties and 
+    """This function plot a scatterplot of correlations between properties and
     a target property.
 
     Parameters:
@@ -316,16 +315,16 @@ def scatter_colorbar(pd_df, mainprop, features, colsplitfeature, cols,
                     hypothese test results.
 
     show: str ['pval', 'test', 'testred', 'ang', 'confint'].
-          Define what information will be shown in the scatterplot, if 
+          Define what information will be shown in the scatterplot, if
           bootstrap were employed.
-          If 'test', the information whether the correlation pass in the 
+          If 'test', the information whether the correlation pass in the
               bootstrap hypothesis tests or not will be presented.
-          If 'testred', the following information will be printed: * if the 
-              correlation passed in both tests, + if the correlaiton passed in 
+          If 'testred', the following information will be printed: * if the
+              correlation passed in both tests, + if the correlaiton passed in
               one test, and nothing if the correlation fail for both tests.
-          If 'pval', the p-value of the correlation bootstrap under null 
+          If 'pval', the p-value of the correlation bootstrap under null
              hypothesis test will be shown.
-          If 'confint', the confidence interval for the correlations will be 
+          If 'confint', the confidence interval for the correlations will be
              show.
           If 'ang', the angular value of the linear regression will be show.
           If '', nothing will be show.
@@ -348,25 +347,25 @@ def scatter_colorbar(pd_df, mainprop, features, colsplitfeature, cols,
         If the plot were calculated:
         'fig': pyplot figure.
                The figure.
-                
+
         'axis': pyplat axis.
                 The axis.
 
         'angular_parameter': np.array of floats with three dimentions.
-                             The angular parameters of the linear model 
+                             The angular parameters of the linear model
                              fitting the data.
 
         If bootstrap were employed:
         'alt_test', 'null_test': np.array of booleans with three dimentions.
-                                 The result of the hypothesis test, H1 and 
+                                 The result of the hypothesis test, H1 and
                                  H0, respectively.
 
         'null_test_pval': np.array of floats with three dimentions.
                           The p-values.
 
-        'alt_test_confimax', 'alt_test_confimin': np.array of booleans with 
+        'alt_test_confimax', 'alt_test_confimin': np.array of booleans with
                                                   three dimentions.
-                                                  Confidence maximum and 
+                                                  Confidence maximum and
                                                   minimun.
     """
 
@@ -376,14 +375,17 @@ def scatter_colorbar(pd_df, mainprop, features, colsplitfeature, cols,
     if uselatex:
         rc('text', usetex=True)
         rc('text.latex',
-            preamble=r'\usepackage[version=4]{mhchem} \usepackage{amsmath} \usepackage{amsfonts} \usepackage{mathtools} \usepackage[T1]{fontenc}')
+           preamble=r'\usepackage[version=4]{mhchem} \usepackage{amsmath}'
+                    r'\usepackage{amsfonts} \usepackage{mathtools}'
+                    r'\usepackage[T1]{fontenc}')
 
     # Features:
     if not isinstance(features, dict):
         print("Error: features should be a dictionary!")
         sys.exit(1)
     checkmissingkeys(list(features.keys()), pd_df.columns.to_list(), "the "
-                     "pandas.DataFrame does not present the following features")
+                     "pandas.DataFrame does not present the following "
+                     "features")
 
     # Cells:
     # if there only one plot per cell, a fake dimension will be crated
@@ -429,7 +431,7 @@ def scatter_colorbar(pd_df, mainprop, features, colsplitfeature, cols,
                     if (len(datax) > 1) and (not np.all(datax == datax[0])):
                         test_apply[celindex, findex, colindex] = True
                         # null hypothesisi
-                        test, pval = bstnullrs(datay, datax, 
+                        test, pval = bstnullrs(datay, datax,
                                                nresamp=bootstrap_info['n'],
                                                alpha=bootstrap_info['alpha'])
                         null_test[celindex, findex, colindex] = test
@@ -438,23 +440,22 @@ def scatter_colorbar(pd_df, mainprop, features, colsplitfeature, cols,
                         test, confi = bstaltrs(datay, datax,
                                                nresamp=bootstrap_info['n'],
                                                alpha=bootstrap_info['alpha'])
-                        alt_test[celindex, findex, colindex] = test 
-                        alt_test_confimax[celindex, findex, colindex] = confi[1] 
-                        alt_test_confimin[celindex, findex, colindex] = confi[0] 
+                        alt_test[celindex, findex, colindex] = test
+                        alt_test_confimax[celindex, findex, colindex] = confi[1]
+                        alt_test_confimin[celindex, findex, colindex] = confi[0]
             print("completed: ", findex + 1, ' of ', len(features))
 
     # If requested, the plot is supressed now
     if supress_plot:
         if bootstrap_info['n']:
-            return {'corrs': corrs_plot, 
-                    'alt_test': alt_test, 
+            return {'corrs': corrs_plot,
+                    'alt_test': alt_test,
                     'alt_test_confimax': alt_test_confimax,
                     'alt_test_confimin': alt_test_confimin,
-                    'null_test': null_test, 
+                    'null_test': null_test,
                     'null_test_pval': null_test_pval
-                    } 
-        else:
-            return {'corrs': corrs_plot} 
+                    }
+        return {'corrs': corrs_plot}
 
     # creating empth plot!
     plt.close('all')
@@ -463,7 +464,7 @@ def scatter_colorbar(pd_df, mainprop, features, colsplitfeature, cols,
     fig, axis = plt.subplots(nrows=height, ncols=width, sharex='col',
                              sharey='row', figsize=(figwidth, figheight))
 
-    # if width or height == 1 (means 1 column, or 1 row) axis has only one 
+    # if width or height == 1 (means 1 column, or 1 row) axis has only one
     # dimension, which make some problems, so it must be reshaped
     if height == 1 or width == 1:
         axis = axis.reshape(height, width)
@@ -482,7 +483,7 @@ def scatter_colorbar(pd_df, mainprop, features, colsplitfeature, cols,
     anotation_font_size = 20
     marker_size = 50
 
-    # Symbols/markers, lines, 
+    # Symbols/markers, lines,
     slines = ['-', '--', ':', '-.']
     scolors = ['y', 'g', 'm', 'c', 'b', 'r']
     smarker = ['o', 's', 'D', '^', '*', 'o', 's', 'x', 'D', '+', '^', 'v', '>']
@@ -499,7 +500,7 @@ def scatter_colorbar(pd_df, mainprop, features, colsplitfeature, cols,
                 if datax.tolist():
                     if (len(datax) > 1) and (not np.all(datax == datax[0])):
                         # Linear Regresion
-                        degreee=1
+                        degreee = 1
                         parameters = np.polyfit(datax, datay, degreee)
                         fit_fn = np.poly1d(parameters)
                         angular_parameter[celindex, indf, colindex] = parameters[0]
@@ -556,29 +557,34 @@ def scatter_colorbar(pd_df, mainprop, features, colsplitfeature, cols,
                                            pancor=False)
     cbar = matplotlib.colorbar.ColorbarBase(cax, cmap=cmap, norm=normalize)
     cax.set_position([0.93, 0.1, 0.04, 0.8])
-    cax.set_aspect(40) # boxY/boxX
+    cax.set_aspect(40)  # boxY/boxX
     cbar.ax.tick_params(labelsize=tick_label_font_size, labelrotation=90)
 
-    plt.subplots_adjust(left = 0.125,
-                        right = 0.92,
-                        bottom = 0.1,
-                        top = 0.9,
-                        wspace = 0.0,
-                        hspace = 0.0)
+    plt.subplots_adjust(left=0.125,
+                        right=0.92,
+                        bottom=0.1,
+                        top=0.9,
+                        wspace=0.0,
+                        hspace=0.0)
 
-    # Defining what will be ploted 
+    # Defining what will be ploted
     if show == 'test':  # The result of the test
         truefalse = {True: 'T',
                      False: 'F'}
-        binfo_plot = np.vectorize(lambda x,y: truefalse[x] + ',' + truefalse[y])(null_test, alt_test)
+        binfo_plot = np.vectorize(lambda x, y: truefalse[x] + ',' +
+                                  truefalse[y])(null_test, alt_test)
     if show == 'testred':
         def auxfunc(x, y):
-            if not x and y: return 'x'
-            if x or not y: return 'o'
+            if not x and y:
+                return 'x'
+            if x or not y:
+                return 'o'
             return '+'
         binfo_plot = np.vectorize(auxfunc)(null_test, alt_test)
     if show == 'confint':  # The confidence intervals
-        binfo_plot = np.vectorize(lambda x,y: str(round(x, 2)) + ',' + str(round(y, 2)))(alt_test_confimax, alt_test_confimin)
+        binfo_plot = np.vectorize(lambda x, y: str(round(x, 2)) + ',' +
+                                  str(round(y, 2)))(alt_test_confimax,
+                                                    alt_test_confimin)
     if show == 'pval':  # the p-value
         binfo_plot = np.array(np.round(null_test_pval, 5), dtype=str)
     if show == 'ang':  # the angle of the linear model
@@ -599,10 +605,12 @@ def scatter_colorbar(pd_df, mainprop, features, colsplitfeature, cols,
                         bbox = dict(facecolor=scolors[celindex], alpha=0.1)
                         ypos = 0.155 + (depth - celindex - 1)*0.2
                         axis[indf, colindex].text(0.06, ypos,
-                                                  binfo_plot[celindex, indf, colindex],
+                                                  binfo_plot[celindex, indf,
+                                                             colindex],
                                                   fontsize=anotation_font_size,
                                                   transform=axis[
-                                                     indf, colindex].transAxes,
+                                                      indf, colindex
+                                                      ].transAxes,
                                                   bbox=bbox)
 
     if bootstrap_info['n'] and show in ['testred']:
@@ -612,14 +620,14 @@ def scatter_colorbar(pd_df, mainprop, features, colsplitfeature, cols,
                 for celindex, celvals in enumerate(list(cels.keys())):
                     if not test_apply[celindex, findex, colindex]:
                         binfo_plot[celindex, findex, colindex] = ' '
-        
+
         for indf, feature in enumerate(features):
             for colindex in range(width):
-                text=''
+                text = ''
                 for celindex in range(depth):
                     text += binfo_plot[celindex, indf, colindex]
                     if celindex < depth-1:
-                        text+=','
+                        text += ','
                 if not all(group[feature] == 0.0):
                     bbox = dict(facecolor=scolors[0], alpha=0.01)
                     ypos = 0.155 + (depth - celindex - 1)*0.2
@@ -642,20 +650,19 @@ def scatter_colorbar(pd_df, mainprop, features, colsplitfeature, cols,
     if bootstrap_info['n']:
         return {'fig': fig,
                 'axis': axis,
-                'corrs': corrs_plot, 
+                'corrs': corrs_plot,
                 'alt_test': alt_test,
                 'alt_test_confimax': alt_test_confimax,
                 'alt_test_confimin': alt_test_confimin,
-                'null_test': null_test, 
+                'null_test': null_test,
                 'null_test_pval': null_test_pval,
                 'angular_parameter': angular_parameter
-               }
-    else:
-        return {'fig': fig,
-                'axis': axis,
-                'corrs': corrs_plot,
-                'angular_parameter': angular_parameter
-               }
+                }
+    return {'fig': fig,
+            'axis': axis,
+            'corrs': corrs_plot,
+            'angular_parameter': angular_parameter
+            }
 
 
 def histbag(figname, bag, grupbybag):
@@ -664,12 +671,12 @@ def histbag(figname, bag, grupbybag):
     ----------
     figname: str.
              The name of the figure.
-             
+
     bag: some structured data object.
          The data of the bag.
-         
+
     grupbybag: the classes to groupby the values of the bag
-    
+
     Return:
     -------
     figure: seaborn figure object
@@ -694,10 +701,9 @@ def histbag(figname, bag, grupbybag):
     plt.close('all')
     for val in split_vals:
         dataval = data[splitfeaturedata == val]
-        g = sns.distplot(dataval, hist = False, kde = True,
-                         kde_kws = {'shade': True, 'linewidth': 3},
-                         label = val)
+        g = sns.distplot(dataval, hist=False, kde=True,
+                         kde_kws={'shade': True, 'linewidth': 3},
+                         label=val)
     g.get_figure().savefig(figname)
-    
-    return g
 
+    return g

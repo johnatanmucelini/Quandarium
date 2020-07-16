@@ -6,7 +6,7 @@ This package present several tools to deal with Quantum Chemistry (QC) data of m
 * AtoMFE (Atomic to Molecular Feature Engineering);
 * Correlation analysis and correlation significance analysis with bootstrap.
 
-## Description:
+## Install:
 
 This package read....
 
@@ -39,4 +39,3 @@ Fell free to contact me by email:
 
 * johnatan.mucelini@usp.br
 * johnatan.mucelini@gmail.com
-

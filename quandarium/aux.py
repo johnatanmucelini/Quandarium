@@ -9,13 +9,12 @@ from sklearn.cluster import DBSCAN
 def to_nparray(data): # unir a de baixo
     """This functions recive a data and return a numpy array"""
     if isinstance(data, list):
-        return np.array(data)
-    if isinstance(data, pd.Series):
-        return np.array(data.values)
-    if isinstance(data, pd.DataFrame):
-        return np.array(data.values)
+        data = np.array(data)
+    if isinstance(data, (pd.Series, pd.DataFrame)):
+        data = np.array(data.values)
     if isinstance(data, np.ndarray):
-        return data
+        pass
+    return data
 
 
 def tonparray(*data, dropnan=True):
@@ -24,7 +23,7 @@ def tonparray(*data, dropnan=True):
     if len(data) == 2:
         data1 = data[0]
         data2 = data[1]
-        if isinstance(data1, pd.core.series.Series):
+        if isinstance(data1, pd.Series):
             data1 = data1.values.flatten()
         elif isinstance(data1, np.ndarray):
             data1 = data1.flatten()
@@ -33,7 +32,7 @@ def tonparray(*data, dropnan=True):
         else:
             print('ERROR: the type {} (for data1) is not suported in tonoparray.'.format(
                 type(data1)))
-        if isinstance(data2, pd.core.series.Series):
+        if isinstance(data2, pd.Series):
             data2 = data2.values.flatten()
         elif isinstance(data2, np.ndarray):
             data2 = data2.flatten()
@@ -45,9 +44,8 @@ def tonparray(*data, dropnan=True):
         if dropnan:
             usefulldata = np.logical_and(np.isnan(data1) == False,
                                          np.isnan(data2) == False)
-            return data1[usefulldata], data2[usefulldata]
-        else:
-            return data1, data2
+            data1, data2 = data1[usefulldata], data2[usefulldata]
+        return data1, data2
 
     if len(data) == 1:
         data1 = data[0]
@@ -62,21 +60,17 @@ def tonparray(*data, dropnan=True):
                 type(data1)))
         if dropnan:
             usefulldata = np.isnan(data1) == False
-            return data1[usefulldata]
-        else:
-            return data1
+            data1 = data1[usefulldata]
+    return data1
 
 
 def to_list(data):
     """This functions recive a data and return a list"""
-    if isinstance(data, list):
-        return data
-    if isinstance(data, pd.Series):
-        return np.array(data.values).tolist()
-    if isinstance(data, pd.DataFrame):
-        return np.array(data.values).tolist()
+    if isinstance(data, (pd.Series, pd.DataFrame)):
+        data = np.array(data.values).tolist()
     if isinstance(data, np.ndarray):
-        return data.tolist()
+        data = data.tolist()
+    return data
 
 
 def checkmissingkeys(keys, dictlist, massange):
@@ -88,7 +82,6 @@ def checkmissingkeys(keys, dictlist, massange):
     if missingkeyslist:
         print("Error: " + massange + ': {}'.format(str(missingkeyslist)))
         sys.exit(1)
-    return
 
 
 def translate_list(dictionary, list_to_be_translated):
@@ -205,11 +198,15 @@ def comp_aveabs(values):
 
 
 def logistic(dij, ri, k):
+    """Return the logistic function values:
+    ri is the radius,
+    k is the smmothness,
+    dij is the atoms distance"""
     ri_sum_rj = ri.reshape(1, -1) + ri.reshape(-1, 1)
     return 1./(1. + np.exp(k*(dij - ri_sum_rj)))
 
 
-def comp_rs(ori, dij, k, R, rcutp, w=[0.1,0.60,0.42]):
+def comp_rs(ori, dij, k, R, rcutp, w=[0.1, 0.60, 0.42]):  # pylint: disable w0102
     """Cost function optimized in ecn_rsopt function."""
     rcut = ori * rcutp
 
@@ -274,69 +271,6 @@ def cost_l2(ori, dij, pij):
     return l2cost
 
 
-def arr2bag(nparray):
-    """It convert a numpy array to a bag.
-    Parameters
-    ----------
-    nparray: np.array or a list.
-             It contains the values which will be converted in the string
-             format.
-
-    Return
-    ------
-    bagstring: str.
-               The string with the nparray info in the bagformat.
-    """
-    addcommas=False  # if a array of strings were stored as a bag, each entry
-                     # need to be protected between ""
-
-    if isinstance(nparray, np.ndarray):
-        if isinstance(nparray.flatten()[0], str):
-            bagstring = '[\"' + '\",\"'.join(str(row) for row in
-                 nparray.tolist()).replace(' ', '') + '\"]'
-        else:
-            bagstring = '[' + ','.join(str(row) for row in
-                 nparray.tolist()).replace(' ', '') + ']'
-        #bagstring = '[' + ','.join(str(row) for row in
-        #     nparray.tolist()).replace(' ', '') + ']'
-    elif isinstance(nparray, list):
-        if isinstance(np.array(nparray).flatten()[0], str):
-            bagstring = '[\"' + '\",\"'.join(str(row) for row in nparray).replace(' ', '') + '\"]'
-        else:
-            bagstring = '[' + ','.join(str(row) for row in nparray).replace(' ', '') + ']'
-    else:
-        print("ERRO: the argument should be a array or list."
-              "A {} was given.".format(type(nparray)))
-    return bagstring
-
-
-def bag2arr(bagstring, dtype=''):
-    """It convert a bagstring to numpy array.
-    Parameters
-    ----------
-    bagstring: str.
-               The string with the nparray info in the bagformat.
-    dtype: a type (optional, default='' is the numpy interpretation).
-           The type of information in numpy array.
-
-    Return
-    ------
-    nparray: np.array or a list.
-             It contains the values which will be converted in the string
-             format.
-    """
-    #
-    nan = np.nan
-
-    if dtype:
-        nparray = eval('np.array(' + bagstring + ', dtype=dtype)')
-    else:
-        nparray = eval('np.array(' + bagstring + ')')
-
-    return nparray
-
-
-
 def changesymb(chemical_symbols, changes, condition=None):
     """It change the chemical symbols to new labels considering a condition.
     Parameters
@@ -386,7 +320,7 @@ def fragstring(is_frag):
 
 
 def RegRDS_set(sampling_distance, N):
-    """Return a set of n dots in R3 (almost) regular distributed in the 
+    """Return a set of n dots in R3 (almost) regular distributed in the
     surface of a sphere of radius 'sampling_distance'.
     More deatiail of the implementation in the article "How to generate
     equidistributed points on the surface of a sphere" by Markus Deserno:
@@ -413,7 +347,7 @@ def RegRDS_set(sampling_distance, N):
     for m in range(0, Mtheta):
         theta = np.pi * (m + 0.5) / Mtheta
         Mphi = int(round(2*np.pi*np.sin(theta)/dphi))
-        for n in range(0, Mphi) :
+        for n in range(0, Mphi):
             phi = 2 * np.pi * n / Mphi
             Ncount += 1
             y = sampling_distance * np.sin(theta) * np.cos(phi)
@@ -440,7 +374,7 @@ def write_points_xyz(file_name, positions):
     for index, element in enumerate(positions):
         if len(element) != 3:
             print("Element {} of positions does not present three "
-                          "elements.".format(str(index)))
+                  "elements.".format(str(index)))
     if not isinstance(positions, list):
         positions = np.array(positions)
 
@@ -479,37 +413,6 @@ def writing_molecule_xyz(file_name, positions, chemical_symbols):
     ase.io.write(file_name, atoms)
 
 
-def linspace_r3_vector(vector_a, vector_b, Qtnsteps):
-    """Return a np.array with elements that starting in vector_a and go to
-    vector_b. The total quantity of dots is Qtnsteps.
-
-    vector_a and vector_b: different np.array with floats in R3.
-    Qtnsteps: intiger grater than zero."""
-
-    if vector_a == vector_b :
-        print("vector_a is equal to vector_b. Aborting...")
-        sys.exit(1)
-
-    if (type(vector_a) != np.ndarray) or (len(vector_a) != 3) :
-        print("vector_a must be a np.array of len 3! Aborting..." )
-        sys.exit(1)
-
-    if (type(vector_b) != np.ndarray) or (len(vector_b) != 3) :
-        print("vector_b must be a np.array of len 3! Aborting..." )
-        sys.exit(1)
-
-    if (type(N) != int) or (N <= 0) :
-        print("N must be an intiger grater than zero! Aborting...")
-        sys.exit(1)
-
-    xvalues = np.linspace( vector_a[0] , vector_b[0] , Qtnsteps )
-    yvalues = np.linspace( vector_a[1] , vector_b[1] , Qtnsteps )
-    zvalues = np.linspace( vector_a[2] , vector_b[2] , Qtnsteps )
-    final_array = np.array([xvalues, yvalues, zvalues]).T
-
-    return final_array
-
-
 def dot_in_atom(dot, atom_position, atom_radius):
     """Verify if a dot in R3 is whitchin the atom of radius atom_radius located in
     atom_position.
@@ -517,7 +420,7 @@ def dot_in_atom(dot, atom_position, atom_radius):
     atom_position: np.array of 3 float elements.
     atom_radius: float grater than zero."""
 
-    result = np.linalg.norm( dot - atom_position ) < atom_radius
+    result = np.linalg.norm(dot - atom_position) < atom_radius
     return result
 
 
@@ -548,47 +451,3 @@ def large_surfaces_index(surface_dots_positions, eps):
     result = db == labels[np.argmax(quanity)]
 
     return result
-
-def RandRDS_dot( sampling_distance ) :
-    """Randon R3 dot in the surface of a sphere of radius sampling distance.
-    See more details in: http://mathworld.wolfram.com/SpherePointPicking.html
-    samplind_distance: a float or a int grater than zero."""
-
-    if not sampling_distance > 0 :
-        print("Sampling_distance must be higher than zero! Aborting...")
-        sys.exit(1)
-
-    u, v = np.random.random(2)
-
-    theta = 2 * np.pi * v
-    phi = np.arccos(2*u-1)
-
-    x = sampling_distance * np.cos(theta) * np.sin(phi)
-    y = sampling_distance * np.sin(theta) * np.sin(phi)
-    z = sampling_distance * np.cos(phi)
-    Dot = np.array([x,y,z])
-
-    return Dot
-
-
-def RandRDS_set( sampling_distance , N ) :
-    """Return a set of N randon R3 dots in the surface of a sphere of radius
-    sampling distance.
-    See more details in: http://mathworld.wolfram.com/SpherePointPicking.html
-    samplind_distance: a float or a int grater than zero.
-    N: intiger grater than zero."""
-
-    if not sampling_distance > 0 :
-        print("Sampling_distance must be higher than zero! Aborting...")
-        sys.exit(1)
-
-    if (type(N) != int) or (N <= 0) :
-        print("N must be an intiger grater than zero! Aborting...")
-        sys.exit(1)
-
-    cart_coordinates=[]
-    for i in range(0, N):
-        cart_coordinates.append( RandRDS_dot(sampling_distance) )
-    cart_coordinates = np.array(cart_coordinates)
-
-    return cart_coordinates
