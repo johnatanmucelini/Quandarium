@@ -3,7 +3,7 @@
 This package present several tools to deal with Quantum Chemistry (QC) data of molecular systems (non-periodic): 
 * Extraction from QC calculations;
 * Molecular analysis, seuch as effective coordination bonds and exposed area;
-* AtoMFE (Atomic to Molecular Feature Engineering);
+* AtoMF (Atomic to Molecular Featurization);
 * Correlation analysis and correlation significance analysis with bootstrap.
 
 ## Install:
