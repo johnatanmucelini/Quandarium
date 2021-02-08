@@ -1,3 +1,7 @@
+# Warning 
+
+It is an old version of quandarium. I am developing the 1.0.0 version and I will release it soon together with more information about quandarium.
+
 # Quandarium 
 
 This package present several tools to deal with Quantum Chemistry (QC) data of molecular systems (non-periodic): 
