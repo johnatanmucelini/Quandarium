@@ -1,6 +1,10 @@
 # Warning 
 
+<<<<<<< HEAD
 **Quandarium is a work in process.** It doesn't reach its first stable version yet and its source code is changing every week. **Use at your own risk.**
+=======
+It is an old version of quandarium. I am developing the 1.0.0 version and I will release it soon together with more information about quandarium.
+>>>>>>> 6013c60fefefb08cb58b0046795c642cc7a12243
 
 # Quandarium 
 
