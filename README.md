@@ -58,7 +58,7 @@ The following papers have employed this package:
 
 ## Cite us:
 
-Please, if you employed the Quandarium package, site us:
+Please, if you employed the Quandarium package, cite us:
 
 Correlation-Based Framework for Extraction of Insights from Quantum Chemistry Databases: Applications for Nanoclusters. *Journal of Chemical Information and Modeling*, **2021**, 61 (3), 1125-1135. DOI: [10.1021/acs.jcim.0c01267](https://doi.org/10.1021/acs.jcim.0c01267)
 
