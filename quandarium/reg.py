@@ -7,11 +7,12 @@ are:
 
 import pandas as pd
 import numpy as np
-from aux import to_nparray
-from mols import avradius
+
+from quandarium.aux import to_nparray
+from quandarium.mols import avradius
 
 
-def relativise(mainfeature, groupbyfeature):  # Versao Nova
+def relativise(mainfeature, groupbyfeature=None):  # Versao Nova
     """It calculate the relative value of a feature for each value of
     groupbyfeature. In other words, the complete dataset will be divided in n
     smaller dataset where the samples divide the same value of groupbyfeature,
@@ -24,7 +25,8 @@ def relativise(mainfeature, groupbyfeature):  # Versao Nova
     mainfeature: np.array, pandas.Series, or list
                  The data of feature which will be compute the relative
                  features.
-    groupbyfeature: np.array, pandas.Series, list of None
+    groupbyfeature: np.array, pandas.Series, list of np.array or pandas.Series, 
+                        or None (default)
                     The relativised data will be calculated per group of
                     samples with unique unique values of the groupbyfeature.
                     If None, the relativeised feature will employ the min of
@@ -39,14 +41,24 @@ def relativise(mainfeature, groupbyfeature):  # Versao Nova
     pd_df = pd.DataFrame()
     pd_df['mainfeature'] = to_nparray(mainfeature)
     if groupbyfeature:
-        pd_df['groupbyfeature'] = to_nparray(groupbyfeature)
-        grouped = pd_df.groupby(groupbyfeature)
+        if isinstance(groupbyfeature, (pd.Series, np.ndarray)):
+            pd_df['groupbyfeature'] = to_nparray(groupbyfeature)
+            grouped = pd_df.groupby('groupbyfeature')
+        if isinstance(groupbyfeature, list):
+            all_gb_features = []
+            for i, data in enumerate(groupbyfeature):
+                feature = str(i)
+                if isinstance(data, pd.Series): data = data.values
+                pd_df[feature] = data               
+                all_gb_features.append(feature)                
+            grouped = pd_df.groupby(all_gb_features)
         relativised = np.zeros(len(pd_df))
         for group in grouped.groups:
+#            print(group)
             groupedby_df = grouped.get_group(group)
             indexes = groupedby_df.index.tolist()
             newdata = to_nparray(groupedby_df['mainfeature']) - to_nparray(
-                groupedby_df['feature']).min()
+                groupedby_df['mainfeature']).min()
             relativised[indexes] = np.array(newdata)
     else:
         relativised = pd_df['mainfeature'].values - pd_df['mainfeature'

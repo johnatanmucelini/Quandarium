@@ -7,16 +7,17 @@ from scipy import optimize
 from scipy.stats import describe
 from scipy.spatial.distance import cdist
 from scipy.signal import find_peaks
-from aux import RegRDS_set
-from aux import large_surfaces_index
-from aux import write_points_xyz
-from aux import comp_aveabs
-from aux import comp_roptl2
-from aux import comp_gaussian
-from aux import comp_pij_maxdamped
-from aux import comp_minmaxbond
-from aux import comp_rs
-from aux import logistic
+
+from quandarium.aux import RegRDS_set
+from quandarium.aux import large_surfaces_index
+from quandarium.aux import write_points_xyz
+from quandarium.aux import comp_aveabs
+from quandarium.aux import comp_roptl2
+from quandarium.aux import comp_gaussian
+from quandarium.aux import comp_pij_maxdamped
+from quandarium.aux import comp_minmaxbond
+from quandarium.aux import comp_rs
+from quandarium.aux import logistic
 
 
 def avradius(positions, raddii=None, useradius=False):

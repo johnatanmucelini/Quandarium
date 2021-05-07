@@ -12,9 +12,10 @@ from scipy.stats import spearmanr
 from scipy.stats import kendalltau
 from scipy.stats import pearsonr
 from sklearn.utils import resample
-from aux import checkmissingkeys
-from aux import to_list
-from aux import tonparray
+
+from quandarium.aux import checkmissingkeys
+from quandarium.aux import to_list
+from quandarium.aux import tonparray
 
 rc('text', usetex=False)
 #rc('text.latex',
@@ -374,12 +375,10 @@ def scatter_colorbar(pd_df, mainprop, features, colsplitfeature, cols,
     print("Initializing scatter plot")
 
     # If were requested, latex will be employed to build the figure.
-    #if uselatex:
-    rc('text', usetex=True)
-    rcParams['text.latex.preamble'] = [r'\usepackage[version=4]{mhchem} \usepackage{amsmath}'
-                                           r'\usepackage{amsfonts} \usepackage{mathtools}'
-                                           r'\usepackage[T1]{fontenc} \boldmath']
-    rcParams['axes.titleweight'] = 'bold'
+    if uselatex:
+        rc('text', usetex=True)
+        rcParams['text.latex.preamble'] = r'\usepackage[version=4]{mhchem} \usepackage{amsmath} \usepackage{amsfonts} \usepackage{mathtools} \usepackage[T1]{fontenc}'# \boldmath'
+        #rcParams['axes.titleweight'] = 'bold'
 
     # Features:
     if not isinstance(features, dict):
@@ -411,7 +410,10 @@ def scatter_colorbar(pd_df, mainprop, features, colsplitfeature, cols,
     for findex, feature in enumerate(list(features.keys())):
         for colindex, colvals in enumerate(list(cols.keys())):
             for celindex, celvals in enumerate(list(cels.keys())):
-                group = grouped.get_group((colvals, celvals))
+                try:
+                    group = grouped.get_group((colvals, celvals))            
+                except KeyError:
+                    continue                
                 datax, datay = tonparray(group[mainprop], group[feature])
                 if (len(datax) > 1) and (not np.all(datax == datax[0])) and (not np.all(datay == datay[0])):
                     test_apply[celindex, findex, colindex] = True
@@ -563,8 +565,8 @@ def scatter_colorbar(pd_df, mainprop, features, colsplitfeature, cols,
     marker_size = 50
 
     # Symbols/markers, lines,
-    slines = ['-', '--', ':', '-.']
-    scolors = ['y', 'g', 'm', 'c', 'b', 'r']
+    slines = ['-', '--', ':', '-.'] * 5
+    scolors = ['y', 'g', 'm', 'c', 'b', 'r'] * 5
     smarker = ['o', 's', 'D', '^', '*', 'o', 's', 'x', 'D', '+', '^', 'v', '>']
 
     # Adding the scatterplos and linear models
@@ -572,7 +574,10 @@ def scatter_colorbar(pd_df, mainprop, features, colsplitfeature, cols,
     for indf, feature in enumerate(list(features.keys())):
         for colindex, colvals in enumerate(list(cols.keys())):
             for celindex, celvals in enumerate(list(cels.keys())):
-                group = grouped.get_group((colvals, celvals))
+                try :
+                    group = grouped.get_group((colvals, celvals))
+                except KeyError:
+                    continue
                 # if ((not all(group[feature] == 0.0))
                 #        and (not all(np.isnan(group[feature])))):
                 datax, datay = tonparray(group[mainprop], group[feature])
@@ -592,6 +597,7 @@ def scatter_colorbar(pd_df, mainprop, features, colsplitfeature, cols,
                         argmax = np.argmax(datax)
                         trend_x = datax[[argmin, argmax]]
                         trend_y = yfited_values[[argmin, argmax]]
+                        #print(colvals,celvals,len(datax),len(datay))
                         # plotando linha obtida com dados da regressao
                         axis[indf, colindex].plot(trend_x, trend_y,
                                                   marker=None,
@@ -617,7 +623,7 @@ def scatter_colorbar(pd_df, mainprop, features, colsplitfeature, cols,
             # Ajuste do alinhamento dos labels, quantidade de casa deciamais,
             axis[0, colindex].xaxis.set_label_position("top")
             axis[0, colindex].set_xlabel(cols[colvals], va='center',
-                                         ha='center', labelpad=40,
+                                         ha='center', labelpad=15,
                                          size=axis_label_font_size)
             axis[indf, 0].set_ylabel(features[feature], va='center',
                                      ha='center', labelpad=40,
@@ -629,16 +635,16 @@ def scatter_colorbar(pd_df, mainprop, features, colsplitfeature, cols,
                 tikslabel.set_fontsize(tick_label_font_size)
                 tikslabel.set_rotation(60)
 
-            y = label['ticklabelssprecision'][1][indf]
-            x = label['ticklabelssprecision'][0]
-            print(list(axis[indf, colindex].xaxis.get_ticklabels()))
-            axis[indf, colindex].xaxis.set_major_formatter(FormatStrFormatter('%0.'+str(x)+'f'))        
-            axis[indf, colindex].yaxis.set_major_formatter(FormatStrFormatter('%0.'+str(y)+'f'))
-            print(list(axis[indf, colindex].xaxis.get_ticklabels()))
-            axis[indf, colindex].xaxis.set_major_locator(plt.MaxNLocator(3))
-            axis[indf, colindex].yaxis.set_major_locator(plt.MaxNLocator(3))
+            #y = label['ticklabelssprecision'][1][indf]
+            #x = label['ticklabelssprecision'][0]
+            #print(list(axis[indf, colindex].xaxis.get_ticklabels()))
+            #axis[indf, colindex].xaxis.set_major_formatter(FormatStrFormatter('%0.'+str(x)+'f'))        
+            #axis[indf, colindex].yaxis.set_major_formatter(FormatStrFormatter('%0.'+str(y)+'f'))
+            #print(list(axis[indf, colindex].xaxis.get_ticklabels()))
+            #axis[indf, colindex].xaxis.set_major_locator(plt.MaxNLocator(3))
+            #axis[indf, colindex].yaxis.set_major_locator(plt.MaxNLocator(3))
 
-            print(list(axis[indf, colindex].xaxis.get_ticklabels()))
+            #print(list(axis[indf, colindex].xaxis.get_ticklabels()))
 
             #axis[indf, colindex].xaxis.set_ticklabels(axis[indf, colindex].xaxis.get_ticklabels(), {'fontweight':'bold'})
             #axis[indf, colindex].yaxis.set_ticklabels(axis[indf, colindex].yaxis.get_ticklabels(), {'fontweight':'bold'})

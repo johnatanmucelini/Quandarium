@@ -3,13 +3,13 @@ import time
 import multiprocessing as mp
 import numpy as np
 
-sys.path.append('/home/johnatan/quandarium/quandarium/')
-from aux import to_nparray
-from aux import to_list
-from mols import ecndav
-from mols import ecndav_rsopt
-from mols import ecndav_ropt
-from mols import findsc
+#sys.path.append('~/Quandarium/quandarium/')
+from quandarium.aux import to_nparray
+from quandarium.aux import to_list
+from quandarium.mols import ecndav
+from quandarium.mols import ecndav_rsopt
+from quandarium.mols import ecndav_ropt
+from quandarium.mols import findsc
 
 
 def rec_ecndav_rsopt(kinfo, Rinfo, positions, cheme, print_convergence=False,
